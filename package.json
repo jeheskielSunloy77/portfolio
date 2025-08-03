@@ -11,14 +11,22 @@
   "dependencies": {
     "@astrojs/mdx": "^4.3.4",
     "@astrojs/react": "^4.3.0",
+    "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/vite": "^4.1.3",
     "@types/canvas-confetti": "^1.9.0",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "astro": "^5.13.2",
     "canvas-confetti": "^1.9.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.540.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.3"
+  },
+  "devDependencies": {
+    "tw-animate-css": "^1.3.7"
   }
 }

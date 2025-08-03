@@ -1,16 +1,68 @@
 ---
-import '../styles/global.css';
-const { content } = Astro.props;
+import '../styles/global.css'
+import { ChatToggle, ThemeToggle } from './main.client'
+interface Props {
+	content: {
+		title: string
+		[key: string]: unknown
+	}
+}
+
+const { content } = Astro.props as Props
+
+const navItems = [
+	{ name: 'home', href: '/' },
+	{ name: 'projects', href: '/projects' },
+	{ name: 'blog', href: '/blog' },
+	{ name: 'contact', href: '/contact' },
+]
 ---
 
-<html lang="en">
+<html lang='en'>
 	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta charset='utf-8' />
+		<meta name='viewport' content='width=device-width' />
+		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
 		<title>{content.title}</title>
+		<script>
+			;(() => {
+				const stored = localStorage.getItem('theme')
+				const prefersDark = window.matchMedia(
+					'(prefers-color-scheme: dark)'
+				).matches
+				const theme = stored || (prefersDark ? 'dark' : 'light')
+				if (theme === 'dark') {
+					document.documentElement.classList.add('dark')
+				} else {
+					document.documentElement.classList.remove('dark')
+				}
+			})()
+		</script>
 	</head>
 	<body>
-		<slot />
+		<header class='sticky top-0 z-50 bg-background/75 backdrop-blur-sm'>
+			<div class='mx-auto max-w-3xl px-8 py-6'>
+				<nav class='flex items-center justify-between'>
+					<ul class='flex gap-4 sm:gap-8'>
+						{
+							navItems.map((nav) => (
+								<li class='link'>
+									<a href={nav.href}>{nav.name}</a>
+								</li>
+							))
+						}
+					</ul>
+					<div class='flex gap-2 sm:gap-4'>
+						<ChatToggle client:idle />
+						<ThemeToggle client:idle />
+					</div>
+				</nav>
+			</div>
+		</header>
+		<div class='mx-auto flex max-w-3xl flex-col px-8'>
+			<main class='grow'>
+				<slot />
+			</main>
+		</div>
 	</body>
 </html>

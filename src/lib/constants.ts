@@ -21,3 +21,4 @@ export const SOCIALS = [
 		icon: Mail,
 	},
 ]
+export const APP_NAME = 'jeheskielsunloy.com'

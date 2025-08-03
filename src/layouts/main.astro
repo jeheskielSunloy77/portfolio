@@ -1,6 +1,8 @@
 ---
+import Socials from '@/components/socials.astro'
 import '../styles/global.css'
 import { ChatToggle, ThemeToggle } from './main.client'
+import { APP_NAME } from '@/lib/constants'
 interface Props {
 	content: {
 		title: string
@@ -64,5 +66,20 @@ const navItems = [
 				<slot />
 			</main>
 		</div>
+		<footer class='w-full pt-12'>
+			<div
+				class='mx-auto flex max-w-3xl flex-col items-center justify-center px-8 pb-32 sm:flex-row-reverse sm:justify-between'
+			>
+				<Socials />
+				<section class='mt-8 text-center sm:mt-0 sm:text-left'>
+					<p class='text-xs text-muted-foreground'>
+						&copy; {new Date().getFullYear()}{' '}
+						<a class='link' href='/'> {APP_NAME} </a>{' '}
+						|{' '}
+						<a class='link font-bold' href='/privacy'> privacy? </a>
+					</p>
+				</section>
+			</div>
+		</footer>
 	</body>
 </html>

@@ -1,0 +1,20 @@
+---
+import { SOCIALS } from '@/lib/constants'
+---
+
+<section class='flex gap-6'>
+	{
+		SOCIALS.map((item) => (
+			<a
+				href={item.href}
+				target='_blank'
+				class='text-muted-foreground hover:text-foreground'
+				rel='noopener noreferrer'
+				title={item.name}
+			>
+				<span class='sr-only'>{item.name}</span>
+				<item.icon aria-hidden='true' className='size-5' />
+			</a>
+		))
+	}
+</section>

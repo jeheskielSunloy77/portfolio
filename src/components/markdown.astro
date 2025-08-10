@@ -1,0 +1,13 @@
+---
+import { marked } from 'marked'
+
+export interface Props {
+	markdown: string
+	class?: string
+}
+const { markdown, ...attr } = Astro.props as Props
+
+const html = marked(markdown)
+---
+
+<div set:html={html} {...attr} />

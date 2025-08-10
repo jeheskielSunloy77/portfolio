@@ -1,79 +1,16 @@
 ---
-import Socials from '@/components/socials.astro'
-import { Button } from '@/components/ui/button'
-import { BIRTH_DATE, BOT_NAME, NICK_NAME } from '@/lib/constants'
-import { ArrowDown, ArrowDownRight, FileDown } from 'lucide-react'
+import HeroSection from '@/components/hero-section.astro'
+import PostsSection from '@/components/posts-section.astro'
+import { ExperienceSection } from '../components/experiance-section'
+import ProjectsSection from '../components/projects-section.astro'
 import MainLayout from '../layouts/main.astro'
-
-function getAge(birthDate: Date) {
-	const today = new Date()
-	let age = today.getFullYear() - birthDate.getFullYear()
-	const monthDiff = today.getMonth() - birthDate.getMonth()
-	if (
-		monthDiff < 0 ||
-		(monthDiff === 0 && today.getDate() < birthDate.getDate())
-	) {
-		age--
-	}
-	return age
-}
 ---
 
 <MainLayout content={{ title: 'My Astro Site' }}>
-	<section
-		class='flex flex-col items-start gap-8 md:flex-row-reverse md:items-center md:justify-between'
-	>
-		<img
-			class='rounded-lg'
-			src='/me.webp'
-			alt=`Photo of ${NICK_NAME}`
-			width={175}
-			height={175}
-		/>
-		<div class='flex max-w-[320px] flex-col sm:max-w-full'>
-			<h1 class='title text-balance text-4xl sm:text-5xl'>
-				hi {NICK_NAME} here. 👋
-			</h1>
-
-			<p class='mt-2 whitespace-nowrap text-sm font-medium sm:text-base'>
-				{getAge(BIRTH_DATE)}
-				yo software engineer from Singapore 🇸🇬
-			</p>
-
-			<p class='mt-4 max-w-sm text-balance text-sm sm:text-base'>
-				Backend by trade, full-stack by passion. I build and self-host the lot.
-			</p>
-
-			<div class='mt-6 flex items-center gap-1'>
-				<p class='text-balance text-sm font-semibold sm:text-base'>
-					For Q&A, raise a ticket with {BOT_NAME}
-				</p>
-				<ArrowDownRight className='hidden size-5 animate-bounce sm:block' />
-				<ArrowDown className='block size-5 animate-bounce sm:hidden' />
-			</div>
-
-			<p class='mt-1 text-xs font-light'>
-				For escalations, please find my
-				<a
-					href='https://www.instagram.com/jeheskielsunloy'
-					target='_blank'
-					class='link font-semibold'
-					title='instagram'
-				>
-					&nbsp;${NICK_NAME}&nbsp;
-				</a>
-				instead.
-			</p>
-
-			<section class='mt-6 flex flex-wrap items-center gap-4'>
-				<a href='/resume.pdf' target='_blank'>
-					<Button variant='outline'>
-						<span class='font-semibold'>Resume</span>
-						<FileDown className='ml-2 size-5' />
-					</Button>
-				</a>
-				<Socials />
-			</section>
-		</div>
-	</section>
+	<article class='flex flex-col gap-16'>
+		<HeroSection />
+		<ExperienceSection client:idle />
+		<ProjectsSection />
+		<PostsSection />
+	</article>
 </MainLayout>

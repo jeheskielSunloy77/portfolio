@@ -1,0 +1,16 @@
+---
+export interface Props {
+	href: string
+	position?: 'left' | 'right'
+	text?: string
+	class?: string
+}
+
+const { href, position = 'left', text, class: className = '' } = Astro.props
+---
+
+<a href={href} class={`link flex items-center gap-2 font-light ${className}`}>
+	{position === 'left' && <slot name='icon' />}
+	{text && <span>{text}</span>}
+	{position === 'right' && <slot name='icon' />}
+</a>

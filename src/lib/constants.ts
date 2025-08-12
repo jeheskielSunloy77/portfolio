@@ -5,6 +5,7 @@ export const BIRTH_DATE = new Date('2000-12-30')
 export const NICK_NAME = 'Jay'
 export const FULL_NAME = 'Jeheskiel Sunloy'
 export const BOT_NAME = 'jBot'
+export const EMAIL = 'jeheskielventiokysunloy@gmail.com'
 export const SOCIALS = [
 	{
 		name: 'LinkedIn',

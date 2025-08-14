@@ -1,0 +1,11 @@
+---
+import ProjectList from '@/components/project-list.astro'
+import MainLayout from '../layouts/main.astro'
+---
+
+<MainLayout content={{ title: 'Projects' }}>
+	<article class='mt-8 flex flex-col gap-8 pb-16'>
+		<h1 class='title'>my projects.</h1>
+		<ProjectList />
+	</article>
+</MainLayout>

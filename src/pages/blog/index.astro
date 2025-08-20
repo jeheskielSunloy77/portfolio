@@ -1,0 +1,14 @@
+---
+import { PostsWithSearch } from '@/components/searchable-post-list'
+import MainLayout from '@/layouts/main.astro'
+import { getCollection } from 'astro:content'
+
+const posts = await getCollection('post')
+---
+
+<MainLayout title='Blog' description='My blog posts and articles.'>
+	<article class='mt-8 flex flex-col gap-8 pb-16'>
+		<h1 class='title'>my blog.</h1>
+		<PostsWithSearch posts={posts} client:idle />
+	</article>
+</MainLayout>

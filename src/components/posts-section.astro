@@ -1,35 +1,14 @@
 ---
 import { FEATURED_POSTS_LIMIT } from '@/lib/constants'
-import type { PostMetadata } from '@/lib/types'
-import { format } from 'date-fns'
+import { getCollection } from 'astro:content'
 import { ArrowRightIcon } from 'lucide-react'
 import LinkWithIcon from './link-with-icon.astro'
+import { PostCard } from './post-card'
 import { Card } from './ui/card'
-import { Separator } from './ui/separator'
 
-const posts: PostMetadata[] = [
-	{
-		title: 'Getting started with Astro',
-		summary: 'A quick introduction to Astro and how to scaffold a new project.',
-		image: '/images/astro-getting-started.png',
-		publishedAt: '2025-04-10',
-		slug: 'getting-started-astro',
-	},
-	{
-		title: 'Building a portfolio with Astro',
-		summary:
-			'Step-by-step walkthrough to create a fast, accessible portfolio site.',
-		image: '/images/portfolio.png',
-		publishedAt: '2025-02-20',
-		slug: 'building-a-portfolio',
-	},
-	{
-		title: 'Writing for the web',
-		summary: 'Tips for writing clear, scannable content for your site.',
-		image: '/images/writing.png',
-		slug: 'writing-for-the-web',
-	},
-].slice(0, FEATURED_POSTS_LIMIT)
+const posts = await getCollection('post').then((p) =>
+	p.slice(0, FEATURED_POSTS_LIMIT)
+)
 ---
 
 <section class='flex flex-col gap-8'>
@@ -43,27 +22,7 @@ const posts: PostMetadata[] = [
 		<ul class='flex flex-col'>
 			{
 				posts.map((post, i) => (
-					<li>
-						{i !== 0 && i !== posts.length && <Separator />}
-						<a href={`/blog/${post.slug}`}>
-							<div class='flex flex-col justify-between p-6 sm:flex-row sm:items-center'>
-								<div class='max-w-md md:max-w-lg'>
-									<h3 class='text-lg font-semibold'>{post.title}</h3>
-									<p class='mt-1 line-clamp-2 text-sm font-light text-muted-foreground'>
-										{post.summary}
-									</p>
-								</div>
-
-								{post.publishedAt && (
-									<p class='mt-2 flex w-full justify-end text-sm font-light sm:mt-0 sm:w-auto'>
-										<time datetime={post.publishedAt}>
-											{format(new Date(post.publishedAt), 'MMM d, yyyy')}
-										</time>
-									</p>
-								)}
-							</div>
-						</a>
-					</li>
+					<PostCard post={post} useSeparator={i !== 0 && i !== posts.length - 1} />
 				))
 			}
 		</ul>

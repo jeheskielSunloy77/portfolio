@@ -1,0 +1,49 @@
+---
+import LinkWithIcon from '@/components/link-with-icon.astro'
+import MainLayout from '@/layouts/main.astro'
+import type { CollectionEntry } from 'astro:content'
+import { getCollection, render } from 'astro:content'
+import { formatDate } from 'date-fns'
+import { ArrowLeftIcon } from 'lucide-react'
+
+export async function getStaticPaths() {
+	const posts = await getCollection('post')
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: post,
+	}))
+}
+
+export type Props = CollectionEntry<'post'>
+
+const post = Astro.props
+
+const { Content } = await render(post)
+---
+
+<MainLayout title={post.data.title} description={post.data.summary}>
+	<article class='mt-8 flex flex-col gap-8 pb-16'>
+		<LinkWithIcon href='/blog' position='left' text='back to blog'>
+			<ArrowLeftIcon className='size-5' />
+		</LinkWithIcon>
+
+		{
+			post.data.image && (
+				<div class='relative mb-6 h-96 w-full overflow-hidden rounded-lg'>
+					<img {...post.data.image} class='object-cover' />
+				</div>
+			)
+		}
+
+		<header>
+			<h1 class='title'>{post.data.title}</h1>
+			<p class='mt-2 text-xs text-muted-foreground'>
+				{formatDate(post.data.publishedAt, 'MMMM dd, yyyy')}
+			</p>
+		</header>
+
+		<main class='prose dark:prose-invert'>
+			<Content />
+		</main>
+	</article>
+</MainLayout>

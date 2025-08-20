@@ -4,13 +4,11 @@ import '../styles/global.css'
 import { ChatToggle, ThemeToggle } from './main.client'
 import { APP_NAME } from '@/lib/constants'
 interface Props {
-	content: {
-		title: string
-		[key: string]: unknown
-	}
+	title: string
+	description: string
 }
 
-const { content } = Astro.props as Props
+const { description, title } = Astro.props as Props
 
 const navItems = [
 	{ name: 'home', href: '/' },
@@ -25,7 +23,8 @@ const navItems = [
 		<meta charset='utf-8' />
 		<meta name='viewport' content='width=device-width' />
 		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
-		<title>{content.title}</title>
+		<title>{title}</title>
+		<meta name='description' content={description} />
 		<script>
 			;(() => {
 				const stored = localStorage.getItem('theme')

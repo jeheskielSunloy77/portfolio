@@ -10,7 +10,7 @@ const { href, position = 'left', text, class: className = '' } = Astro.props
 ---
 
 <a href={href} class={`link flex items-center gap-2 font-light ${className}`}>
-	{position === 'left' && <slot name='icon' />}
+	{position === 'left' && <slot />}
 	{text && <span>{text}</span>}
-	{position === 'right' && <slot name='icon' />}
+	{position === 'right' && <slot />}
 </a>

@@ -62,7 +62,9 @@ function Timeline(props: { experiences: Experience[] }) {
 								{exp.description && (
 									<ul className='ml-4 list-outside list-disc'>
 										{exp.description.map((desc, i) => (
-											<li className='prose pr-8 text-sm dark:prose-invert'>{desc}</li>
+											<li key={i} className='prose pr-8 text-sm dark:prose-invert'>
+												{desc}
+											</li>
 										))}
 									</ul>
 								)}

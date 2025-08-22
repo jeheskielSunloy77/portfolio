@@ -33,7 +33,7 @@ function Timeline(props: { experiences: Experience[] }) {
 							<a
 								href={exp.href}
 								target='_blank'
-								className='absolute -left-16 top-4 flex items-center justify-center rounded-full bg-white'
+								className='absolute -left-16 top-4 flex items-center justify-center rounded-full bg-muted'
 							>
 								<Avatar className='size-12 border'>
 									<AvatarImage
@@ -45,13 +45,16 @@ function Timeline(props: { experiences: Experience[] }) {
 								</Avatar>
 							</a>
 							<div className='flex flex-1 flex-col justify-start gap-1'>
-								{exp.start && (
-									<time className='text-xs text-muted-foreground'>
-										<span>{exp.start}</span>
-										<span>{' - '}</span>
-										<span>{exp.end ? exp.end : 'Present'}</span>
-									</time>
-								)}
+								<time className='text-xs text-muted-foreground'>
+									{exp.subtitle ||
+										(exp.start && (
+											<>
+												<span>{exp.start}</span>
+												<span>{' - '}</span>
+												<span>{exp.end ? exp.end : 'Present'}</span>
+											</>
+										))}
+								</time>
 								<h2 className='font-semibold leading-none'>{exp.name}</h2>
 								{exp.title && (
 									<p className='text-sm text-muted-foreground'>{exp.title}</p>

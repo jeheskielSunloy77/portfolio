@@ -5,8 +5,9 @@ export interface Experience {
 	href: string
 	title: string
 	logo: string
-	start: string
+	start?: string
 	end?: string
+	subtitle?: string
 	description?: string[]
 	links?: { icon: LucideIcon; href: string; name: string }[]
 }

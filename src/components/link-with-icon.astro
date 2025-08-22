@@ -9,8 +9,23 @@ export interface Props {
 const { href, position = 'left', text, class: className = '' } = Astro.props
 ---
 
-<a href={href} class={`link flex items-center gap-2 font-light ${className}`}>
-	{position === 'left' && <slot />}
+<a
+	href={href}
+	class={`link flex group items-center gap-2 font-light ${className}`}
+>
+	{
+		position === 'left' && (
+			<span class='group-hover:-translate-x-0.5 transition-transform'>
+				<slot />
+			</span>
+		)
+	}
 	{text && <span>{text}</span>}
-	{position === 'right' && <slot />}
+	{
+		position === 'right' && (
+			<span class='group-hover:translate-x-0.5 transition-transform'>
+				<slot />
+			</span>
+		)
+	}
 </a>

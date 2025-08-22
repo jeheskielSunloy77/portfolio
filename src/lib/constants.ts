@@ -6,6 +6,10 @@ export const NICK_NAME = 'Jay'
 export const FULL_NAME = 'Jeheskiel Sunloy'
 export const BOT_NAME = 'jBot'
 export const EMAIL = 'jeheskielventiokysunloy@gmail.com'
+export const FEATURED_PROJECTS_LIMIT = 2
+export const FEATURED_POSTS_LIMIT = 3
+export const APP_NAME = 'jeheskielsunloy.com'
+
 export const SOCIALS = [
 	{
 		name: 'LinkedIn',
@@ -23,75 +27,67 @@ export const SOCIALS = [
 		icon: Mail,
 	},
 ]
-export const APP_NAME = 'jeheskielsunloy.com'
 export const CAREERS: Experience[] = [
 	{
-		name: 'Singapore Institute of Technology',
-		href: 'https://www.singaporetech.edu.sg',
-		title: 'Software Developer (Contract)',
-		logo: '/sit.png',
-		start: 'Apr 2023',
-		end: 'Jun 2023',
+		name: 'digipémad',
+		href: 'https://digipemad.com',
+		title: 'Software Engineer',
+		logo: '/me/work3.webp',
+		start: 'Mar 2024',
 		description: [
-			'Built NFTVue, an NFT gallery website that allows students to connect their crypto wallets to view and verify school event–issued NFTs.',
-			'Worked on DemoConstruct, a full‑stack web application (React + Python) that uses Meshroom to reconstruct 3D models from captured images.',
-		],
-		links: [
-			{
-				name: 'NFTVue',
-				href: 'https://nftvue.vercel.app',
-				icon: Globe,
-			},
+			'The child company of PéMad International Transearch, focusing on software development and IT solutions.',
+			'Working as a software engineer, focusing on full-stack development using Next.js and Node.js.',
+			'Building and maintaining web applications for various clients.',
 		],
 	},
 	{
-		name: 'Acme Webworks',
-		href: 'https://acme-webworks.example',
-		title: 'Frontend Engineer',
-		logo: '/acme.png',
-		start: 'Jun 2022',
-		end: 'Present',
+		name: 'PéMad International Transearch',
+		href: 'https://pemad.or.id',
+		title: 'Software Engineer',
+		logo: '/me/work2.svg',
+		start: 'Mar 2024',
 		description: [
-			'Worked on responsive, accessible web applications using modern frontend tooling.',
-			'Collaborated with design and backend teams to deliver features end‑to‑end.',
+			'Working as a software engineer, building and maintaining internal applications.',
+			'Collaborating with cross-functional teams to deliver high-quality software solutions.',
 		],
 	},
 	{
-		name: 'Bright Labs',
-		href: 'https://bright-labs.example',
-		title: 'Software Engineer Intern',
-		logo: '/bright.png',
-		start: 'Jun 2021',
-		end: 'Dec 2021',
+		name: 'KreasiX Internship',
+		href: 'https://www.kreasix.com',
+		title: 'Developer Intern',
+		logo: '/me/work1.jpeg',
+		start: 'May 2022',
+		end: 'Jul 2022',
 		description: [
-			'Implemented UI components and integration tests.',
-			'Participated in sprint planning and code reviews.',
+			'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase',
 		],
 	},
 ]
 
 export const EDUCATIONS: Experience[] = [
 	{
-		name: 'University of Example',
-		href: 'https://university-of-example.example',
-		title: 'Bachelor of Science in Computer Science',
-		logo: '/university.png',
-		start: 'Aug 2018',
-		end: 'May 2022',
+		name: 'Refactory Bootcamp',
+		href: 'https://refactory.id',
+		title: 'Software Engineer Intern',
+		logo: '/me/education2.jpg',
+		start: 'Jul 2022',
+		end: 'Sep 2022',
 		description: [
-			'Focused on algorithms, web development, and software engineering principles.',
-			'Completed a senior project on real‑time collaboration tools.',
+			'Bootcamp + Internship program by Refactory',
+			'Intensive 7-week program focused on full-stack web development.',
+			'Learned modern web technologies including React, Node.js, and Golang.',
+			'Worked on team projects to build real-world applications.',
 		],
 	},
 	{
-		name: 'Online Academy',
-		href: 'https://online-academy.example',
-		title: 'Full‑Stack Web Development Certificate',
-		logo: '/online-academy.png',
-		start: 'Mar 2021',
-		end: 'Sep 2021',
+		name: 'Satya Wacana Christian University',
+		href: 'https://uksw.edu',
+		title: 'Bachelor of Science in Computer Science',
+		logo: '/me/education1.svg',
+		subtitle: 'Enroled on Aug 2017',
 		description: [
-			'Immersive program covering modern frontend and backend technologies with project‑based assessments.',
+			'Focused on algorithms, web development, and software engineering principles.',
+			'Completed a senior project on real‑time collaboration tools.',
 		],
 	},
 ]
@@ -99,66 +95,124 @@ export const EDUCATIONS: Experience[] = [
 export const PROJECTS: Project[] = [
 	{
 		isFeatured: true,
-		image: '/screenshots/nftvue.png',
-		name: 'NFTVue',
+		name: 'Academic Information System',
+		href: 'https://nextjs-iakn-kupang.vercel.app/',
 		description:
-			'An **NFT gallery** that lets students connect crypto wallets to view and verify event‑issued NFTs.\n\nBuilt with Next.js and React.',
-		href: 'https://nftvue.vercel.app',
-		tags: ['react', 'web3', 'nextjs'],
-		links: [
-			{ name: 'Live Demo', href: 'https://nftvue.vercel.app', icon: Globe },
-			{
-				name: 'Source',
-				href: 'https://github.com/jeheskielSunloy77/nftvue',
-				icon: Github,
-			},
-		],
-	},
-	{
-		isFeatured: true,
-		image: '/screenshots/democonstruct.png',
-		name: 'DemoConstruct',
-		description:
-			'Full‑stack app that reconstructs 3D models from images using **Meshroom** and a React frontend.\n\nFeatures:\n- Image preprocessing\n- 3D reconstruction pipeline\n- Interactive model viewer',
-		tags: ['react', 'python', '3d'],
+			'A full featured academic information system for IAKN Kupang University. It includes features like student registration, course management, academic records, LMS, and more.',
+		tags: ['nextjs', 'postgresql', 'tailwindcss', 'typescript'],
+		image: '/projects/iaknKupang.webp',
 		links: [
 			{
-				name: 'Project Page',
-				href: 'https://demo-construct.example',
+				name: 'Demo',
+				href: 'https://nextjs-iakn-kupang.vercel.app/',
 				icon: Globe,
 			},
 		],
 	},
 	{
-		image: '/screenshots/portfolio.png',
-		name: 'Personal Portfolio',
+		isFeatured: true,
+		name: 'Cross Platform Coffee Shop App',
+		href: 'https://github.com/jeheskielSunloy77/react-native-coffee-shop',
 		description:
-			'This website: built with **TypeScript**, **React**, and **Tailwind** — responsive and accessible.\n\nSee the [source on GitHub](https://github.com/jeheskielSunloy77/portfolio).',
-		href: 'https://jeheskielsunloy.com',
-		tags: ['typescript', 'react', 'tailwind'],
+			'A cross-platform mobile application for ordering coffee from local shops.',
+		tags: ['react-native', 'expo', 'supabase', 'typescript', 'tailwindcss'],
+		image: '/projects/coffeeShopApp.png',
 		links: [
-			{ name: 'Live', href: 'https://jeheskielsunloy.com', icon: Globe },
 			{
 				name: 'Source',
-				href: 'https://github.com/jeheskielSunloy77/portfolio',
+				href: 'https://github.com/jeheskielSunloy77/react-native-coffee-shop',
 				icon: Github,
 			},
 		],
 	},
 	{
-		name: 'Open Source CLI Tool',
+		name: 'Ecommerce App',
+		href: 'https://ecommerce-app.example',
 		description:
-			'Small CLI utility to scaffold and lint projects quickly.\n\nWritten in Node.js — see the [repository](https://github.com/jeheskielSunloy77/cli-tool) for usage and examples.',
-		tags: ['node', 'cli'],
+			'The Ecommerce App is a full-stack web application built using PHP, Laravel, and Tailwindcss. The app is designed to provide users with a seamless shopping experience, from browsing products to placing orders.',
+		tags: ['php', 'laravel', 'tailwindcss'],
+		image: '/projects/ecommerce.webp',
 		links: [
 			{
+				name: 'Demo',
+				href: 'https://ecommerce-app.example',
+				icon: Globe,
+			},
+		],
+	},
+	{
+		name: 'Ecommerce Web Scraper',
+		href: 'https://go-ecommerce-scraper.vercel.app/',
+		description:
+			'A webscraper build with GO using serverless functions technology, that can scrape the web looking for any product from the user.',
+		tags: ['go', 'colly'],
+		image: '/projects/webscraper.webp',
+		links: [
+			{
+				name: 'Demo',
+				href: 'https://go-ecommerce-scraper.vercel.app/',
+				icon: Globe,
+			},
+			{
 				name: 'Source',
-				href: 'https://github.com/jeheskielSunloy77/cli-tool',
+				href: 'https://github.com/jeheskielSunloy77/go-ecommerce-scraper',
 				icon: Github,
 			},
 		],
 	},
+	{
+		name: 'CRUD App',
+		href: 'https://dataon-project.vercel.app/',
+		description:
+			'A simple CRUD application with Antd on the frontend and using mockapi.io to handle the resources.',
+		tags: ['react', 'antd', 'tailwindcss'],
+		image: '/projects/crudApp.webp',
+		links: [
+			{
+				name: 'Demo',
+				href: 'https://dataon-project.vercel.app/',
+				icon: Globe,
+			},
+			{
+				name: 'Source',
+				href: 'https://github.com/jeheskielSunloy77/dataon-project',
+				icon: Github,
+			},
+		],
+	},
+	{
+		name: 'PWA Weather App',
+		href: 'https://nextjs-weather-app-lemon.vercel.app/',
+		description:
+			'A progressive web application that can be installed on any device that can provide an accurate weather report from all around the world.',
+		tags: ['nextjs', 'tailwindcss', 'typescript'],
+		image: '/projects/weatherApp.webp',
+		links: [
+			{
+				name: 'Demo',
+				href: 'https://nextjs-weather-app-lemon.vercel.app/',
+				icon: Globe,
+			},
+			{
+				name: 'Source',
+				href: 'https://github.com/jeheskielSunloy77/nextjs-weather-app',
+				icon: Github,
+			},
+		],
+	},
+	{
+		name: 'IAKN Kupang Profile Website',
+		href: 'https://iakn-kupang-profile.vercel.app/',
+		description:
+			'A Fullstack web app for IAKN Kupang University build with Astro, Tailwindcss and Postgresql.',
+		tags: ['nextjs', 'tailwindcss', 'postgresql', 'typescript'],
+		image: '/projects/iaknProfile.webp',
+		links: [
+			{
+				name: 'Demo',
+				href: 'https://iakn-kupang-profile.vercel.app/',
+				icon: Globe,
+			},
+		],
+	},
 ]
-
-export const FEATURED_PROJECTS_LIMIT = 2
-export const FEATURED_POSTS_LIMIT = 3

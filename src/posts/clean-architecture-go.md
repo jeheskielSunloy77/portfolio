@@ -1,6 +1,6 @@
 ---
 title: How I Keep My Go Code Clean (Without Going Crazy) 🧹
-publishedAt: 2023-10-15
+publishedAt: 2025-01-15
 summary: 'Learn how to structure your Go applications cleanly without over-engineering. Practical tips for services, repositories, and testing.'
 ---
 

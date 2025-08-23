@@ -1,16 +1,14 @@
 ---
 import { FEATURED_PROJECTS_LIMIT } from '@/lib/constants'
-import { ArrowRightIcon } from 'lucide-react'
-import LinkWithIcon from './link-with-icon.astro'
 import ProjectList from './project-list.astro'
+import Section from './section.astro'
 ---
 
-<section class='flex flex-col gap-8'>
-	<div class='flex justify-between'>
-		<h2 class='title text-2xl sm:text-3xl'>featured projects</h2>
-		<LinkWithIcon href='/projects' position='right' text='view more'>
-			<ArrowRightIcon className='size-5' />
-		</LinkWithIcon>
-	</div>
+<Section
+	id='projects'
+	title='Featured Projects'
+	description='Explore some of my highlighted projects that showcase my skills and creativity in web development.'
+	viewMoreHref='/projects'
+>
 	<ProjectList limit={FEATURED_PROJECTS_LIMIT} isFeatured />
-</section>
+</Section>

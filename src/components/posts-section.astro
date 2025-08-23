@@ -1,9 +1,8 @@
 ---
 import { FEATURED_POSTS_LIMIT } from '@/lib/constants'
 import { getCollection } from 'astro:content'
-import { ArrowRightIcon } from 'lucide-react'
-import LinkWithIcon from './link-with-icon.astro'
 import { PostCard } from './post-card'
+import Section from './section.astro'
 import { Card } from './ui/card'
 
 const posts = await getCollection('post').then((p) =>
@@ -11,13 +10,12 @@ const posts = await getCollection('post').then((p) =>
 )
 ---
 
-<section class='flex flex-col gap-8'>
-	<div class='flex justify-between'>
-		<h2 class='title text-3xl'>recent posts</h2>
-		<LinkWithIcon href='/blog' position='right' text='view more'>
-			<ArrowRightIcon className='size-5' />
-		</LinkWithIcon>
-	</div>
+<Section
+	id='posts'
+	title='Recent Posts'
+	description='Read my latest articles on web development, programming, and technology.'
+	viewMoreHref='/blog'
+>
 	<Card>
 		<ul class='flex flex-col'>
 			{
@@ -27,4 +25,4 @@ const posts = await getCollection('post').then((p) =>
 			}
 		</ul>
 	</Card>
-</section>
+</Section>

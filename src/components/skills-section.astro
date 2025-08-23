@@ -1,0 +1,45 @@
+---
+import { SKILLS } from '@/lib/constants'
+import Section from './section.astro'
+
+const featuredSkills = SKILLS.filter((s) => !s.hide)
+---
+
+<Section
+	id='skills'
+	title='Current technologies'
+	description="I'm proficient in a range of modern technologies that empower me to build highly functional solutions. These are some of my main technologies."
+>
+	<div
+		class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-between gap-4'
+	>
+		{
+			featuredSkills.map((skill) => (
+				<div class='flex gap-5 p-2.5 rounded-xl border border-border/80 bg-muted/50 items-center transition-colors duration-200 hover:bg-muted'>
+					<div class={`p-3 ${skill.bgColor} rounded-lg max-w-14 w-full h-14`}>
+						<img
+							src={skill.imageUrl}
+							width={1000}
+							height={1000}
+							alt={`${skill.name} logo`}
+							class={`size-8 ${skill.imageDarkUrl ? 'block dark:hidden' : ''} ${skill.name === 'NextJS' ? 'dark:invert' : ''}`}
+						/>
+						{skill.imageDarkUrl && (
+							<img
+								src={skill.imageDarkUrl}
+								width={1000}
+								height={1000}
+								alt={`${skill.name} logo`}
+								class={`size-8 dark:block hidden`}
+							/>
+						)}
+					</div>
+					<div>
+						<h4 class='font-semibold text-sm'>{skill.name}</h4>
+						<p class='text-muted-foreground text-xs'>{skill.description}</p>
+					</div>
+				</div>
+			))
+		}
+	</div>
+</Section>

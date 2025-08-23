@@ -23,15 +23,22 @@ export function ChatBot() {
 
 function Chat() {
 	const { messages, setMessages, error, status, sendMessage } = useChat()
+	const [isOpen, setIsOpen] = useState(false)
 
 	return (
-		<Accordion type='single' collapsible className='flexs relative z-40'>
+		<Accordion
+			type='single'
+			collapsible
+			className='flexs relative z-40'
+			onValueChange={(v) => setIsOpen(v === 'chat')}
+			value={isOpen ? 'chat' : ''}
+		>
 			<AccordionItem
-				value='item-1'
+				value='chat'
 				className='fixed bottom-8 right-8 w-80 rounded-md border bg-background'
 			>
 				<AccordionTrigger className='border-b px-6'>
-					<ChatHeader />
+					<ChatHeader isOpen={isOpen} />
 				</AccordionTrigger>
 				<AccordionContent className='flex max-h-96 min-h-80 flex-col justify-between p-0'>
 					<ChatMessages messages={messages} error={error} status={status} />
@@ -47,11 +54,12 @@ function Chat() {
 	)
 }
 
-function ChatHeader() {
+function ChatHeader(props: { isOpen: boolean }) {
 	return (
 		<section className='flex w-full items-center justify-start gap-3'>
+			{!props.isOpen && <Bot className='size-5' />}
 			<div className='flex flex-col items-start'>
-				<p className='text-xs'>Chat with</p>
+				<p className='text-xs text-muted-foreground'>Chat with</p>
 				<div className='flex items-center gap-2'>
 					<span className='size-2 animate-pulse rounded-full bg-emerald-500' />
 					<p className='text-sm font-medium'>{BOT_NAME}</p>
@@ -93,22 +101,23 @@ function ChatInput({
 		}
 
 		await sendMessage(message)
-		setMessages((messages) => [...messages, message])
 		setInput('')
 	}
 
 	return (
 		<form onSubmit={handleSubmit} className='flex gap-1 border-t px-2 py-3'>
-			<Button
-				title='Clear chat'
-				variant='outline'
-				onClick={() => setMessages([])}
-				className='px-3 py-2'
-				disabled={!isReady || !isClearable}
-				type='button'
-			>
-				<Trash className='size-4 text-rose-500' />
-			</Button>
+			{isClearable && (
+				<Button
+					title='Clear chat'
+					variant='outline'
+					onClick={() => setMessages([])}
+					className='px-3 py-2'
+					disabled={!isReady}
+					type='button'
+				>
+					<Trash className='size-4 text-rose-500' />
+				</Button>
+			)}
 			<Input
 				autoFocus
 				placeholder='Ask something...'

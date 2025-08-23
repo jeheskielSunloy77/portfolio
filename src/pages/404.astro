@@ -1,0 +1,40 @@
+---
+import LinkWithIcon from '@/components/link-with-icon.astro'
+import Main from '@/layouts/main.astro'
+import { ArrowLeftIcon } from 'lucide-react'
+---
+
+<Main
+	title='404 Not Found'
+	description="Oops! The page you're looking for doesn't exist."
+>
+	<article class='mt-8 flex flex-col gap-8 pb-16'>
+		<div
+			class='min-h-full px-4 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8'
+		>
+			<div class='mx-auto max-w-max'>
+				<section class='sm:flex'>
+					<p class='title text-muted-foreground'>404</p>
+					<div class='sm:ml-6'>
+						<div>
+							<h1 class='title sm:text-5xl'>
+								cannot find <i>eh</i>...
+							</h1>
+							<p class='mt-1 text-base text-muted-foreground'>
+								Maybe I renamed or deleted the page <i>eh</i>. Try again{' '}
+								<i>lor</i>.
+							</p>
+						</div>
+						<div
+							class='mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6'
+						>
+							<LinkWithIcon href='/' text='back to home' position='left'>
+								<ArrowLeftIcon className='size-5' />
+							</LinkWithIcon>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</article>
+</Main>

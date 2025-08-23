@@ -1,6 +1,7 @@
 ---
 import HeroSection from '@/components/hero-section.astro'
 import PostsSection from '@/components/posts-section.astro'
+import SkillsSection from '@/components/skills-section.astro'
 import { APP_NAME, FULL_NAME } from '@/lib/constants'
 import { ExperienceSection } from '../components/experiance-section'
 import ProjectsSection from '../components/projects-section.astro'
@@ -11,9 +12,10 @@ import MainLayout from '../layouts/main.astro'
 	title={FULL_NAME}
 	description={`Welcome to ${APP_NAME}, the personal portfolio of ${FULL_NAME}. Explore my projects, blog posts, and more.`}
 >
-	<article class='flex flex-col gap-16'>
+	<article class='flex flex-col gap-28'>
 		<HeroSection />
 		<ExperienceSection client:idle />
+		<SkillsSection />
 		<ProjectsSection />
 		<PostsSection />
 	</article>

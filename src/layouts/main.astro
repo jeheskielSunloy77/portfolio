@@ -4,12 +4,14 @@ import '../styles/global.css'
 import { ChatToggle, ThemeToggle } from './main.client'
 import { APP_NAME } from '@/lib/constants'
 import { ChatBot } from '@/components/chat-bot'
-interface Props {
+import { ClientRouter, fade, slide } from 'astro:transitions'
+
+export interface Props {
 	title: string
 	description: string
 }
 
-const { description, title } = Astro.props as Props
+const { description, title } = Astro.props
 
 const navItems = [
 	{ name: 'home', href: '/' },
@@ -40,8 +42,9 @@ const navItems = [
 		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
 		<title>{title}</title>
 		<meta name='description' content={description} />
-		
+		<ClientRouter />
 	</head>
+
 	<body>
 		<header class='sticky top-0 z-50 bg-background/75 backdrop-blur-sm'>
 			<div class='mx-auto max-w-3xl px-8 py-6'>
@@ -50,7 +53,14 @@ const navItems = [
 						{
 							navItems.map((nav) => (
 								<li class='link'>
-									<a href={nav.href}>{nav.name}</a>
+									<a
+										href={nav.href}
+										class={
+											Astro.url.pathname === nav.href ? 'underline font-semibold' : ''
+										}
+									>
+										{nav.name}
+									</a>
 								</li>
 							))
 						}

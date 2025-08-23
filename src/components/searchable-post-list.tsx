@@ -13,7 +13,7 @@ interface Props {
 	}[]
 }
 
-export function PostsWithSearch({ posts }: Props) {
+export function SearchablePostList({ posts }: Props) {
 	const [query, setQuery] = useState('')
 
 	const filtered = posts.filter((post) =>

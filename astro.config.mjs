@@ -1,11 +1,11 @@
 // @ts-check
 
 import mdx from '@astrojs/mdx';
+import node from '@astrojs/node';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
 // import "./src/env";
 
 
@@ -15,7 +15,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  site: import.meta.env.APP_URL || 'https://example.com',
+  site: import.meta.env.APP_URL || 'http://localhost:4321',
   integrations: [react(), mdx(), sitemap()],
 
   adapter: node({

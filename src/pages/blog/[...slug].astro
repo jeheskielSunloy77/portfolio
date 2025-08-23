@@ -19,9 +19,38 @@ export type Props = CollectionEntry<'post'>
 const post = Astro.props
 
 const { Content } = await render(post)
+
+const sharedData = {
+	title: post.data.title,
+	description: post.data.description,
+	publishedTime: post.data.publishedAt,
+	modifiedTime: post.data.updatedAt,
+	articleSection: 'Blog',
+}
+
+const seo = {
+	...sharedData,
+	keywords: post.data.keywords,
+	ogImage: post.data.image?.src,
+	author: post.data.author,
+	articleTags: post.data.tags,
+	canonical: new URL(`/blog/${post.id}`, Astro.site).toString(),
+	ogType: 'article',
+	twitterCard: 'summary_large_image',
+} as const
 ---
 
-<MainLayout title={post.data.title} description={post.data.summary}>
+<MainLayout
+	seo={seo}
+	articleSchema={{
+		...sharedData,
+		keywords: seo.keywords.split(',').map((k) => k.trim()),
+		url: seo.canonical,
+		image: post.data.image
+			? [new URL(post.data.image.src, Astro.site).toString()]
+			: undefined,
+	}}
+>
 	<article class='mt-8 flex flex-col gap-8 pb-16'>
 		<LinkWithIcon href='/blog' position='left' text='back to blog'>
 			<ArrowLeftIcon className='size-5' />

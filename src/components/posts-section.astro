@@ -18,11 +18,7 @@ const posts = await getCollection('post').then((p) =>
 >
 	<Card>
 		<ul class='flex flex-col'>
-			{
-				posts.map((post, i) => (
-					<PostCard post={post} useSeparator={i !== 0 && i !== posts.length - 1} />
-				))
-			}
+			{posts.map((post, i) => <PostCard post={post} useSeparator={i !== 0} />)}
 		</ul>
 	</Card>
 </Section>

@@ -1,24 +1,19 @@
 ---
-import Socials from '@/components/socials.astro'
 import '../styles/global.css'
-import { ChatToggle, ThemeToggle } from './main.client'
-import { APP_NAME } from '@/lib/constants'
+import Footer from '@/components/footer.astro'
 import { ChatBot } from '@/components/chat-bot'
-import { ClientRouter, fade, slide } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
+import Seo from '@/components/seo.astro'
+import type { ComponentProps } from 'astro/types'
+import Navbar from '@/components/navbar.astro'
+import ArticleSchema from '@/components/article-schema.astro'
 
 export interface Props {
-	title: string
-	description: string
+	seo: ComponentProps<typeof Seo>
+	articleSchema?: ComponentProps<typeof ArticleSchema>
 }
 
-const { description, title } = Astro.props
-
-const navItems = [
-	{ name: 'home', href: '/' },
-	{ name: 'projects', href: '/projects' },
-	{ name: 'blog', href: '/blog' },
-	{ name: 'contact', href: '/contact' },
-]
+const { seo, articleSchema } = Astro.props
 ---
 
 <html lang='en'>
@@ -36,62 +31,20 @@ const navItems = [
 				}
 			})()
 		</script>
-
 		<meta charset='utf-8' />
 		<meta name='viewport' content='width=device-width' />
-		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
-		<title>{title}</title>
-		<meta name='description' content={description} />
+		<Seo {...seo} />
+		{articleSchema && <ArticleSchema {...articleSchema} />}
 		<ClientRouter />
 	</head>
-
 	<body>
-		<header class='sticky top-0 z-50 bg-background/75 backdrop-blur-sm'>
-			<div class='mx-auto max-w-3xl px-8 py-6'>
-				<nav class='flex items-center justify-between'>
-					<ul class='flex gap-4 sm:gap-8'>
-						{
-							navItems.map((nav) => (
-								<li class='link'>
-									<a
-										href={nav.href}
-										class={
-											Astro.url.pathname === nav.href ? 'underline font-semibold' : ''
-										}
-									>
-										{nav.name}
-									</a>
-								</li>
-							))
-						}
-					</ul>
-					<div class='flex gap-2 sm:gap-4'>
-						<ChatToggle client:idle />
-						<ThemeToggle client:idle />
-					</div>
-				</nav>
-			</div>
-		</header>
+		<Navbar />
 		<div class='mx-auto flex max-w-3xl flex-col px-8'>
 			<main class='grow'>
 				<slot />
 			</main>
 			<ChatBot client:idle />
 		</div>
-		<footer class='w-full pt-12'>
-			<div
-				class='mx-auto flex max-w-3xl flex-col items-center justify-center px-8 pb-32 sm:flex-row-reverse sm:justify-between'
-			>
-				<Socials />
-				<section class='mt-8 text-center sm:mt-0 sm:text-left'>
-					<p class='text-xs text-muted-foreground'>
-						&copy; {new Date().getFullYear()}{' '}
-						<a class='link' href='/'> {APP_NAME} </a>{' '}
-						|{' '}
-						<a class='link font-bold' href='/privacy'> privacy? </a>
-					</p>
-				</section>
-			</div>
-		</footer>
+		<Footer />
 	</body>
 </html>

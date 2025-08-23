@@ -1,0 +1,35 @@
+---
+import { ChatToggle, ThemeToggle } from './navbar.client'
+
+const navItems = [
+	{ name: 'home', href: '/' },
+	{ name: 'projects', href: '/projects' },
+	{ name: 'blog', href: '/blog' },
+	{ name: 'contact', href: '/contact' },
+]
+---
+
+<header class='sticky top-0 z-50 bg-background/75 backdrop-blur-sm'>
+	<div class='mx-auto max-w-3xl px-8 py-6'>
+		<nav class='flex items-center justify-between'>
+			<ul class='flex gap-4 sm:gap-8'>
+				{
+					navItems.map((nav) => (
+						<li class='link'>
+							<a
+								href={nav.href}
+								class={Astro.url.pathname === nav.href ? 'underline font-semibold' : ''}
+							>
+								{nav.name}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<div class='flex gap-2 sm:gap-4'>
+				<ChatToggle client:idle />
+				<ThemeToggle client:idle />
+			</div>
+		</nav>
+	</div>
+</header>

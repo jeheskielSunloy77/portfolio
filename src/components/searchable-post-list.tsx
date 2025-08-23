@@ -45,10 +45,7 @@ export function SearchablePostList({ posts }: Props) {
 			<Card>
 				<ul className='flex flex-col'>
 					{filtered.map((post, i) => (
-						<PostCard
-							post={post}
-							useSeparator={i !== 0 && i !== filtered.length - 1}
-						/>
+						<PostCard key={i} post={post} useSeparator={i !== 0} />
 					))}
 				</ul>
 			</Card>

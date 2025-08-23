@@ -20,12 +20,14 @@ export function PostCard({ post, useSeparator }: Props) {
 			: new Date(post.data.publishedAt)
 
 	return (
-		<li>
+		<li className='group'>
 			{useSeparator && <Separator />}
 			<a href={`/blog/${post.id}`}>
 				<div className='flex flex-col justify-between p-6 sm:flex-row sm:items-center'>
 					<div className='max-w-md md:max-w-lg'>
-						<h3 className='text-lg font-semibold'>{post.data.title}</h3>
+						<h3 className='text-lg font-semibold group-hover:underline'>
+							{post.data.title}
+						</h3>
 						<p className='mt-1 line-clamp-2 text-sm font-light text-muted-foreground'>
 							{post.data.summary}
 						</p>

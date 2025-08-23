@@ -9,8 +9,10 @@ import MainLayout from '../layouts/main.astro'
 ---
 
 <MainLayout
-	title={FULL_NAME}
-	description={`Welcome to ${APP_NAME}, the personal portfolio of ${FULL_NAME}. Explore my projects, blog posts, and more.`}
+	seo={{
+		title: FULL_NAME,
+		description: `Welcome to ${APP_NAME}, the personal portfolio of ${FULL_NAME}. Explore my projects, blog posts, and more.`,
+	}}
 >
 	<article class='flex flex-col gap-28'>
 		<HeroSection />

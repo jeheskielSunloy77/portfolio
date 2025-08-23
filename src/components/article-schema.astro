@@ -1,0 +1,63 @@
+---
+import { FULL_NAME, SOCIALS } from '@/lib/constants'
+
+export interface Props {
+	title: string
+	description: string
+	publishedTime: Date
+	modifiedTime?: Date
+	author?: string
+	authorUrl?: string
+	authorSocials?: string[]
+	image?: string[]
+	url: string
+	keywords: string[]
+	articleSection?: string
+}
+
+const {
+	title,
+	description,
+	publishedTime,
+	modifiedTime,
+	author = FULL_NAME,
+	authorUrl = '/',
+	authorSocials = SOCIALS.map((s) => s.href),
+	image,
+	url,
+	keywords,
+	articleSection,
+} = Astro.props
+
+const schema = {
+	'@context': 'https://schema.org',
+	'@type': 'BlogPosting',
+	headline: title,
+	description: description,
+	image: image?.map((img) => new URL(img, Astro.site)),
+	datePublished: publishedTime,
+	dateModified: modifiedTime || publishedTime,
+	author: {
+		'@type': 'Person',
+		name: author,
+		url: new URL(authorUrl, Astro.site),
+		sameAs: authorSocials,
+	},
+	publisher: {
+		'@type': 'Person',
+		name: author,
+		logo: {
+			'@type': 'ImageObject',
+			url: new URL('/images/logo.jpg', Astro.site),
+		},
+	},
+	mainEntityOfPage: {
+		'@type': 'WebPage',
+		'@id': url,
+	},
+	articleSection: articleSection,
+	keywords: keywords,
+}
+---
+
+<script type='application/ld+json' set:html={JSON.stringify(schema)} />

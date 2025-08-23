@@ -33,3 +33,14 @@ export type PostMetadata = {
 	publishedAt?: string
 	slug: string
 }
+
+export interface Skill {
+	name: string
+	description: string
+	imageUrl: string
+	imageDarkUrl?: string
+	bgColor: string
+	hide?: boolean
+}
+
+export type Theme = 'dark' | 'light'

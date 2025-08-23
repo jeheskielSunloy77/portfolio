@@ -21,25 +21,26 @@ const navItems = [
 
 <html lang='en'>
 	<head>
-		<meta charset='utf-8' />
-		<meta name='viewport' content='width=device-width' />
-		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
-		<title>{title}</title>
-		<meta name='description' content={description} />
-		<script>
+		<script is:inline>
 			;(() => {
-				const stored = localStorage.getItem('theme')
+				const theme = localStorage.getItem('theme')
 				const prefersDark = window.matchMedia(
 					'(prefers-color-scheme: dark)'
 				).matches
-				const theme = stored || (prefersDark ? 'dark' : 'light')
-				if (theme === 'dark') {
+				if (theme === 'dark' || (!theme && prefersDark)) {
 					document.documentElement.classList.add('dark')
 				} else {
 					document.documentElement.classList.remove('dark')
 				}
 			})()
 		</script>
+
+		<meta charset='utf-8' />
+		<meta name='viewport' content='width=device-width' />
+		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+		<title>{title}</title>
+		<meta name='description' content={description} />
+		
 	</head>
 	<body>
 		<header class='sticky top-0 z-50 bg-background/75 backdrop-blur-sm'>

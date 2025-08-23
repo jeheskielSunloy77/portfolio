@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
+import { useTheme } from '@/hooks/use-theme'
 import { $isChatBotVisible } from '@/stores/chat-bot'
 import { useStore } from '@nanostores/react'
 import { Bot, BotOff, Moon, Sun } from 'lucide-react'
-import { useEffect, useState } from 'react'
 
 export function ChatToggle() {
 	const isVisible = useStore($isChatBotVisible)
@@ -19,29 +19,8 @@ export function ChatToggle() {
 	)
 }
 
-type Theme = 'light' | 'dark'
-
 export function ThemeToggle() {
-	const [theme, setTheme] = useState<Theme>('light')
-
-	useEffect(() => {
-		const stored = localStorage.getItem('theme')
-		if (stored) {
-			setTheme(stored as Theme)
-			document.documentElement.classList.toggle('dark', stored === 'dark')
-		} else {
-			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-			setTheme(prefersDark ? 'dark' : 'light')
-			document.documentElement.classList.toggle('dark', prefersDark)
-		}
-	}, [])
-
-	function toggle() {
-		const newTheme = theme === 'light' ? 'dark' : 'light'
-		setTheme(newTheme)
-		document.documentElement.classList.toggle('dark', newTheme === 'dark')
-		localStorage.setItem('theme', newTheme)
-	}
+	const { theme, toggle } = useTheme()
 
 	return (
 		<Button size='icon' variant='ghost' onClick={toggle}>

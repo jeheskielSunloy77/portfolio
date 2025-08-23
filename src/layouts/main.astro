@@ -3,6 +3,7 @@ import Socials from '@/components/socials.astro'
 import '../styles/global.css'
 import { ChatToggle, ThemeToggle } from './main.client'
 import { APP_NAME } from '@/lib/constants'
+import { ChatBot } from '@/components/chat-bot'
 interface Props {
 	title: string
 	description: string
@@ -64,6 +65,7 @@ const navItems = [
 			<main class='grow'>
 				<slot />
 			</main>
+			<ChatBot client:idle />
 		</div>
 		<footer class='w-full pt-12'>
 			<div

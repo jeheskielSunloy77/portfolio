@@ -8,7 +8,11 @@ export interface Experience {
 	start?: string
 	end?: string
 	subtitle?: string
-	description?: string[]
+	description?: string
+	list?: {
+		isMarkdown?: boolean
+		content: string
+	}[]
 	links?: { icon: LucideIcon; href: string; name: string }[]
 }
 

@@ -1,6 +1,7 @@
 import { CAREERS, EDUCATIONS } from '@/lib/constants'
 import type { Experience } from '@/lib/types'
 import { AvatarFallback } from '@radix-ui/react-avatar'
+import Markdown from 'react-markdown'
 import { Avatar, AvatarImage } from './ui/avatar'
 import { Badge } from './ui/badge'
 import { Card, CardContent } from './ui/card'
@@ -59,14 +60,19 @@ function Timeline(props: { experiences: Experience[] }) {
 								{exp.title && (
 									<p className='text-sm text-muted-foreground'>{exp.title}</p>
 								)}
-								{exp.description && (
+								{exp.list && (
 									<ul className='ml-4 list-outside list-disc'>
-										{exp.description.map((desc, i) => (
+										{exp.list.map((l, i) => (
 											<li key={i} className='prose pr-8 text-sm dark:prose-invert'>
-												{desc}
+												{l.isMarkdown ? <Markdown>{l.content}</Markdown> : l.content}
 											</li>
 										))}
 									</ul>
+								)}
+								{exp.description && (
+									<p className='prose pr-8 text-sm dark:prose-invert'>
+										{exp.description}
+									</p>
 								)}
 							</div>
 							{!!exp.links?.length && (

@@ -4,7 +4,7 @@ import { Github, Globe, Linkedin, Mail } from 'lucide-react'
 export const BIRTH_DATE = new Date('2000-12-30')
 export const NICK_NAME = 'Jay'
 export const FULL_NAME = 'Jeheskiel Sunloy'
-export const BOT_NAME = 'jBot'
+export const BOT_NAME = 'J-Assist'
 export const EMAIL = 'jeheskielventiokysunloy@gmail.com'
 export const FEATURED_PROJECTS_LIMIT = 2
 export const FEATURED_POSTS_LIMIT = 3
@@ -29,26 +29,44 @@ export const SOCIALS = [
 ]
 export const CAREERS: Experience[] = [
 	{
-		name: 'digipémad',
-		href: 'https://digipemad.com',
-		title: 'Software Engineer',
-		logo: '/me/work3.webp',
-		start: 'Mar 2024',
-		description: [
-			'The child company of PéMad International Transearch, focusing on software development and IT solutions.',
-			'Working as a software engineer, focusing on full-stack development using Next.js and Node.js.',
-			'Building and maintaining web applications for various clients.',
-		],
-	},
-	{
 		name: 'PéMad International Transearch',
 		href: 'https://pemad.or.id',
 		title: 'Software Engineer',
-		logo: '/me/work2.svg',
+		logo: '/me/work3.svg',
 		start: 'Mar 2024',
-		description: [
-			'Working as a software engineer, building and maintaining internal applications.',
-			'Collaborating with cross-functional teams to deliver high-quality software solutions.',
+		list: [
+			{
+				content:
+					'Working as a software engineer, building and maintaining mobile and web applications.',
+			},
+			{
+				content:
+					'A part of the [digipémad](https://digipemad.com) team, a child company of PéMad that focuses on software development products and services.',
+				isMarkdown: true,
+			},
+			{
+				content:
+					'Collaborating with cross-functional teams to deliver high-quality software solutions.',
+			},
+		],
+	},
+	{
+		name: 'Refactory Internship',
+		href: 'https://refactory.id',
+		title: 'Software Engineer Intern',
+		logo: '/me/work2.jpg',
+		start: 'Jul 2022',
+		end: 'Sep 2022',
+		list: [
+			{ content: 'Internship program by Refactory' },
+			{
+				content: 'Intensive 7-week program focused on full-stack web development.',
+			},
+			{
+				content:
+					'Learned modern web technologies including React, Node.js, and Golang.',
+			},
+			{ content: 'Paired with experienced professionals to enhance my skills.' },
 		],
 	},
 	{
@@ -58,37 +76,36 @@ export const CAREERS: Experience[] = [
 		logo: '/me/work1.jpeg',
 		start: 'May 2022',
 		end: 'Jul 2022',
-		description: [
+		description:
 			'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase',
-		],
 	},
 ]
 
 export const EDUCATIONS: Experience[] = [
-	{
-		name: 'Refactory Bootcamp',
-		href: 'https://refactory.id',
-		title: 'Software Engineer Intern',
-		logo: '/me/education2.jpg',
-		start: 'Jul 2022',
-		end: 'Sep 2022',
-		description: [
-			'Bootcamp + Internship program by Refactory',
-			'Intensive 7-week program focused on full-stack web development.',
-			'Learned modern web technologies including React, Node.js, and Golang.',
-			'Worked on team projects to build real-world applications.',
-		],
-	},
 	{
 		name: 'Satya Wacana Christian University',
 		href: 'https://uksw.edu',
 		title: 'Bachelor of Science in Computer Science',
 		logo: '/me/education1.svg',
 		subtitle: 'Enroled on Aug 2017',
-		description: [
-			'Focused on algorithms, web development, and software engineering principles.',
-			'Completed a senior project on real‑time collaboration tools.',
+		list: [
+			{
+				content:
+					'Focused on algorithms, web development, and software engineering principles.',
+			},
+			{ content: 'Completed a senior project on real‑time collaboration tools.' },
 		],
+	},
+	{
+		name: 'SMA 1 Ambon',
+		href:
+			'https://sekolah.data.kemdikbud.go.id/index.php/chome/profil/4c8c345a-8d71-4e48-b706-b9bab6fdb2aa',
+		title: 'High School Diploma',
+		logo: '/me/education2.webp',
+		start: 'Jul 2014',
+		end: 'Jul 2017',
+		description:
+			'Not the best student, but always tried my best. Learned a lot of things during my time in high school and developed a strong interest in programming.',
 	},
 ]
 
@@ -116,7 +133,7 @@ export const PROJECTS: Project[] = [
 		description:
 			'A cross-platform mobile application for ordering coffee from local shops.',
 		tags: ['react-native', 'expo', 'supabase', 'typescript', 'tailwindcss'],
-		image: '/projects/coffeeShopApp.png',
+		image: '/projects/coffeeShopApp.webp',
 		links: [
 			{
 				name: 'Source',
@@ -127,16 +144,16 @@ export const PROJECTS: Project[] = [
 	},
 	{
 		name: 'Ecommerce App',
-		href: 'https://ecommerce-app.example',
+		href: 'https://github.com/jeheskielSunloy77/laravel-ecommerce',
 		description:
 			'The Ecommerce App is a full-stack web application built using PHP, Laravel, and Tailwindcss. The app is designed to provide users with a seamless shopping experience, from browsing products to placing orders.',
 		tags: ['php', 'laravel', 'tailwindcss'],
 		image: '/projects/ecommerce.webp',
 		links: [
 			{
-				name: 'Demo',
-				href: 'https://ecommerce-app.example',
-				icon: Globe,
+				name: 'Source',
+				href: 'https://github.com/jeheskielSunloy77/laravel-ecommerce',
+				icon: Github,
 			},
 		],
 	},

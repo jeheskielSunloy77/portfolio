@@ -83,11 +83,11 @@ const t = dictionary[Astro.params.lang]
 		<header class='space-y-3'>
 			<h1 class='text-5xl font-extrabold'>{post.data.title}</h1>
 			<div class='flex items-center gap-4'>
-				<p class='text-xs text-muted-foreground'>
+				<p class='text-sm text-muted-foreground'>
 					{formatDate(post.data.publishedAt, 'MMMM dd, yyyy')}
 				</p>
 				<span class='text-muted-foreground'>•</span>
-				<p class='text-xs text-muted-foreground'>
+				<p class='text-sm text-muted-foreground'>
 					{post.data.readTime}
 					{t['minutes read']}
 				</p>

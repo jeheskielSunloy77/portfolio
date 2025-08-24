@@ -1,12 +1,19 @@
 ---
+import { CopyToClipboardButton } from '@/components/copy-to-clipboard-button'
 import LinkWithIcon from '@/components/link-with-icon.astro'
 import { dictionary } from '@/i18n/dictionary'
 import type { Language } from '@/i18n/i18n'
 import MainLayout from '@/layouts/main.astro'
+import { getPosts } from '@/posts/posts'
 import type { CollectionEntry } from 'astro:content'
 import { getCollection, render } from 'astro:content'
 import { formatDate } from 'date-fns'
-import { ArrowLeftIcon } from 'lucide-react'
+import {
+	ArrowLeftIcon,
+	FacebookIcon,
+	LinkedinIcon,
+	TwitterIcon,
+} from 'lucide-react'
 
 export const prerender = true
 
@@ -49,6 +56,27 @@ const seo = {
 } as const
 
 const t = dictionary[Astro.params.lang]
+
+const relatedPosts = await getPosts({
+	limit: 2,
+	filter: (p) =>
+		p.id !== post.id &&
+		p.data.lang === post.data.lang &&
+		(post.data.related?.includes(p.id.split('/')[1]) ||
+			post.data.tags.some((tag) => p.data.tags.includes(tag))),
+})
+
+const shareText = `Check out this article: ${post.data.title} - ${seo.canonical}`
+const encodedShareText = encodeURIComponent(shareText)
+const encodedUrl = encodeURIComponent(seo.canonical)
+const encodedTitle = encodeURIComponent(post.data.title)
+const encodedDescription = encodeURIComponent(post.data.description)
+
+const shareURL = {
+	twitter: `https://twitter.com/intent/tweet?text=${encodedShareText}`,
+	linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}&summary=${encodedDescription}&source=${encodedUrl}`,
+	facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+}
 ---
 
 <MainLayout
@@ -97,5 +125,77 @@ const t = dictionary[Astro.params.lang]
 		<main class='prose dark:prose-invert'>
 			<Content />
 		</main>
+
+		<div
+			class='flex flex-col items-center gap-4 rounded-lg py-6 bg-muted/30 border'
+		>
+			<p class='text-lg font-semibold text-center'>
+				Enjoyed this article? Share it with your network!
+			</p>
+			<div class='flex gap-4'>
+				<a
+					href={shareURL.twitter}
+					target='_blank'
+					rel='noopener noreferrer'
+					class='p-2 rounded-full bg-muted border hover:border-transparent hover:bg-blue-500 hover:text-white transition-colors'
+				>
+					<TwitterIcon className='size-5' />
+				</a>
+				<a
+					href={shareURL.linkedIn}
+					target='_blank'
+					rel='noopener noreferrer'
+					class='p-2 rounded-full bg-muted border hover:border-transparent hover:bg-blue-800 hover:text-white transition-colors'
+				>
+					<LinkedinIcon className='size-5' />
+				</a>
+				<a
+					href={shareURL.facebook}
+					target='_blank'
+					rel='noopener noreferrer'
+					class='p-2 rounded-full bg-muted border hover:border-transparent hover:bg-blue-700 hover:text-white transition-colors'
+				>
+					<FacebookIcon className='size-5' />
+				</a>
+				<CopyToClipboardButton url={seo.canonical} client:idle />
+			</div>
+		</div>
+
+		{
+			relatedPosts.length > 0 && (
+				<section class='mt-12'>
+					<h2 class='mb-6'>{t['related posts']}.</h2>
+					<div class='grid gap-6 md:grid-cols-2'>
+						{relatedPosts.map((relatedPost) => (
+							<a
+								href={`/${Astro.params.lang}/blog/${relatedPost.id.split('/')[1]}`}
+								class='group flex flex-col gap-2 rounded-lg border p-4 transition-colors hover:bg-muted/50'
+							>
+								{relatedPost.data.image && (
+									<div class='relative h-40 w-full overflow-hidden rounded-md'>
+										<img
+											src={relatedPost.data.image.src}
+											alt={relatedPost.data.title}
+											class='object-cover'
+										/>
+									</div>
+								)}
+								<h3 class='text-xl font-bold group-hover:underline'>
+									{relatedPost.data.title}
+								</h3>
+								<div class='mt-auto flex items-center gap-2 text-xs text-muted-foreground'>
+									<p>{formatDate(relatedPost.data.publishedAt, 'MMMM dd, yyyy')}</p>
+									<span>•</span>
+									<p>
+										{relatedPost.data.readTime}
+										{t['minutes read']}
+									</p>
+								</div>
+							</a>
+						))}
+					</div>
+				</section>
+			)
+		}
 	</article>
 </MainLayout>

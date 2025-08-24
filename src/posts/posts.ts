@@ -1,10 +1,14 @@
 import type { Language } from '@/i18n/i18n'
-import { getCollection } from 'astro:content'
+import { getCollection, type CollectionEntry } from 'astro:content'
 
-export async function getPosts(params: { lang: Language; limit?: number }) {
+export async function getPosts(params: {
+	lang?: Language
+	limit?: number
+	filter?: (post: CollectionEntry<'post'>) => any
+}) {
 	const posts = await getCollection(
 		'post',
-		(post) => post.data.lang === params.lang
+		params.filter ?? ((post) => post.data.lang === params.lang)
 	)
 
 	const sorted = posts.sort(

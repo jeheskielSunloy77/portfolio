@@ -192,6 +192,7 @@ export const dictionary = {
 		'CRUD App': 'CRUD App',
 		'PWA Weather App': 'PWA Weather App',
 		'IAKN Kupang Profile Website': 'IAKN Kupang Profile Website',
+		'related posts': 'related posts',
 	},
 	id: {
 		'minutes read': 'menit baca',
@@ -386,5 +387,6 @@ export const dictionary = {
 		'CRUD App': 'Aplikasi CRUD',
 		'PWA Weather App': 'Aplikasi Cuaca PWA',
 		'IAKN Kupang Profile Website': 'Website Profil IAKN Kupang',
+		'related posts': 'postingan terkait',
 	},
 } as const

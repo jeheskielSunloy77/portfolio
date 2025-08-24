@@ -15,6 +15,7 @@ export const post = defineCollection({
 			image: image().optional(),
 			lang: z.enum(['en', 'id']),
 			readTime: z.coerce.number().min(1),
+			related: z.array(z.string()).optional(),
 		}),
 })
 

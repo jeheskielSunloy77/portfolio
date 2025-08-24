@@ -45,7 +45,7 @@ export function ThemeToggle() {
 export function LanguageToggle(props: { lang: Language; pathname: string }) {
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger>
+			<DropdownMenuTrigger asChild>
 				<Button size='icon' variant='ghost'>
 					<Languages />
 					<span className='sr-only'>Language Toggle</span>

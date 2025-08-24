@@ -6,6 +6,7 @@ tags: ['astro', 'nextjs', 'react', 'performance', 'seo']
 keywords: 'astro js portfolio, astro vs nextjs, astro performance, nextjs static site, react with astro, astro seo boost, astro islands architecture, astro site speed, astro for portfolio, nextjs alternatives'
 readTime: 5
 lang: en
+related: ['redesigning-my-portfolio-making-space-for-what-matters']
 ---
 
 If you’ve ever built a portfolio as a developer, you probably know the cycle: you want it to look cool, show off your skills, and maybe sneak in some fancy animations ✨. For the past couple of years, I’ve always reached for **Next.js** whenever I needed to build something—portfolio, dashboard, app, you name it.

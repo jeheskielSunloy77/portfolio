@@ -1,5 +1,6 @@
 export const dictionary = {
 	en: {
+		'minutes read': 'minutes read',
 		'Search for something...': 'Search for something...',
 		'Contact Me': 'Contact Me',
 		'For inquiries, collaborations, or just to say hello, use the form below to reach out to me directly. I look forward to connecting with you!':
@@ -99,8 +100,8 @@ export const dictionary = {
 		'Welcome to {APP_NAME}, the personal portfolio of {FULL_NAME}. Explore my projects, blog posts, and more.':
 			'Welcome to {APP_NAME}, the personal portfolio of {FULL_NAME}. Explore my projects, blog posts, and more.',
 		'hi {NICK_NAME} here. 👋': 'hi {NICK_NAME} here. 👋',
-		'yo software engineer from Indonesia 🇮🇩':
-			'yo software engineer from Indonesia 🇮🇩',
+		'{AGE} yo software engineer hailing from Indonesia 🇮🇩':
+			'{AGE} yo software engineer hailing from Indonesia 🇮🇩',
 		'Backend by trade, full-stack by passion. I build and self-host the lot.':
 			'Backend by trade, full-stack by passion. I build and self-host the lot.',
 		'For Q&A, raise a ticket with': 'For Q&A, raise a ticket with',
@@ -119,8 +120,6 @@ export const dictionary = {
 		'Recent Posts': 'Recent Posts',
 		'Read my latest articles on web development, programming, and technology.':
 			'Read my latest articles on web development, programming, and technology.',
-		'Chat Toggle': 'Chat Toggle',
-		'Theme Toggle': 'Theme Toggle',
 		'Chat with': 'Chat with',
 		'Clear chat': 'Clear chat',
 		'Ask something...': 'Ask something...',
@@ -186,8 +185,16 @@ export const dictionary = {
 			'A Fullstack web app for IAKN Kupang University build with Astro, Tailwindcss and Postgresql.',
 		Source: 'Source',
 		Demo: 'Demo',
+		'Academic Information System': 'Academic Information System',
+		'Cross Platform Coffee Shop App': 'Cross Platform Coffee Shop App',
+		'Ecommerce App': 'Ecommerce App',
+		'Ecommerce Web Scraper': 'Ecommerce Web Scraper',
+		'CRUD App': 'CRUD App',
+		'PWA Weather App': 'PWA Weather App',
+		'IAKN Kupang Profile Website': 'IAKN Kupang Profile Website',
 	},
 	id: {
+		'minutes read': 'menit baca',
 		'Search for something...': 'Cari sesuatu...',
 		'Contact Me': 'Hubungi Saya',
 		'For inquiries, collaborations, or just to say hello, use the form below to reach out to me directly. I look forward to connecting with you!':
@@ -287,8 +294,8 @@ export const dictionary = {
 		'Welcome to {APP_NAME}, the personal portfolio of {FULL_NAME}. Explore my projects, blog posts, and more.':
 			'Selamat datang di {APP_NAME}, portofolio pribadi {FULL_NAME}. Jelajahi proyek-proyek, postingan blog, dan lainnya.',
 		'hi {NICK_NAME} here. 👋': 'halo {NICK_NAME} di sini. 👋',
-		'yo software engineer from Indonesia 🇮🇩':
-			'yo, insinyur perangkat lunak dari Indonesia 🇮🇩',
+		'{AGE} yo software engineer hailing from Indonesia 🇮🇩':
+			'sofware engineer {AGE} tahun dari Indonesia 🇮🇩',
 		'Backend by trade, full-stack by passion. I build and self-host the lot.':
 			'Backend secara profesi, full-stack karena passion. Saya membangun dan mengelola sendiri semuanya.',
 		'For Q&A, raise a ticket with': 'Untuk tanya jawab, ajukan tiket ke',
@@ -307,8 +314,6 @@ export const dictionary = {
 		'Recent Posts': 'Postingan Terbaru',
 		'Read my latest articles on web development, programming, and technology.':
 			'Baca artikel terbaru saya tentang pengembangan web, pemrograman, dan teknologi.',
-		'Chat Toggle': 'Alihkan Chat',
-		'Theme Toggle': 'Alihkan Tema',
 		'Chat with': 'Chat dengan',
 		'Clear chat': 'Bersihkan chat',
 		'Ask something...': 'Tanyakan sesuatu...',
@@ -374,5 +379,12 @@ export const dictionary = {
 			'Aplikasi web Fullstack untuk Universitas IAKN Kupang yang dibangun dengan Astro, Tailwindcss, dan Postgresql.',
 		Source: 'Sumber',
 		Demo: 'Demo',
+		'Academic Information System': 'Sistem informasi Akademik',
+		'Cross Platform Coffee Shop App': 'Aplikasi Kafe Cross Platform',
+		'Ecommerce App': 'Aplikasi Ecommerce',
+		'Ecommerce Web Scraper': 'Web Scraper Ecommerce',
+		'CRUD App': 'Aplikasi CRUD',
+		'PWA Weather App': 'Aplikasi Cuaca PWA',
+		'IAKN Kupang Profile Website': 'Website Profil IAKN Kupang',
 	},
 } as const

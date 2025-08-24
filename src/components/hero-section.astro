@@ -41,8 +41,12 @@ const t = dictionary[Astro.props.lang]
 		</h1>
 
 		<p class='mt-2 whitespace-nowrap text-sm font-medium sm:text-base'>
-			{getAge(BIRTH_DATE)}
-			{t['yo software engineer from Indonesia 🇮🇩']}
+			{
+				t['{AGE} yo software engineer hailing from Indonesia 🇮🇩'].replace(
+					'{AGE}',
+					String(getAge(BIRTH_DATE))
+				)
+			}
 		</p>
 
 		<p class='mt-4 max-w-sm text-balance text-sm sm:text-base'>

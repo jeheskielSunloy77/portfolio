@@ -31,7 +31,7 @@ const t = dictionary[Astro.props.lang]
 						<a href={project.href || project.image}>
 							<img
 								src={project.image}
-								alt={project.name}
+								alt={t[project.name]}
 								width={500}
 								height={300}
 								class='h-40 w-full object-cover object-top'
@@ -40,7 +40,7 @@ const t = dictionary[Astro.props.lang]
 					)}
 				</CardHeader>
 				<CardContent className='flex flex-col gap-2'>
-					<CardTitle>{project.name}</CardTitle>
+					<CardTitle>{t[project.name]}</CardTitle>
 					<div class='max-w-full text-pretty font-sans text-xs text-muted-foreground'>
 						{t[project.description]}
 					</div>

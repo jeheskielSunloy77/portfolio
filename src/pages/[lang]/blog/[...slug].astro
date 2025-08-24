@@ -1,6 +1,7 @@
 ---
 import LinkWithIcon from '@/components/link-with-icon.astro'
-import { LANGUAGES } from '@/i18n/i18n'
+import { dictionary } from '@/i18n/dictionary'
+import type { Language } from '@/i18n/i18n'
 import MainLayout from '@/layouts/main.astro'
 import type { CollectionEntry } from 'astro:content'
 import { getCollection, render } from 'astro:content'
@@ -10,12 +11,14 @@ import { ArrowLeftIcon } from 'lucide-react'
 export async function getStaticPaths() {
 	const posts = await getCollection('post')
 
-	return posts.flatMap((post) =>
-		LANGUAGES.map((lang) => ({
-			params: { slug: post.id, lang },
+	return posts.map((post) => {
+		const [lang, slug] = post.id.split('/') as [Language, string]
+
+		return {
+			params: { slug, lang },
 			props: post,
-		}))
-	)
+		}
+	})
 }
 
 export type Props = CollectionEntry<'post'>
@@ -42,6 +45,8 @@ const seo = {
 	ogType: 'article',
 	twitterCard: 'summary_large_image',
 } as const
+
+const t = dictionary[Astro.params.lang]
 ---
 
 <MainLayout
@@ -73,11 +78,18 @@ const seo = {
 			)
 		}
 
-		<header>
+		<header class='space-y-3'>
 			<h1 class='text-5xl font-extrabold'>{post.data.title}</h1>
-			<p class='mt-2 text-xs text-muted-foreground'>
-				{formatDate(post.data.publishedAt, 'MMMM dd, yyyy')}
-			</p>
+			<div class='flex items-center gap-4'>
+				<p class='text-xs text-muted-foreground'>
+					{formatDate(post.data.publishedAt, 'MMMM dd, yyyy')}
+				</p>
+				<span class='text-muted-foreground'>•</span>
+				<p class='text-xs text-muted-foreground'>
+					{post.data.readTime}
+					{t['minutes read']}
+				</p>
+			</div>
 		</header>
 
 		<main class='prose dark:prose-invert'>

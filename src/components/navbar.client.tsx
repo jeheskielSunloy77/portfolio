@@ -1,12 +1,17 @@
 import { Button } from '@/components/ui/button'
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { useTheme } from '@/hooks/use-theme'
-import { dictionary } from '@/i18n/dictionary'
-import { DEFAULT_LANGUAGE } from '@/i18n/i18n'
+import { LANGUAGE_MAP, LANGUAGES, type Language } from '@/i18n/i18n'
 import { $isChatBotVisible } from '@/stores/chat-bot'
 import { useStore } from '@nanostores/react'
-import { Bot, BotOff, Moon, Sun } from 'lucide-react'
-
-const t = dictionary[DEFAULT_LANGUAGE]
+import { Bot, BotOff, Languages, Moon, Sun } from 'lucide-react'
 
 export function ChatToggle() {
 	const isVisible = useStore($isChatBotVisible)
@@ -18,7 +23,7 @@ export function ChatToggle() {
 	return (
 		<Button size='icon' variant='ghost' onClick={toggle}>
 			{isVisible ? <Bot className='size-5' /> : <BotOff className='size-5' />}
-			<span className='sr-only'>{t['Chat Toggle']}</span>
+			<span className='sr-only'>Chat Toggle</span>
 		</Button>
 	)
 }
@@ -33,7 +38,30 @@ export function ThemeToggle() {
 			) : (
 				<Moon className='size-4 text-indigo-500' />
 			)}
-			<span className='sr-only'>{t['Theme Toggle']}</span>
+			<span className='sr-only'>Theme Toggle</span>
 		</Button>
+	)
+}
+export function LanguageToggle(props: { lang: Language; pathname: string }) {
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger>
+				<Button size='icon' variant='ghost'>
+					<Languages />
+					<span className='sr-only'>Language Toggle</span>
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent>
+				<DropdownMenuLabel>Languages</DropdownMenuLabel>
+				<DropdownMenuSeparator />
+				{LANGUAGES.map((lang) => (
+					<DropdownMenuItem key={lang} asChild>
+						<a href={`/${lang}${props.pathname}`}>
+							{LANGUAGE_MAP[lang].emoji} {LANGUAGE_MAP[lang].name}
+						</a>
+					</DropdownMenuItem>
+				))}
+			</DropdownMenuContent>
+		</DropdownMenu>
 	)
 }

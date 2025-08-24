@@ -1,7 +1,7 @@
 ---
 import { dictionary } from '@/i18n/dictionary'
-import { type Language } from '@/i18n/i18n'
-import { ChatToggle, ThemeToggle } from './navbar.client'
+import { type Language, getPathnameWithoutLang } from '@/i18n/i18n'
+import { ChatToggle, LanguageToggle, ThemeToggle } from './navbar.client'
 
 export interface Props {
 	lang: Language
@@ -16,6 +16,8 @@ const navItems = [
 	{ label: t['blog'], href: `/${lang}/blog` },
 	{ label: t['contact'], href: `/${lang}/contact` },
 ]
+
+const pathname = Astro.url.pathname
 ---
 
 <header class='sticky top-0 z-50 bg-background/75 backdrop-blur-sm'>
@@ -23,20 +25,32 @@ const navItems = [
 		<nav class='flex items-center justify-between'>
 			<ul class='flex gap-4 sm:gap-8'>
 				{
-					navItems.map((nav) => (
-						<li
-							class={
-								Astro.url.pathname === nav.href
-									? 'underline font-semibold'
-									: 'hover:text-foreground hover:underline'
-							}
-						>
-							<a href={nav.href}>{nav.label}</a>
-						</li>
-					))
+					navItems.map((nav) => {
+						const isHome = nav.href === `/${lang}`
+						const isActive = isHome
+							? pathname === nav.href || pathname === `${nav.href}/`
+							: pathname.startsWith(nav.href)
+
+						return (
+							<li
+								class={
+									isActive
+										? 'underline font-semibold'
+										: 'hover:text-foreground hover:underline'
+								}
+							>
+								<a href={nav.href}>{nav.label}</a>
+							</li>
+						)
+					})
 				}
 			</ul>
 			<div class='flex gap-2 sm:gap-4'>
+				<LanguageToggle
+					lang={lang}
+					pathname={getPathnameWithoutLang(Astro.url.pathname, lang)}
+					client:idle
+				/>
 				<ChatToggle client:idle />
 				<ThemeToggle client:idle />
 			</div>

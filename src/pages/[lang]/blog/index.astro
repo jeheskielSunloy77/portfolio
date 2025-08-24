@@ -3,14 +3,11 @@ import { SearchablePostList } from '@/components/searchable-post-list'
 import { dictionary } from '@/i18n/dictionary'
 import { getLangPaths } from '@/i18n/i18n'
 import MainLayout from '@/layouts/main.astro'
-import { getCollection } from 'astro:content'
+import { getPosts } from '@/posts/posts'
 
 export const getStaticPaths = getLangPaths
 
-const posts = await getCollection(
-	'post',
-	(post) => post.data.lang === Astro.params.lang
-)
+const posts = await getPosts({ lang: Astro.params.lang })
 
 const t = dictionary[Astro.params.lang]
 ---

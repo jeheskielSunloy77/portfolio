@@ -4,6 +4,7 @@ publishedAt: 2025-01-15
 description: Learn how to structure Go applications with clean architecture principles that actually work. Discover why pure Clean Architecture doesn't fit Go, and get a practical approach using services and repositories that keeps code maintainable without over-engineering. Includes real code examples and testing strategies.
 tags: ['go', 'design patterns', 'clean architecture']
 keywords: 'golang architecture, go clean code, golang project structure, go services pattern, golang repositories, go best practices, golang testing, go code organization, clean architecture go, golang design patterns'
+readTime: 9
 lang: en
 ---
 

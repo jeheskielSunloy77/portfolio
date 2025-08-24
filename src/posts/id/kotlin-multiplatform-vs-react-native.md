@@ -1,6 +1,6 @@
 ---
-title: 'Kotlin Multiplatform vs React Native: Which Cross-Platform Framework Should You Choose? 🤔'
-description: 'Honest comparison of Kotlin Multiplatform vs React Native from a developer who has used both. Performance, DX, and real-world insights to help you choose the right cross-platform framework in 2025.'
+title: 'Kotlin Multiplatform vs React Native: Framework Cross-Platform Mana yang Sebaiknya Kamu Pilih? 🤔'
+description: 'Perbandingan jujur Kotlin Multiplatform vs React Native dari seorang developer yang pernah menggunakan keduanya. Performa, DX, dan wawasan dari dunia nyata untuk membantumu memilih framework cross-platform yang tepat di tahun 2025.'
 publishedAt: '2025-06-22'
 tags:
  [
@@ -13,168 +13,165 @@ tags:
   'Native Development',
  ]
 keywords: 'Kotlin Multiplatform, React Native, cross-platform development, mobile development, KMP vs RN, mobile frameworks 2025, native performance, JavaScript bridge, mobile app development'
+readTime: 8
 lang: id
 ---
 
-# Kotlin Multiplatform vs React Native: Which Cross-Platform Framework Should You Choose? 🤔
+Halo para dev\! 👋
 
-_Published on [Date] | 8 min read_
+Jadi kamu lagi coba milih framework cross-platform dan bingung antara React Native dan Kotlin Multiplatform (KMP)? Tenang, aku udah pernah di posisimu, lengkap dengan tumpukan tab Stack Overflow sebagai buktinya 😅
 
-Hey devs! 👋
+Aku udah ngelewatin perjalanan ini: dari web dev React → React Native → Android native dengan Kotlin → dan sekarang KMP. Percaya deh, aku udah ngerasain sakit dan senangnya dari tiap pendekatan. Biar aku jabarin apa yang udah aku pelajari supaya kamu nggak perlu ngulangin kesalahan yang sama.
 
-So you're trying to pick a cross-platform framework and you're stuck between React Native and Kotlin Multiplatform (KMP)? Been there, done that, got the stack overflow tabs to prove it 😅
+## TL;DR untuk Developer yang Nggak Sabaran 🏃‍♂️
 
-I've been on this journey from React web dev → React Native → native Android with Kotlin → and now KMP. Trust me, I've felt the pain and glory of each approach. Let me break down what I've learned so you don't have to make the same mistakes I did.
+**React Native**: Cocok banget buat web dev, prototyping cepat, ekosistem raksasa. _Bridge_ JavaScript-nya kadang bisa... _pedes_ 🌶️
+**Kotlin Multiplatform**: Cuma berbagi _business logic_, UI tetap native, performa lebih baik. Kurva belajarnya lebih terjal, ekosistem lebih kecil.
 
-## TL;DR for the Impatient Devs 🏃‍♂️
+Tapi jangan kemana-mana dulu, karena detail pentingnya ada di implementasi\!
 
-**React Native**: Great for web devs, fast prototyping, huge ecosystem. JavaScript bridge can be... _spicy_ 🌶️
-**Kotlin Multiplatform**: Share business logic only, native UI, better performance. Steeper learning curve, smaller ecosystem.
+## Perjalanan Karierku (Atau: Bagaimana Aku Berhenti Khawatir dan Mulai Mencintai Mobile) 📱
 
-But stick around for the juicy details because the devil's in the implementation!
+Awalnya aku seorang React dev (kayak separuh dari kita semua, jujur aja). React Native terasa seperti pilihan yang paling jelas – bahasa yang sama, pola yang mirip, katanya "belajar sekali, tulis di mana saja". Katanya bakal seru 🤡
 
-## My Developer Journey (Or: How I Learned to Stop Worrying and Love Mobile) 📱
+**Plot twist**: Ternyata emang seru\! Sampai akhirnya nggak seru lagi.
 
-Started as a React dev (like half of us, let's be real). React Native felt like the obvious choice - same language, similar patterns, "learn once, write anywhere" they said. It'll be fun, they said 🤡
+Lalu aku terjun ke pengembangan Android native dengan Kotlin dan ya ampun, perbedaan performanya itu _juara banget_ 👨‍🍳💋. Tapi harus me-maintain dua codebase? Batinku menangis.
 
-**Plot twist**: It was actually pretty fun! Until it wasn't.
+Lalu datanglah Kotlin Multiplatform. Langsung pecah banget di kepala 🤯
 
-Then I dove into native Android development with Kotlin and holy moly, the performance difference was _chef's kiss_ 👨‍🍳💋. But maintaining two codebases? My soul was crying.
+## React Native: Yang Bagus, Yang Jelek, dan Yang "Kok Gini Sih?"
 
-Enter Kotlin Multiplatform. Mind = blown 🤯
+### Yang Bagus-Bagus ✅
 
-## React Native: The Good, Bad, and the "Why is This Happening?"
+**Akrab dengan JavaScript**: Kalau kamu datang dari dunia web dev, RN terasa seperti di rumah. JavaScript yang itu-itu lagi, pola React yang familiar, bahkan tools debugging yang mirip.
 
-### The Good Stuff ✅
+**Pengembangan Cepat**: Mau bikin prototipe dengan cepat? RN adalah teman baikmu. _Hot reload_-nya beneran ngebut, dan kamu bisa melakukan iterasi dengan sangat cepat.
 
-**JavaScript Familiarity**: If you're coming from web dev, RN feels like home. Same old JS, familiar React patterns, even similar debugging tools.
+**Ekosistemnya RAKSASA**: Butuh library? Mungkin ada 5 jenis. Butuh solusi untuk kasus aneh? Seseorang di Stack Overflow udah nemuin solusinya 3 tahun yang lalu.
 
-**Rapid Development**: Want to prototype something fast? RN is your friend. Hot reload is actually hot, and you can iterate stupidly fast.
+**Satu Codebase**: Tulis sekali, deploy ke iOS dan Android. Impian, kan? Ya... kurang lebih begitu 😬
 
-**Ecosystem is MASSIVE**: Need a library? There's probably 5 of them. Need a weird edge case solution? Someone on Stack Overflow already solved it 3 years ago.
+### Yang Kurang Bagus ❌
 
-**Single Codebase**: Write once, deploy to iOS and Android. The dream, right? Well... mostly 😬
+**Si _Bridge_**: _Bridge_ dari JavaScript ke native itu? Rasanya kayak punya penerjemah yang kadang suka ngarang. _Performance bottleneck_ itu nyata, terutama untuk animasi kompleks atau pemrosesan data yang berat.
 
-### The Not-So-Good Stuff ❌
+**Perbedaan Platform**: Slogan "tulis sekali, jalankan di mana saja" cepat berubah jadi "tulis sekali, debug di mana-mana". iOS dan Android punya perilaku yang berbeda, dan kamu akan menghabiskan waktu menangani kasus-kasus spesifik di tiap platform.
 
-**The Bridge**: That JavaScript-to-native bridge? It's like having a translator who sometimes just makes stuff up. Performance bottlenecks are real, especially with complex animations or heavy data processing.
+**Ketergantungan Modul Native**: Butuh sesuatu yang nggak disediakan inti RN? Semoga ada modul komunitas yang bagus, atau ujung-ujungnya kamu nulis kode native juga.
 
-**Platform Differences**: "Write once, run anywhere" becomes "write once, debug everywhere" real quick. iOS and Android have different behaviors, and you'll spend time handling platform-specific edge cases.
+**Ukuran Bundle**: Ukuran aplikasimu bisa jadi bengkak. Pengguna dengan ponsel lama atau penyimpanan terbatas nggak akan senang.
 
-**Native Module Dependency**: Need something the core RN doesn't provide? Hope there's a good community module, or you're writing native code anyway.
+### Kapan React Native Jadi Pilihan Terbaik 🌟
 
-**Bundle Size**: Your app size can get chunky. Users with older phones or limited storage aren't always happy.
+Sempurna untuk:
 
-### When React Native Shines 🌟
+- MVP dan prototipe
+- Aplikasi yang sebagian besar operasinya adalah CRUD (Create, Read, Update, Delete)
+- Tim dengan latar belakang React/JS yang kuat
+- Startup yang harus bergerak cepat
+- Aplikasi yang tidak butuh banyak fitur native yang berat
 
-Perfect for:
+## Android Native dengan Kotlin: Si Monster Performa 🦍
 
-- MVPs and prototypes
-- Apps that are mostly CRUD operations
-- Teams with strong React/JS background
-- Startups that need to move fast
-- Apps that don't need heavy native features
+### Yang Bagus-Bagus ✅
 
-## Native Android with Kotlin: The Performance Beast 🦍
+**Performa**: Ini native, bro\! Nggak ada _bridge_, nggak ada lapisan terjemahan, cuma kode murni yang dikompilasi dan berjalan langsung di perangkat keras.
 
-### The Good Stuff ✅
+**Fitur Platform**: Mau pakai API Android terbaru? Sudah tersedia di hari pertama. API Camera2? Sensor gerak? Proses di latar belakang? Semua tersedia tanpa harus nunggu seseorang membuatkan _bridge_-nya.
 
-**Performance**: It's native, baby! No bridge, no translation layer, just pure compiled code running on the metal.
+**Tooling**: Android Studio itu beneran bagus. Debugger-nya berfungsi, alat profiling sudah terintegrasi, dan emulatornya nggak bikin kamu pengen banting laptop.
 
-**Platform Features**: Want to use the latest Android API? It's there day one. Camera2 API? Motion sensors? Background processing? All available without waiting for someone to write a bridge.
+**Type Safety**: Fitur _null safety_ dan sistem tipe data Kotlin bisa menangkap banyak bug saat kompilasi. Rasanya kayak punya peninjau kode yang sangat teliti tapi benar-benar membantu.
 
-**Tooling**: Android Studio is legitimately good. The debugger actually works, profiling tools are built-in, and the emulator doesn't make you want to throw your laptop.
+### Yang Kurang Bagus ❌
 
-**Type Safety**: Kotlin's null safety and type system catch so many bugs at compile time. It's like having a really pedantic code reviewer who's actually helpful.
+**Dua Codebase**: Mau versi iOS juga? Artinya kamu harus me-maintain codebase Swift/Objective-C yang terpisah. Kecepatan kerjamu langsung berkurang setengahnya.
 
-### The Not-So-Good Stuff ❌
+**Kurva Belajar**: Kalau kamu dari web dev, _Android lifecycle_, Gradle, dan sintaks Kotlin bisa terasa memusingkan pada awalnya.
 
-**Two Codebases**: Want iOS too? That's a whole separate Swift/Objective-C codebase to maintain. Your velocity just got cut in half.
+**Kecepatan Pengembangan**: Pengembangan native biasanya lebih lambat daripada cross-platform untuk membuat sesuatu bisa berjalan di kedua platform.
 
-**Learning Curve**: If you're coming from web dev, the Android lifecycle, Gradle, and Kotlin syntax can be overwhelming at first.
+### Kapan Waktunya Pakai Native Android 💪
 
-**Development Speed**: Native development is typically slower than cross-platform for getting something working on both platforms.
+Sempurna untuk:
 
-### When Native Android is the Move 💪
+- Aplikasi yang performanya sangat krusial (game, pemrosesan media, animasi kompleks)
+- Aplikasi yang sangat bergantung pada fitur spesifik platform
+- Proyek jangka panjang di mana maintenance lebih penting daripada kecepatan rilis
+- Saat kamu butuh pengalaman pengguna yang super mulus 60fps
 
-Perfect for:
+## Kotlin Multiplatform: Solusi Terbaik dari Dua Dunia? 🌍
 
-- Performance-critical apps (games, media processing, complex animations)
-- Apps that heavily use platform-specific features
-- Long-term projects where maintenance matters more than speed to market
-- When you need that buttery smooth 60fps experience
+Nah, di sinilah bagian menariknya. KMP tidak mencoba menjadi seperti React Native. KMP mengambil pendekatan yang sama sekali berbeda.
 
-## Kotlin Multiplatform: The Best of Both Worlds? 🌍
+### Pergeseran Filosofi 🧠
 
-Now here's where it gets interesting. KMP isn't trying to be React Native. It's taking a different approach entirely.
+Daripada "tulis UI sekali, jalankan di mana saja," KMP berkata "bagikan _business logic_-mu, pertahankan UI native."
 
-### The Philosophy Shift 🧠
+Logika jaringan, pemrosesan data, aturan bisnis, validasi – semua itu ada di dalam kode Kotlin yang dibagikan. UI-mu tetap native di masing-masing platform.
 
-Instead of "write UI once, run everywhere," KMP says "share your business logic, keep native UI."
+### Yang Bagus-Bagus ✅
 
-Your networking, data processing, business rules, validation - all that lives in shared Kotlin code. Your UI stays native on each platform.
+**Adopsi Bertahap**: Kamu bisa mulai dari yang kecil. Bagikan hanya klien API-mu, atau hanya model datamu. Tidak perlu menulis ulang semuanya.
 
-### The Good Stuff ✅
+**Performa Native**: UI-nya native, kode yang dibagikan dikompilasi menjadi native. Tidak ada "pajak" dari JavaScript bridge.
 
-**Gradual Adoption**: You can start small. Share just your API client, or just your data models. No need to rewrite everything.
+**Type Safety di Mana Saja**: Sistem tipe data Kotlin bekerja lintas platform. Kode Swift di iOS-mu juga mendapatkan manfaat _type safety_ yang sama.
 
-**Native Performance**: UI is native, shared code compiles to native. No JavaScript bridge tax.
+**Berkembang Pesat**: Google sangat mendukung ini. _Tooling_-nya berkembang pesat, dan perusahaan besar (Netflix, Cash App, dll.) mulai mengadopsinya.
 
-**Type Safety Everywhere**: Kotlin's type system works across platforms. Your iOS Swift code gets the same type safety benefits.
+**Area yang Familiar**: Kalau kamu sudah tahu Kotlin, kamu sudah 80% siap. Kalau kamu tahu Java, belajar Kotlin cukup cepat.
 
-**Growing Fast**: Google's pushing hard on this. The tooling is improving rapidly, and big companies (Netflix, Cash App, etc.) are adopting it.
+### Yang Kurang Bagus ❌
 
-**Familiar Territory**: If you know Kotlin, you're 80% there. If you know Java, you can pick up Kotlin pretty quickly.
+**Kurva Belajar**: Kamu harus mengerti kedua platform. Mau bikin untuk iOS? Kamu harus menulis kode UI dengan Swift. Untuk Android? Pakai Compose atau XML Views.
 
-### The Not-So-Good Stuff ❌
+**Ekosistem**: Masih lebih kecil dari RN. Beberapa hal mungkin perlu kamu implementasikan sendiri atau menunggu solusi dari komunitas.
 
-**Learning Curve**: You need to understand both platforms. Want iOS? You're writing Swift UI code. Android? Compose or Views.
+**Tooling**: Semakin baik, tapi belum sematang RN. Debugging kode yang dibagikan kadang masih agak rumit.
 
-**Ecosystem**: Still smaller than RN. Some things you'll need to implement yourself or wait for community solutions.
+**Model Mental**: Ini adalah cara berpikir yang berbeda tentang pengembangan cross-platform. Butuh penyesuaian.
 
-**Tooling**: Getting better, but not as mature as RN. Debugging shared code can be tricky sometimes.
+### Kapan KMP Jadi Pilihan Masuk Akal 🎯
 
-**Mental Model**: It's a different way of thinking about cross-platform development. Takes some adjustment.
+Sempurna untuk:
 
-### When KMP Makes Sense 🎯
+- Tim yang menginginkan performa native tapi dengan _business logic_ yang dibagikan
+- Proyek jangka panjang di mana kualitas kode itu penting
+- Aplikasi dengan _business logic_ yang kompleks tapi UI yang relatif standar
+- Tim yang bersedia belajar kedua platform
+- Saat kamu ingin manfaat cross-platform tanpa harus berkompromi
 
-Perfect for:
+## Bicara Blak-blakan: Perbandingan Performa 📊
 
-- Teams that want native performance but shared business logic
-- Long-term projects where code quality matters
-- Apps with complex business logic but relatively standard UI
-- Teams willing to invest in learning both platforms
-- When you want the benefits of cross-platform without the compromises
+Biar aku jujur soal performa:
 
-## The Real Talk: Performance Comparison 📊
+**React Native**: Cukup bagus untuk sebagian besar aplikasi. Instagram pakai RN, jadi nggak mungkin seburuk itu, kan? Tapi animasi kompleks dan pemrosesan data yang berat bisa terasa patah-patah.
 
-Let me be straight with you about performance:
+**Native Kotlin**: Kenceng banget. Kalau aplikasimu perlu memproses video, menangani animasi kompleks, atau bekerja dengan dataset besar, native adalah rajanya.
 
-**React Native**: Good enough for most apps. Instagram uses it, so it can't be that bad, right? But complex animations and heavy data processing can stutter.
+**KMP**: _Business logic_-nya punya performa layaknya native (karena memang native). UI-nya punya performa layaknya native (karena memang native). Kamu dapat yang terbaik dari kedua dunia.
 
-**Native Kotlin**: Blazing fast. If your app needs to process video, handle complex animations, or work with large datasets, native is king.
+## Pengalaman Developer: Opini Jujurku 👨‍💻
 
-**KMP**: Business logic performs like native (because it is native). UI performs like native (because it is native). You get the best of both worlds.
+**DX React Native**: 8/10 - _Hot reload_ luar biasa, debugging terasa familiar, komunitas besar berarti solusi ada di mana-mana.
 
-## Developer Experience: My Honest Take 👨‍💻
+**DX Android Native**: 7/10 - _Tooling_-nya bagus, tapi mengelola dua codebase itu menyakitkan. Tapi Android Studio memang solid.
 
-**React Native DX**: 8/10 - Hot reload is amazing, debugging is familiar, huge community means solutions are everywhere.
+**DX KMP**: 7/10 saat ini, dan terus membaik - Masih ada beberapa bagian yang kasar, tapi kalau sudah berjalan, hasilnya sangat bagus. Pengalaman debugging kode yang dibagikan semakin baik.
 
-**Native Android DX**: 7/10 - Great tooling, but managing two codebases hurts. Android Studio is solid though.
+## Pertarungan Ekosistem 📚
 
-**KMP DX**: 7/10 currently, trending upward - Still rough edges, but when it works, it works really well. The shared code debugging experience is getting better.
+**React Native**: Udah matang banget. Apapun yang kamu butuhkan, kemungkinan besar sudah ada. Kualitas paketnya bervariasi, tapi biasanya selalu ada pilihan.
 
-## The Ecosystem Battle 📚
+**KMP**: Berkembang pesat tapi masih kecil. Kamu mungkin perlu menulis beberapa hal sendiri, tapi library intinya sudah solid.
 
-**React Native**: Mature AF. Whatever you need, it probably exists. Package quality varies, but there's usually something.
+**Native**: Library platform jelas sudah ada, tapi kamu harus mengelola dependensi untuk dua platform.
 
-**KMP**: Growing fast but still small. You might need to write some stuff yourself, but the core libraries are solid.
+## Contoh Kode (Karena Kita Developer, Bukan Filsuf) 💻
 
-**Native**: Platform libraries are obviously there, but you're managing dependencies for two platforms.
-
-## Code Examples (Because We're Devs, Not Philosophers) 💻
-
-### Data Model in React Native
+### Model Data di React Native
 
 ```javascript
 interface User {
@@ -189,7 +186,7 @@ const fetchUser = async (id: string): Promise<User> => {
 }
 ```
 
-### Same Data Model in KMP (Shared Code)
+### Model Data yang Sama di KMP (Kode yang Dibagikan)
 
 ```kotlin
 @Serializable
@@ -206,62 +203,62 @@ class UserRepository {
 }
 ```
 
-The KMP version runs natively on both platforms, gives you compile-time safety, and your business logic is shared. The UI code stays native on each platform.
+Versi KMP berjalan secara native di kedua platform, memberimu keamanan saat kompilasi (_compile-time safety_), dan _business logic_-mu dibagikan. Kode UI tetap native di masing-masing platform.
 
-## My Recommendation: It Depends™ 🤷‍♂️
+## Rekomendasiku: Tergantung™ 🤷‍♂️
 
-I know, I know, "it depends" is the most developer answer ever. But hear me out:
+Aku tahu, aku tahu, "tergantung" adalah jawaban paling developer sedunia. Tapi dengarkan dulu:
 
-### Choose React Native if:
+### Pilih React Native jika:
 
-- You're a small team/startup that needs to move fast
-- Your team is primarily web developers
-- You're building a standard CRUD app
-- Time to market is more important than performance optimization
-- You need to prototype quickly
+- Kamu adalah tim kecil/startup yang harus bergerak cepat
+- Tim-mu sebagian besar adalah web developer
+- Kamu membangun aplikasi CRUD standar
+- Waktu rilis ke pasar lebih penting daripada optimasi performa
+- Kamu perlu membuat prototipe dengan cepat
 
-### Choose Native Android (+ iOS) if:
+### Pilih Native Android (+ iOS) jika:
 
-- Performance is critical
-- You're building something platform-specific
-- You have separate mobile teams for each platform
-- Budget and timeline allow for maintaining two codebases
+- Performa adalah hal yang sangat krusial
+- Kamu membangun sesuatu yang sangat spesifik untuk platform tertentu
+- Kamu punya tim mobile yang terpisah untuk tiap platform
+- Anggaran dan waktu memungkinkan untuk me-maintain dua codebase
 
-### Choose Kotlin Multiplatform if:
+### Pilih Kotlin Multiplatform jika:
 
-- You want to share business logic but keep native UI
-- Performance matters but you still want code sharing benefits
-- You're planning a long-term project
-- Your team is willing to learn both platforms
-- You want type safety across your entire mobile stack
+- Kamu ingin berbagi _business logic_ tapi mempertahankan UI native
+- Performa itu penting tapi kamu tetap ingin manfaat dari berbagi kode
+- Kamu merencanakan proyek jangka panjang
+- Tim-mu bersedia mempelajari kedua platform
+- Kamu menginginkan _type safety_ di seluruh tumpukan teknologi mobile-mu
 
-## The Future is Multiplatform (Probably) 🔮
+## Masa Depan Itu Multiplatform (Kayaknya) 🔮
 
-Hot take: I think KMP is the future for serious mobile development. Here's why:
+Prediksi liar: Aku pikir KMP adalah masa depan untuk pengembangan mobile yang serius. Ini alasannya:
 
-1. **Google's all-in**: They're betting big on this
-2. **Industry adoption**: Big players are moving to KMP
-3. **It solves real problems**: You get performance without sacrificing code sharing
-4. **The tooling is catching up fast**
+1. **Google sangat serius**: Mereka bertaruh besar pada KMP
+2. **Adopsi industri**: Pemain besar mulai beralih ke KMP
+3. **Ini memecahkan masalah nyata**: Kamu dapat performa tanpa mengorbankan pembagian kode
+4. **_Tooling_-nya mengejar dengan sangat cepat**
 
-But React Native isn't going anywhere. It's perfect for certain use cases and has a massive community.
+Tapi React Native tidak akan ke mana-mana. RN sempurna untuk kasus penggunaan tertentu dan punya komunitas yang masif.
 
-## My Current Stack 🛠️
+## Stack Teknologi-ku Saat Ini 🛠️
 
-For new projects, I'm choosing KMP. The shared business logic + native UI approach just makes sense for the long term. Performance is better, type safety is amazing, and I can still move reasonably fast.
+Untuk proyek baru, aku memilih KMP. Pendekatan _business logic_ bersama + UI native sangat masuk akal untuk jangka panjang. Performanya lebih baik, _type safety_-nya luar biasa, dan aku masih bisa bekerja dengan cukup cepat.
 
-But if I needed to ship an MVP yesterday? React Native all the way.
+Tapi kalau aku harus merilis MVP kemarin? Jelas React Native.
 
-## Wrapping Up 🎬
+## Penutup 🎬
 
-Look, there's no perfect framework. React Native gets you there fast but with some performance trade-offs. Native gives you everything but costs more time and money. KMP is the new kid that's trying to solve the trade-offs, and it's getting really good at it.
+Begini, tidak ada framework yang sempurna. React Native membawamu ke tujuan dengan cepat tapi dengan beberapa kompromi performa. Native memberimu segalanya tapi butuh lebih banyak waktu dan uang. KMP adalah anak baru yang mencoba menyelesaikan kompromi tersebut, dan ia berhasil melakukannya dengan sangat baik.
 
-My advice? Start with what your team knows, but keep learning. The mobile development landscape is evolving fast, and the best developers are the ones who can adapt.
+Saran saya? Mulailah dengan apa yang tim-mu sudah kuasai, tapi teruslah belajar. Lanskap pengembangan mobile berkembang pesat, dan developer terbaik adalah mereka yang bisa beradaptasi.
 
-What's your experience been? Are you team RN, team native, or are you drinking the KMP Kool-Aid like me? Drop a comment and let me know!
+Gimana pengalamanmu? Kamu tim RN, tim native, atau udah 'keracunan' KMP kayak aku? Tulis di kolom komentar ya\!
 
 ---
 
-_If this helped you make a decision (or just procrastinate making one), give it a share! And if you're hiring React/Kotlin/KMP developers who've been through the trenches... well, my DMs are open 😉_
+_Jika ini membantumu membuat keputusan (atau hanya menunda-nunda), jangan ragu untuk membagikannya\! Dan jika kamu sedang merekrut developer React/Kotlin/KMP yang sudah berpengalaman... yah, DM-ku terbuka 😉_
 
-**Tags:** #ReactNative #KotlinMultiplatform #MobileDevelopment #CrossPlatform #Kotlin #JavaScript #NativeDevelopment
+**Tags:** \#ReactNative \#KotlinMultiplatform \#MobileDevelopment \#CrossPlatform \#Kotlin \#JavaScript \#NativeDevelopment

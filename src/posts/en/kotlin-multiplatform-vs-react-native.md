@@ -13,12 +13,9 @@ tags:
   'Native Development',
  ]
 keywords: 'Kotlin Multiplatform, React Native, cross-platform development, mobile development, KMP vs RN, mobile frameworks 2025, native performance, JavaScript bridge, mobile app development'
+readTime: 8
 lang: en
 ---
-
-# Kotlin Multiplatform vs React Native: Which Cross-Platform Framework Should You Choose? 🤔
-
-_Published on [Date] | 8 min read_
 
 Hey devs! 👋
 

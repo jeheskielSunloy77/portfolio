@@ -2,7 +2,7 @@
 import { dictionary } from '@/i18n/dictionary'
 import { type Language } from '@/i18n/i18n'
 import { FEATURED_POSTS_LIMIT } from '@/lib/constants'
-import { getCollection } from 'astro:content'
+import { getPosts } from '@/posts/posts'
 import { PostCard } from './post-card'
 import Section from './section.astro'
 import { Card } from './ui/card'
@@ -11,10 +11,11 @@ export interface Props {
 	lang: Language
 }
 
-const posts = await getCollection(
-	'post',
-	(p) => p.data.lang === Astro.props.lang
-).then((p) => p.slice(0, FEATURED_POSTS_LIMIT))
+const posts = await getPosts({
+	lang: Astro.props.lang,
+	limit: FEATURED_POSTS_LIMIT,
+})
+
 const t = dictionary[Astro.props.lang]
 ---
 
@@ -29,7 +30,11 @@ const t = dictionary[Astro.props.lang]
 >
 	<Card>
 		<ul class='flex flex-col'>
-			{posts.map((post, i) => <PostCard post={post} useSeparator={i !== 0} />)}
+			{
+				posts.map((post, i) => (
+					<PostCard post={{ ...post.data, id: post.id }} useSeparator={i !== 0} />
+				))
+			}
 		</ul>
 	</Card>
 </Section>

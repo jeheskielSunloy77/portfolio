@@ -14,6 +14,7 @@ const post = defineCollection({
 			publishedAt: z.coerce.date(),
 			image: image().optional(),
 			lang: z.enum(['en', 'id']),
+			readTime: z.coerce.number().min(1),
 		}),
 })
 

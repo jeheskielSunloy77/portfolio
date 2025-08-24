@@ -125,3 +125,7 @@ button,
 a {
 	cursor: pointer;
 }
+
+html {
+	scrollbar-gutter: stable both-edges;
+}

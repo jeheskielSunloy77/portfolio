@@ -8,7 +8,7 @@ interface Props {
 }
 
 export function PostCard({ post, useSeparator }: Props) {
-	const publishedAt = format(post.publishedAt, 'yyyy-MM-dd')
+	const publishedAt = format(post.publishedAt, 'MMM d, yyyy')
 
 	const [lang, slug] = post.id.split('/')
 

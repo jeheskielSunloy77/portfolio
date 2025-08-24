@@ -20,7 +20,7 @@ const { seo, articleSchema, lang } = Astro.props
 
 <html lang={lang}>
 	<head>
-		<script is:inline>
+		<script is:inline data-astro-rerun>
 			;(() => {
 				const theme = localStorage.getItem('theme')
 				const prefersDark = window.matchMedia(

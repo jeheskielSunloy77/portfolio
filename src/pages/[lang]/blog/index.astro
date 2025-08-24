@@ -5,6 +5,7 @@ import { getLangPaths } from '@/i18n/i18n'
 import MainLayout from '@/layouts/main.astro'
 import { getPosts } from '@/posts/posts'
 
+export const prerender = true
 export const getStaticPaths = getLangPaths
 
 const posts = await getPosts({ lang: Astro.params.lang })

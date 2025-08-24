@@ -6,7 +6,7 @@ import { Github, Globe, Linkedin, Mail } from 'lucide-react'
 const t = dictionary[DEFAULT_LANGUAGE]
 
 export const BIRTH_DATE = new Date('2000-12-30')
-export const NICK_NAME = 'Jay'
+export const NICK_NAME = 'jay'
 export const FULL_NAME = 'Jeheskiel Sunloy'
 export const BOT_NAME = 'J-assist'
 export const EMAIL = 'jeheskielventiokysunloy@gmail.com'

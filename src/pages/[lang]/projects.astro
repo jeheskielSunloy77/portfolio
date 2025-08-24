@@ -4,6 +4,7 @@ import { dictionary } from '@/i18n/dictionary'
 import { getLangPaths } from '@/i18n/i18n'
 import MainLayout from '@/layouts/main.astro'
 
+export const prerender = true
 export const getStaticPaths = getLangPaths
 
 const t = dictionary[Astro.params.lang]

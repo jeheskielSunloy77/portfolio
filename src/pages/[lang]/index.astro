@@ -9,6 +9,7 @@ import { getLangPaths } from '@/i18n/i18n'
 import MainLayout from '@/layouts/main.astro'
 import { APP_NAME, FULL_NAME } from '@/lib/constants'
 
+export const prerender = true
 export const getStaticPaths = getLangPaths
 
 const lang = Astro.params.lang

@@ -13,6 +13,7 @@ const post = defineCollection({
 			updatedAt: z.coerce.date().optional(),
 			publishedAt: z.coerce.date(),
 			image: image().optional(),
+			lang: z.enum(['en', 'id']),
 		}),
 })
 

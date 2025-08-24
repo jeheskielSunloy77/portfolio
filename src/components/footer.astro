@@ -1,6 +1,14 @@
 ---
+import { dictionary } from '@/i18n/dictionary'
+import { type Language } from '@/i18n/i18n'
 import { APP_NAME } from '@/lib/constants'
 import Socials from './socials.astro'
+
+export interface Props {
+	lang: Language
+}
+
+const t = dictionary[Astro.props.lang]
 ---
 
 <footer class='w-full pt-12'>
@@ -11,9 +19,19 @@ import Socials from './socials.astro'
 		<section class='mt-8 text-center sm:mt-0 sm:text-left'>
 			<p class='text-xs text-muted-foreground'>
 				&copy; {new Date().getFullYear()}{' '}
-				<a class='link' href='/'> {APP_NAME} </a>{' '}
+				<a
+					class='hover:text-foreground hover:underline'
+					href={`/${Astro.props.lang}`}
+				>
+					{APP_NAME}
+				</a>{' '}
 				|{' '}
-				<a class='link font-bold' href='/privacy'> privacy? </a>
+				<a
+					class='hover:text-foreground hover:underline font-bold'
+					href={`/${Astro.props.lang}/privacy`}
+				>
+					{t['privacy?']}
+				</a>
 			</p>
 		</section>
 	</div>

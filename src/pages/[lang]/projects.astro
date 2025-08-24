@@ -1,0 +1,26 @@
+---
+import ProjectList from '@/components/project-list.astro'
+import { dictionary } from '@/i18n/dictionary'
+import { getLangPaths } from '@/i18n/i18n'
+import MainLayout from '@/layouts/main.astro'
+
+export const getStaticPaths = getLangPaths
+
+const t = dictionary[Astro.params.lang]
+---
+
+<MainLayout
+	lang={Astro.params.lang}
+	seo={{
+		title: t['Projects'],
+		description:
+			t[
+				'Explore my projects, showcasing my skills and creativity in web development.'
+			],
+	}}
+>
+	<article class='mt-8 flex flex-col gap-8 pb-16'>
+		<h1 class='title'>{t['my projects.']}</h1>
+		<ProjectList lang={Astro.params.lang} />
+	</article>
+</MainLayout>

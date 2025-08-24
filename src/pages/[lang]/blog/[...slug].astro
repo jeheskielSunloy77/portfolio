@@ -1,5 +1,6 @@
 ---
 import LinkWithIcon from '@/components/link-with-icon.astro'
+import { LANGUAGES } from '@/i18n/i18n'
 import MainLayout from '@/layouts/main.astro'
 import type { CollectionEntry } from 'astro:content'
 import { getCollection, render } from 'astro:content'
@@ -8,10 +9,13 @@ import { ArrowLeftIcon } from 'lucide-react'
 
 export async function getStaticPaths() {
 	const posts = await getCollection('post')
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: post,
-	}))
+
+	return posts.flatMap((post) =>
+		LANGUAGES.map((lang) => ({
+			params: { slug: post.id, lang },
+			props: post,
+		}))
+	)
 }
 
 export type Props = CollectionEntry<'post'>
@@ -41,6 +45,7 @@ const seo = {
 ---
 
 <MainLayout
+	lang={Astro.params.lang}
 	seo={seo}
 	articleSchema={{
 		...sharedData,
@@ -52,7 +57,11 @@ const seo = {
 	}}
 >
 	<article class='mt-8 flex flex-col gap-8 pb-16'>
-		<LinkWithIcon href='/blog' position='left' text='back to blog'>
+		<LinkWithIcon
+			href={`/${Astro.params.lang}/blog`}
+			position='left'
+			text='back to blog'
+		>
 			<ArrowLeftIcon className='size-5' />
 		</LinkWithIcon>
 

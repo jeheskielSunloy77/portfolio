@@ -1,20 +1,31 @@
 ---
+import { dictionary } from '@/i18n/dictionary'
+import { type Language } from '@/i18n/i18n'
 import { FEATURED_POSTS_LIMIT } from '@/lib/constants'
 import { getCollection } from 'astro:content'
 import { PostCard } from './post-card'
 import Section from './section.astro'
 import { Card } from './ui/card'
 
-const posts = await getCollection('post').then((p) =>
-	p.slice(0, FEATURED_POSTS_LIMIT)
-)
+export interface Props {
+	lang: Language
+}
+
+const posts = await getCollection(
+	'post',
+	(p) => p.data.lang === Astro.props.lang
+).then((p) => p.slice(0, FEATURED_POSTS_LIMIT))
+const t = dictionary[Astro.props.lang]
 ---
 
 <Section
 	id='posts'
-	title='Recent Posts'
-	description='Read my latest articles on web development, programming, and technology.'
-	viewMoreHref='/blog'
+	lang={Astro.props.lang}
+	title={t['Recent Posts']}
+	description={t[
+		'Read my latest articles on web development, programming, and technology.'
+	]}
+	viewMoreHref={`/${Astro.props.lang}/blog`}
 >
 	<Card>
 		<ul class='flex flex-col'>

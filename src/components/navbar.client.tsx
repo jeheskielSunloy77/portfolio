@@ -1,8 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { useTheme } from '@/hooks/use-theme'
+import { dictionary } from '@/i18n/dictionary'
+import { DEFAULT_LANGUAGE } from '@/i18n/i18n'
 import { $isChatBotVisible } from '@/stores/chat-bot'
 import { useStore } from '@nanostores/react'
 import { Bot, BotOff, Moon, Sun } from 'lucide-react'
+
+const t = dictionary[DEFAULT_LANGUAGE]
 
 export function ChatToggle() {
 	const isVisible = useStore($isChatBotVisible)
@@ -14,7 +18,7 @@ export function ChatToggle() {
 	return (
 		<Button size='icon' variant='ghost' onClick={toggle}>
 			{isVisible ? <Bot className='size-5' /> : <BotOff className='size-5' />}
-			<span className='sr-only'>Chat Toggle</span>
+			<span className='sr-only'>{t['Chat Toggle']}</span>
 		</Button>
 	)
 }
@@ -29,7 +33,7 @@ export function ThemeToggle() {
 			) : (
 				<Moon className='size-4 text-indigo-500' />
 			)}
-			<span className='sr-only'>Theme Toggle</span>
+			<span className='sr-only'>{t['Theme Toggle']}</span>
 		</Button>
 	)
 }

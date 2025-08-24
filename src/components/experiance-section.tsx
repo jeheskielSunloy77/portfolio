@@ -1,3 +1,5 @@
+import { dictionary } from '@/i18n/dictionary'
+import { type Language } from '@/i18n/i18n'
 import { CAREERS, EDUCATIONS } from '@/lib/constants'
 import type { Experience } from '@/lib/types'
 import { AvatarFallback } from '@radix-ui/react-avatar'
@@ -7,24 +9,26 @@ import { Badge } from './ui/badge'
 import { Card, CardContent } from './ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 
-export function ExperienceSection() {
+export function ExperienceSection(props: { lang: Language }) {
+	const t = dictionary[props.lang]
 	return (
 		<Tabs defaultValue='work'>
 			<TabsList className='mb-2 grid w-full grid-cols-2'>
-				<TabsTrigger value='work'>Work</TabsTrigger>
-				<TabsTrigger value='education'>Education</TabsTrigger>
+				<TabsTrigger value='work'>{t['Work']}</TabsTrigger>
+				<TabsTrigger value='education'>{t['Education']}</TabsTrigger>
 			</TabsList>
 			<TabsContent value='work'>
-				<Timeline experiences={CAREERS} />
+				<Timeline experiences={CAREERS} lang={props.lang} />
 			</TabsContent>
 			<TabsContent value='education'>
-				<Timeline experiences={EDUCATIONS} />
+				<Timeline experiences={EDUCATIONS} lang={props.lang} />
 			</TabsContent>
 		</Tabs>
 	)
 }
 
-function Timeline(props: { experiences: Experience[] }) {
+function Timeline(props: { experiences: Experience[]; lang: Language }) {
+	const t = dictionary[props.lang]
 	return (
 		<Card>
 			<CardContent className='p-0'>
@@ -52,7 +56,7 @@ function Timeline(props: { experiences: Experience[] }) {
 											<>
 												<span>{exp.start}</span>
 												<span>{' - '}</span>
-												<span>{exp.end ? exp.end : 'Present'}</span>
+												<span>{exp.end ? exp.end : t['Present']}</span>
 											</>
 										))}
 								</time>

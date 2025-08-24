@@ -1,4 +1,13 @@
+import type { dictionary } from '@/i18n/dictionary'
 import type { LucideIcon } from 'lucide-react'
+
+export type LocalizedString = keyof typeof dictionary.en
+
+interface Link {
+	icon: LucideIcon
+	href: string
+	name: LocalizedString
+}
 
 export interface Experience {
 	name: string
@@ -13,17 +22,17 @@ export interface Experience {
 		isMarkdown?: boolean
 		content: string
 	}[]
-	links?: { icon: LucideIcon; href: string; name: string }[]
+	links?: Link[]
 }
 
 export interface Project {
 	isFeatured?: boolean
 	image?: string
 	name: string
-	description: string
+	description: LocalizedString
 	href?: string
 	tags: string[]
-	links?: { icon: LucideIcon; href: string; name: string }[]
+	links?: Link[]
 }
 
 export type PostMetadata = {
@@ -36,7 +45,7 @@ export type PostMetadata = {
 
 export interface Skill {
 	name: string
-	description: string
+	description: LocalizedString
 	imageUrl: string
 	imageDarkUrl?: string
 	bgColor: string
@@ -44,3 +53,5 @@ export interface Skill {
 }
 
 export type Theme = 'dark' | 'light'
+
+export type Dictionary = typeof dictionary.en

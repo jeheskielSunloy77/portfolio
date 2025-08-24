@@ -1,14 +1,25 @@
 ---
+import { dictionary } from '@/i18n/dictionary'
+import { type Language } from '@/i18n/i18n'
 import { SKILLS } from '@/lib/constants'
 import Section from './section.astro'
 
 const featuredSkills = SKILLS.filter((s) => !s.hide)
+
+export interface Props {
+	lang: Language
+}
+
+const t = dictionary[Astro.props.lang]
 ---
 
 <Section
 	id='skills'
-	title='Current technologies'
-	description="I'm proficient in a range of modern technologies that empower me to build highly functional solutions. These are some of my main technologies."
+	lang={Astro.props.lang}
+	title={t['Current technologies']}
+	description={t[
+		"I'm proficient in a range of modern technologies that empower me to build highly functional solutions. These are some of my main technologies."
+	]}
 >
 	<div
 		class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-between gap-4'
@@ -36,7 +47,7 @@ const featuredSkills = SKILLS.filter((s) => !s.hide)
 					</div>
 					<div>
 						<h4 class='font-semibold text-sm'>{skill.name}</h4>
-						<p class='text-muted-foreground text-xs'>{skill.description}</p>
+						<p class='text-muted-foreground text-xs'>{t[skill.description]}</p>
 					</div>
 				</div>
 			))

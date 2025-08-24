@@ -1,0 +1,37 @@
+---
+import { SearchablePostList } from '@/components/searchable-post-list'
+import { dictionary } from '@/i18n/dictionary'
+import { getLangPaths } from '@/i18n/i18n'
+import MainLayout from '@/layouts/main.astro'
+import { getCollection } from 'astro:content'
+
+export const getStaticPaths = getLangPaths
+
+const posts = await getCollection(
+	'post',
+	(post) => post.data.lang === Astro.params.lang
+)
+
+const t = dictionary[Astro.params.lang]
+---
+
+<MainLayout
+	lang={Astro.params.lang}
+	seo={{
+		title: t['Blog'],
+		description: t['My blog posts and articles.'],
+		keywords:
+			t[
+				'blog, articles, web development, programming, technology, software engineering, tutorials, tips, guides'
+			],
+	}}
+>
+	<article class='mt-8 flex flex-col gap-8 pb-16'>
+		<h1 class='title'>{t['my blog.']}</h1>
+		<SearchablePostList
+			posts={posts}
+			placeholder={t['Search for something...']}
+			client:idle
+		/>
+	</article>
+</MainLayout>

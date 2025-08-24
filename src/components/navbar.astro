@@ -1,11 +1,20 @@
 ---
+import { dictionary } from '@/i18n/dictionary'
+import { type Language } from '@/i18n/i18n'
 import { ChatToggle, ThemeToggle } from './navbar.client'
 
+export interface Props {
+	lang: Language
+}
+
+const { lang }: Props = Astro.props
+const t = dictionary[lang]
+
 const navItems = [
-	{ name: 'home', href: '/' },
-	{ name: 'projects', href: '/projects' },
-	{ name: 'blog', href: '/blog' },
-	{ name: 'contact', href: '/contact' },
+	{ label: t['home'], href: `/${lang}` },
+	{ label: t['projects'], href: `/${lang}/projects` },
+	{ label: t['blog'], href: `/${lang}/blog` },
+	{ label: t['contact'], href: `/${lang}/contact` },
 ]
 ---
 
@@ -15,13 +24,14 @@ const navItems = [
 			<ul class='flex gap-4 sm:gap-8'>
 				{
 					navItems.map((nav) => (
-						<li class='link'>
-							<a
-								href={nav.href}
-								class={Astro.url.pathname === nav.href ? 'underline font-semibold' : ''}
-							>
-								{nav.name}
-							</a>
+						<li
+							class={
+								Astro.url.pathname === nav.href
+									? 'underline font-semibold'
+									: 'hover:text-foreground hover:underline'
+							}
+						>
+							<a href={nav.href}>{nav.label}</a>
 						</li>
 					))
 				}

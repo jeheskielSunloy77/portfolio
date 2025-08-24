@@ -1,5 +1,9 @@
+import { dictionary } from '@/i18n/dictionary'
+import { DEFAULT_LANGUAGE } from '@/i18n/i18n'
 import type { Experience, Project, Skill } from '@/lib/types'
 import { Github, Globe, Linkedin, Mail } from 'lucide-react'
+
+const t = dictionary[DEFAULT_LANGUAGE]
 
 export const BIRTH_DATE = new Date('2000-12-30')
 export const NICK_NAME = 'Jay'
@@ -27,6 +31,7 @@ export const SOCIALS = [
 		icon: Mail,
 	},
 ]
+
 export const CAREERS: Experience[] = [
 	{
 		name: 'PéMad International Transearch',
@@ -37,16 +42,22 @@ export const CAREERS: Experience[] = [
 		list: [
 			{
 				content:
-					'Working as a software engineer, building and maintaining mobile and web applications.',
+					t[
+						'Working as a software engineer, building and maintaining mobile and web applications.'
+					],
 			},
 			{
 				content:
-					'A part of the [digipémad](https://digipemad.com) team, a child company of PéMad that focuses on software development products and services.',
+					t[
+						'A part of the [digipémad](https://digipemad.com) team, a child company of PéMad that focuses on software development products and services.'
+					],
 				isMarkdown: true,
 			},
 			{
 				content:
-					'Collaborating with cross-functional teams to deliver high-quality software solutions.',
+					t[
+						'Collaborating with cross-functional teams to deliver high-quality software solutions.'
+					],
 			},
 		],
 	},
@@ -58,15 +69,18 @@ export const CAREERS: Experience[] = [
 		start: 'Jul 2022',
 		end: 'Sep 2022',
 		list: [
-			{ content: 'Internship program by Refactory' },
+			{ content: t['Internship program by Refactory'] },
 			{
-				content: 'Intensive 7-week program focused on full-stack web development.',
+				content:
+					t['Intensive 7-week program focused on full-stack web development.'],
 			},
 			{
 				content:
-					'Learned modern web technologies including React, Node.js, and Golang.',
+					t['Learned modern web technologies including React, Node.js, and Golang.'],
 			},
-			{ content: 'Paired with experienced professionals to enhance my skills.' },
+			{
+				content: t['Paired with experienced professionals to enhance my skills.'],
+			},
 		],
 	},
 	{
@@ -77,7 +91,9 @@ export const CAREERS: Experience[] = [
 		start: 'May 2022',
 		end: 'Jul 2022',
 		description:
-			'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase',
+			t[
+				'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase'
+			],
 	},
 ]
 
@@ -90,10 +106,11 @@ export const EDUCATIONS: Experience[] = [
 		subtitle: 'Enroled on Aug 2017',
 		list: [
 			{
-				content:
-					'Focused on algorithms, web development, and software engineering principles.',
+				content: t['Completed a senior project on real‑time collaboration tools.'],
 			},
-			{ content: 'Completed a senior project on real‑time collaboration tools.' },
+			{
+				content: t['Completed a senior project on real‑time collaboration tools.'],
+			},
 		],
 	},
 	{
@@ -105,7 +122,9 @@ export const EDUCATIONS: Experience[] = [
 		start: 'Jul 2014',
 		end: 'Jul 2017',
 		description:
-			'Not the best student, but always tried my best. Learned a lot of things during my time in high school and developed a strong interest in programming.',
+			t[
+				'Not the best student, but always tried my best. Learned a lot of things during my time in high school and developed a strong interest in programming.'
+			],
 	},
 ]
 
@@ -179,7 +198,7 @@ export const SKILLS: Skill[] = [
 	},
 	{
 		name: 'SQL',
-		description: 'JOIN pain with suffering',
+		description: 'JOIN pain WITH suffering',
 		imageUrl: '/skills/postgresql.svg',
 		bgColor: 'bg-[#336791]/20',
 	},

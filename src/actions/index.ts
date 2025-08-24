@@ -22,18 +22,6 @@ export const server = {
 		}),
 		handler: async ({ name, email, message }) => {
 			try {
-				console.log({
-					from: `"${name}" <${email}>`,
-					to: import.meta.env.SMTP_RECEIVER_EMAIL,
-					subject: `New Contact Form Submission from ${name}`,
-					text: message,
-					html: `<p><b>From:</b> ${name} (${email})</p>
-                 <p><b>Message:</b></p>
-                 <p>${message}</p>`,
-				})
-
-				return { success: true }
-
 				await transporter.sendMail({
 					from: `"${name}" <${email}>`,
 					to: import.meta.env.SMTP_RECEIVER_EMAIL,

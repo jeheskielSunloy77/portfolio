@@ -1,5 +1,7 @@
 ---
 import { Button } from '@/components/ui/button'
+import { dictionary } from '@/i18n/dictionary'
+import { type Language } from '@/i18n/i18n'
 import { BIRTH_DATE, BOT_NAME, NICK_NAME } from '@/lib/constants'
 import { ArrowDown, ArrowDownRight, Bot, FileDown } from 'lucide-react'
 import Socials from './socials.astro'
@@ -16,6 +18,11 @@ function getAge(birthDate: Date) {
 	}
 	return age
 }
+export interface Props {
+	lang: Language
+}
+
+const t = dictionary[Astro.props.lang]
 ---
 
 <section
@@ -24,29 +31,31 @@ function getAge(birthDate: Date) {
 	<img
 		class='rounded-lg'
 		src='/me/me.webp'
-		alt=`Photo of ${NICK_NAME}`
+		alt={`Photo of ${NICK_NAME}`}
 		width={175}
 		height={175}
 	/>
 	<div class='flex max-w-[320px] flex-col sm:max-w-full'>
 		<h1 class='title text-balance text-4xl sm:text-5xl'>
-			hi {NICK_NAME} here. 👋
+			{t['hi {NICK_NAME} here. 👋'].replace('{NICK_NAME}', NICK_NAME)}
 		</h1>
 
 		<p class='mt-2 whitespace-nowrap text-sm font-medium sm:text-base'>
 			{getAge(BIRTH_DATE)}
-			yo software engineer from Indonesia 🇮🇩
+			{t['yo software engineer from Indonesia 🇮🇩']}
 		</p>
 
 		<p class='mt-4 max-w-sm text-balance text-sm sm:text-base'>
-			Backend by trade, full-stack by passion. I build and self-host the lot.
+			{
+				t['Backend by trade, full-stack by passion. I build and self-host the lot.']
+			}
 		</p>
 
 		<div class='mt-6 flex items-center gap-1'>
 			<p
 				class='text-balance text-sm font-semibold sm:text-base flex items-center gap-1'
 			>
-				For Q&A, raise a ticket with
+				{t['For Q&A, raise a ticket with']}
 				<Bot className='size-5' />
 				{BOT_NAME}
 			</p>
@@ -55,22 +64,22 @@ function getAge(birthDate: Date) {
 		</div>
 
 		<p class='mt-1 text-xs font-light'>
-			For escalations, please find my
+			{t['For escalations, please find my']}
 			<a
 				href='https://www.instagram.com/jeheskielsunloy'
 				target='_blank'
-				class='link font-semibold'
+				class='hover:text-foreground hover:underline font-semibold'
 				title='instagram'
 			>
 				&nbsp;${NICK_NAME}&nbsp;
 			</a>
-			instead.
+			{t['instead.']}
 		</p>
 
 		<section class='mt-6 flex flex-wrap items-center gap-4'>
 			<a href='/me/resume.pdf' target='_blank'>
 				<Button variant='outline'>
-					<span class='font-semibold'>Resume</span>
+					<span class='font-semibold'>{t['Resume']}</span>
 					<FileDown className='ml-2 size-5' />
 				</Button>
 			</a>

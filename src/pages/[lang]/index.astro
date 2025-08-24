@@ -1,0 +1,37 @@
+---
+import { ExperienceSection } from '@/components/experiance-section'
+import HeroSection from '@/components/hero-section.astro'
+import PostsSection from '@/components/posts-section.astro'
+import ProjectsSection from '@/components/projects-section.astro'
+import SkillsSection from '@/components/skills-section.astro'
+import { dictionary } from '@/i18n/dictionary'
+import { getLangPaths } from '@/i18n/i18n'
+import MainLayout from '@/layouts/main.astro'
+import { APP_NAME, FULL_NAME } from '@/lib/constants'
+
+export const getStaticPaths = getLangPaths
+
+const lang = Astro.params.lang
+
+const t = dictionary[lang]
+---
+
+<MainLayout
+	lang={lang}
+	seo={{
+		title: FULL_NAME,
+		description: t[
+			`Welcome to {APP_NAME}, the personal portfolio of {FULL_NAME}. Explore my projects, blog posts, and more.`
+		]
+			.replace('{APP_NAME}', APP_NAME)
+			.replace('{FULL_NAME}', FULL_NAME),
+	}}
+>
+	<article class='flex flex-col gap-28'>
+		<HeroSection lang={lang} />
+		<ExperienceSection client:idle lang={lang} />
+		<SkillsSection lang={lang} />
+		<ProjectsSection lang={lang} />
+		<PostsSection lang={lang} />
+	</article>
+</MainLayout>

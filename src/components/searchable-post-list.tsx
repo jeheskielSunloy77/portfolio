@@ -11,9 +11,10 @@ interface Props {
 		id: string
 		data: InferEntrySchema<'post'>
 	}[]
+	placeholder: string
 }
 
-export function SearchablePostList({ posts }: Props) {
+export function SearchablePostList({ posts, placeholder }: Props) {
 	const [query, setQuery] = useState('')
 
 	const filtered = posts.filter((post) =>
@@ -27,7 +28,7 @@ export function SearchablePostList({ posts }: Props) {
 			<div className='flex items-center gap-3'>
 				<Input
 					type='text'
-					placeholder='Search something...'
+					placeholder={placeholder}
 					value={query}
 					onChange={(e) => setQuery(e.target.value)}
 				/>

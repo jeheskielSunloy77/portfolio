@@ -1,13 +1,20 @@
 ---
 import LinkWithIcon from '@/components/link-with-icon.astro'
+import { dictionary } from '@/i18n/dictionary'
+import { DEFAULT_LANGUAGE } from '@/i18n/i18n'
 import Main from '@/layouts/main.astro'
 import { ArrowLeftIcon } from 'lucide-react'
+
+const lang = DEFAULT_LANGUAGE
+
+const t = dictionary[lang]
 ---
 
 <Main
+	lang={lang}
 	seo={{
-		title: '404 Not Found',
-		description: "Oops! The page you're looking for doesn't exist.",
+		title: t['404 Not Found'],
+		description: t["Oops! The page you're looking for doesn't exist."],
 	}}
 >
 	<article class='mt-8 flex flex-col gap-8 pb-16'>
@@ -16,21 +23,24 @@ import { ArrowLeftIcon } from 'lucide-react'
 		>
 			<div class='mx-auto max-w-max'>
 				<section class='sm:flex'>
-					<p class='title text-muted-foreground'>404</p>
 					<div class='sm:ml-6'>
 						<div>
 							<h1 class='title sm:text-5xl'>
-								cannot find <i>eh</i>...
+								{t['cannot find']}
+								<i>
+									{t['eh']}
+								</i>...
 							</h1>
 							<p class='mt-1 text-base text-muted-foreground'>
-								Maybe I renamed or deleted the page <i>eh</i>. Try again{' '}
-								<i>lor</i>.
+								{t['Maybe I renamed or deleted the page']}
+								<i>{t['eh']}</i>. {t['Try again']}
+								<i>{t['lor']}</i>.
 							</p>
 						</div>
 						<div
 							class='mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6'
 						>
-							<LinkWithIcon href='/' text='back to home' position='left'>
+							<LinkWithIcon href={`/${lang}`} text={t['back to home']} position='left'>
 								<ArrowLeftIcon className='size-5' />
 							</LinkWithIcon>
 						</div>

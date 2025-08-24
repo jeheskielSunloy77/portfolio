@@ -1,14 +1,29 @@
 ---
+import { dictionary } from '@/i18n/dictionary'
+import { type Language } from '@/i18n/i18n'
 import { FEATURED_PROJECTS_LIMIT } from '@/lib/constants'
 import ProjectList from './project-list.astro'
 import Section from './section.astro'
+
+export interface Props {
+	lang: Language
+}
+
+const t = dictionary[Astro.props.lang]
 ---
 
 <Section
 	id='projects'
-	title='Featured Projects'
-	description='Explore some of my highlighted projects that showcase my skills and creativity in web development.'
-	viewMoreHref='/projects'
+	lang={Astro.props.lang}
+	title={t['Featured Projects']}
+	description={t[
+		'Explore some of my highlighted projects that showcase my skills and creativity in web development.'
+	]}
+	viewMoreHref={`/${Astro.props.lang}/projects`}
 >
-	<ProjectList limit={FEATURED_PROJECTS_LIMIT} isFeatured />
+	<ProjectList
+		lang={Astro.props.lang}
+		limit={FEATURED_PROJECTS_LIMIT}
+		isFeatured
+	/>
 </Section>

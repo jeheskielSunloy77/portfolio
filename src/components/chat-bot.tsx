@@ -1,3 +1,5 @@
+import { dictionary } from '@/i18n/dictionary'
+import { type Language } from '@/i18n/i18n'
 import { BOT_NAME } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { $isChatBotVisible } from '@/stores/chat-bot'
@@ -16,12 +18,12 @@ import {
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 
-export function ChatBot() {
+export function ChatBot(props: { lang: Language }) {
 	const isVisible = useStore($isChatBotVisible)
-	if (isVisible) return <Chat />
+	if (isVisible) return <Chat lang={props.lang} />
 }
 
-function Chat() {
+function Chat({ lang }: { lang: Language }) {
 	const { messages, setMessages, error, status, sendMessage } = useChat()
 	const [isOpen, setIsOpen] = useState(false)
 
@@ -38,15 +40,21 @@ function Chat() {
 				className='fixed bottom-8 right-8 w-80 rounded-md border bg-background'
 			>
 				<AccordionTrigger className='border-b px-6'>
-					<ChatHeader isOpen={isOpen} />
+					<ChatHeader isOpen={isOpen} lang={lang} />
 				</AccordionTrigger>
 				<AccordionContent className='flex max-h-96 min-h-80 flex-col justify-between p-0'>
-					<ChatMessages messages={messages} error={error} status={status} />
+					<ChatMessages
+						messages={messages}
+						error={error}
+						status={status}
+						lang={lang}
+					/>
 					<ChatInput
 						sendMessage={sendMessage}
 						setMessages={setMessages}
 						status={status}
 						isClearable={messages.length > 0}
+						lang={lang}
 					/>
 				</AccordionContent>
 			</AccordionItem>
@@ -54,12 +62,13 @@ function Chat() {
 	)
 }
 
-function ChatHeader(props: { isOpen: boolean }) {
+function ChatHeader(props: { isOpen: boolean; lang: Language }) {
+	const t = dictionary[props.lang]
 	return (
 		<section className='flex w-full items-center justify-start gap-3'>
 			{!props.isOpen && <Bot className='size-5' />}
 			<div className='flex flex-col items-start'>
-				<p className='text-xs text-muted-foreground'>Chat with</p>
+				<p className='text-xs text-muted-foreground'>{t['Chat with']}</p>
 				<div className='flex items-center gap-2'>
 					<span className='size-2 animate-pulse rounded-full bg-emerald-500' />
 					<p className='text-sm font-medium'>{BOT_NAME}</p>
@@ -78,6 +87,7 @@ interface ChatInputProps extends HTMLAttributes<HTMLFormElement> {
 	) => void
 	isClearable: boolean
 	status: ChatStatus
+	lang: Language
 }
 
 function ChatInput({
@@ -85,7 +95,10 @@ function ChatInput({
 	setMessages,
 	status,
 	isClearable,
+	lang,
 }: ChatInputProps) {
+	const t = dictionary[lang]
+
 	const [input, setInput] = useState('')
 
 	const isReady = status === 'ready'
@@ -108,7 +121,7 @@ function ChatInput({
 		<form onSubmit={handleSubmit} className='flex gap-1 border-t px-2 py-3'>
 			{isClearable && (
 				<Button
-					title='Clear chat'
+					title={t['Clear chat']}
 					variant='outline'
 					onClick={() => setMessages([])}
 					className='px-3 py-2'
@@ -120,7 +133,7 @@ function ChatInput({
 			)}
 			<Input
 				autoFocus
-				placeholder='Ask something...'
+				placeholder={t['Ask something...']}
 				value={input}
 				onChange={(e) => setInput(e.target.value)}
 				disabled={!isReady}
@@ -131,7 +144,7 @@ function ChatInput({
 				}}
 			/>
 			<Button
-				title='Send message'
+				title={t['Send message']}
 				variant='default'
 				className='px-3 py-2'
 				disabled={input.length === 0 || !isReady}
@@ -147,9 +160,12 @@ interface ChatMessagesProps {
 	messages: Message[]
 	error: Error | undefined
 	status: ChatStatus
+	lang: Language
 }
 
-function ChatMessages({ messages, error, status }: ChatMessagesProps) {
+function ChatMessages({ messages, error, status, lang }: ChatMessagesProps) {
+	const t = dictionary[lang]
+
 	const scrollRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
@@ -163,7 +179,7 @@ function ChatMessages({ messages, error, status }: ChatMessagesProps) {
 			<ul>
 				{messages.map((msg) => (
 					<li key={msg.id}>
-						<ChatMessage message={msg} />
+						<ChatMessage message={msg} lang={lang} />
 					</li>
 				))}
 			</ul>
@@ -171,10 +187,13 @@ function ChatMessages({ messages, error, status }: ChatMessagesProps) {
 			{!error && messages.length === 0 && (
 				<div className='mt-16 flex h-full flex-col items-center justify-center gap-2'>
 					<Bot />
-					<p className='font-medium'>Send a message to start the chat!</p>
+					<p className='font-medium'>{t['Send a message to start the chat!']}</p>
 					<p className='text-center text-xs text-muted-foreground'>
-						You can ask the bot anything about me and it will help to find the
-						relevant information!
+						{
+							t[
+								'You can ask the bot anything about me and it will help to find the relevant information!'
+							]
+						}
 					</p>
 				</div>
 			)}
@@ -182,13 +201,15 @@ function ChatMessages({ messages, error, status }: ChatMessagesProps) {
 			{status === 'streaming' && (
 				<div className='flex items-center justify-center'>
 					<Loader2 className='mr-1.5 size-3 animate-spin text-muted-foreground' />
-					<p className='text-center text-xs text-muted-foreground'>Thinking...</p>
+					<p className='text-center text-xs text-muted-foreground'>
+						{t['Thinking...']}
+					</p>
 				</div>
 			)}
 
 			{error && (
 				<p className='text-center text-xs text-rose-500'>
-					Something went wrong. Please try again!
+					{t['Something went wrong. Please try again!']}
 				</p>
 			)}
 		</div>
@@ -197,9 +218,11 @@ function ChatMessages({ messages, error, status }: ChatMessagesProps) {
 
 interface ChatMessageProps {
 	message: Message
+	lang: Language
 }
 
-function ChatMessage({ message }: ChatMessageProps) {
+function ChatMessage({ message, lang }: ChatMessageProps) {
+	const t = dictionary[lang]
 	const isBot = message.role === 'assistant'
 
 	function messageToText(message: Message): string {

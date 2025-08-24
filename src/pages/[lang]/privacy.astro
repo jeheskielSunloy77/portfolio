@@ -1,0 +1,112 @@
+---
+const lastUpdated = 'Aug 2025'
+import { dictionary } from '@/i18n/dictionary'
+import { getLangPaths } from '@/i18n/i18n'
+import MainLayout from '@/layouts/main.astro'
+import { EMAIL } from '@/lib/constants'
+
+export const getStaticPaths = getLangPaths
+
+const t = dictionary[Astro.params.lang]
+---
+
+<MainLayout
+	lang={Astro.params.lang}
+	seo={{
+		title: t['Privacy Policy'],
+		description:
+			t['Learn about the privacy practices of this portfolio website.'],
+	}}
+>
+	<article class='prose mt-8 pb-16 dark:prose-invert'>
+		<div class='space-y-4'>
+			<h1 class='title text-5xl'>{t['privacy policy.']}</h1>
+			<p>{t['Last Updated:']} {lastUpdated}</p>
+		</div>
+		<div class='space-y-4'>
+			<h2 class='font-extrabold text-3xl'>{t['Hey, Welcome!']}</h2>
+			<p>
+				{
+					t[
+						"Thanks for stopping by! This Privacy Policy is just here to let you know how things work around here. My website is mainly about showcasing my work, and I'm all about respecting your privacy."
+					]
+				}
+			</p>
+			<h2 class='font-extrabold text-2xl'>
+				{t['What Information I Collect (Hint: Not Much)']}
+			</h2>
+			<p>
+				{
+					t[
+						"Honestly, this is just a static portfolio site, so I don't actively collect any personal information. There's no account creation, no tracking cookies, and definitely no sneaky data gathering."
+					]
+				}
+			</p>
+			<h3>{t['Chatbot Conversations']}</h3>
+			<p>
+				{
+					t[
+						'If you send a message through the chatbot, it might be stored for caching and training purposes. So please avoid sharing any confidential info in the chat.'
+					]
+				}
+			</p>
+			<h3>{t['Contact Info']}</h3>
+			<p>
+				{
+					t[
+						"If you reach out via email or the contact form, the info you provide is entirely up to you. I'll only use it to reply and have a conversation with you—no funny business."
+					]
+				}
+			</p>
+			<h2 class='font-extrabold text-2xl'>{t['How I Use the Info']}</h2>
+			<p>{t["Here's what I might do with any information I collect:"]}</p>
+			<ul>
+				<li>{t['Make sure the site is running smoothly']}</li>
+				<li>{t['Improve the website based on feedback you might share']}</li>
+				<li>{t['Respond to your questions or feedback']}</li>
+			</ul>
+			<h2 class='font-extrabold text-2xl'>
+				{t["Sharing Your Info (Spoiler: I Don't)"]}
+			</h2>
+			<p>
+				{
+					t[
+						"I don't sell, trade, or rent your personal info. If you shared something sensitive by accident, feel free to reach out, and I'll help you remove it."
+					]
+				}
+			</p>
+			<h2 class='font-extrabold text-2xl'>
+				{t["Security (The Internet Isn't Perfect)"]}
+			</h2>
+			<p>
+				{
+					t[
+						"I'll do my best to keep any info you share safe, but let's be real—no system is foolproof. While I'll take reasonable steps to protect your info, I can't promise 100% security."
+					]
+				}
+			</p>
+			<h2 class='font-extrabold text-2xl'>{t['Policy Updates (No Surprises)']}</h2>
+			<p>
+				{t['This policy is current as of']}
+				<b>{lastUpdated}</b>.{' '}
+				{
+					t[
+						"If I make any changes, I'll update it here, so you're always in the loop. Feel free to check back occasionally, but don't worry—I'm not making any big changes without letting you know."
+					]
+				}
+			</p>
+			<h2 class='font-extrabold text-2xl'>{t['Got Questions?']}</h2>
+			<p>
+				{
+					t[
+						'If you have any questions, concerns, or just want to say hi, drop me an email at'
+					]
+				}{' '}
+				<a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+				{t['or use the']}{' '}
+				<a href={`/${Astro.params.lang}/contact`}>{t['contact form']}</a>.{' '}
+				{t["I'd love to hear from you!"]}
+			</p>
+		</div>
+	</article>
+</MainLayout>

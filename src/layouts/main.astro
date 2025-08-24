@@ -7,16 +7,18 @@ import Seo from '@/components/seo.astro'
 import type { ComponentProps } from 'astro/types'
 import Navbar from '@/components/navbar.astro'
 import ArticleSchema from '@/components/article-schema.astro'
+import { DEFAULT_LANGUAGE, type Language } from '@/i18n/i18n'
 
 export interface Props {
 	seo: ComponentProps<typeof Seo>
 	articleSchema?: ComponentProps<typeof ArticleSchema>
+	lang: Language
 }
 
-const { seo, articleSchema } = Astro.props
+const { seo, articleSchema, lang } = Astro.props
 ---
 
-<html lang='en'>
+<html lang={lang}>
 	<head>
 		<script is:inline>
 			;(() => {
@@ -38,13 +40,13 @@ const { seo, articleSchema } = Astro.props
 		<ClientRouter />
 	</head>
 	<body>
-		<Navbar />
+		<Navbar lang={lang} />
 		<div class='mx-auto flex max-w-3xl flex-col px-8'>
 			<main class='grow'>
 				<slot />
 			</main>
-			<ChatBot client:idle />
+			<ChatBot client:idle lang={lang} />
 		</div>
-		<Footer />
+		<Footer lang={lang} />
 	</body>
 </html>

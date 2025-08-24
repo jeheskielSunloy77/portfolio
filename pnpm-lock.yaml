@@ -32,6 +32,9 @@ importers:
       '@datastax/astra-db-ts':
         specifier: ^2.0.2
         version: 2.0.2
+      '@google/generative-ai':
+        specifier: ^0.24.1
+        version: 0.24.1
       '@hookform/resolvers':
         specifier: ^5.2.1
         version: 5.2.1(react-hook-form@7.62.0(react@19.1.1))

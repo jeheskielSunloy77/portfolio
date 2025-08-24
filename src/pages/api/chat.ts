@@ -1,3 +1,4 @@
+import { tryPromise } from '@/lib/utils'
 import { getVectorStore } from '@/lib/vector-db'
 import { toUIMessageStream } from '@ai-sdk/langchain'
 import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis'
@@ -13,38 +14,55 @@ import {
 } from '@langchain/core/prompts'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { Redis } from '@upstash/redis'
+
 import { createUIMessageStreamResponse } from 'ai'
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents'
 import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever'
 import { createRetrievalChain } from 'langchain/chains/retrieval'
 
+function errResponse(error: Error, message: string, status = 500) {
+	console.error(
+		`[CHAT_BOT_API] [ERROR] message: ${message}\n error: ${error.message} stack: ${error.stack}`
+	)
+	return new Response(JSON.stringify({ error: message }), { status })
+}
+
 export async function POST({ request }: { request: Request }) {
 	try {
-		const body = await request.json()
-		const messages = body.messages
+		const body = await tryPromise(request.json())
+		if (body.error) return errResponse(body.error, 'Invalid request body', 400)
+
+		const messages = body.data.messages
 
 		const latestMessage = messages[messages.length - 1].content
 
 		const cache = new UpstashRedisCache({
-			client: Redis.fromEnv(),
+			client: new Redis({
+				url: import.meta.env.UPSTASH_REDIS_REST_URL,
+				token: import.meta.env.UPSTASH_REDIS_REST_TOKEN,
+			}),
 		})
 
 		const chatModel = new ChatGoogleGenerativeAI({
 			model: 'gemini-2.5-flash',
 			streaming: true,
 			temperature: 0,
-			apiKey: process.env.GOOGLE_API_KEY!,
+			apiKey: import.meta.env.GEMINI_API_KEY!,
 			cache,
 		})
 
 		const rephraseModel = new ChatGoogleGenerativeAI({
 			model: 'gemini-2.5-flash',
 			temperature: 0,
-			apiKey: process.env.GOOGLE_API_KEY!,
+			apiKey: import.meta.env.GEMINI_API_KEY!,
 			cache,
 		})
 
-		const retriever = (await getVectorStore()).asRetriever()
+		const vectorStore = await tryPromise(getVectorStore())
+		if (vectorStore.error)
+			return errResponse(vectorStore.error, 'Failed to initialize vector store')
+
+		const retriever = vectorStore.data.asRetriever()
 
 		// Format chat history for LangChain
 		const chatHistory = messages
@@ -67,11 +85,19 @@ export async function POST({ request }: { request: Request }) {
 			],
 		])
 
-		const historyAwareRetrievalChain = await createHistoryAwareRetriever({
-			llm: rephraseModel,
-			retriever,
-			rephrasePrompt,
-		})
+		const historyAwareRetrievalChain = await tryPromise(
+			createHistoryAwareRetriever({
+				llm: rephraseModel,
+				retriever,
+				rephrasePrompt,
+			})
+		)
+
+		if (historyAwareRetrievalChain.error)
+			return errResponse(
+				historyAwareRetrievalChain.error,
+				'Failed to create retrieval chain'
+			)
 
 		// Final chatbot prompt
 		const prompt = ChatPromptTemplate.fromMessages([
@@ -89,28 +115,40 @@ export async function POST({ request }: { request: Request }) {
 		])
 
 		// Combine retrieved docs with LLM
-		const combineDocsChain = await createStuffDocumentsChain({
-			llm: chatModel,
-			prompt,
-			documentPrompt: PromptTemplate.fromTemplate('Page content:\n{page_content}'),
-			documentSeparator: '\n------\n',
-		})
+		const combineDocsChain = await tryPromise(
+			createStuffDocumentsChain({
+				llm: chatModel,
+				prompt,
+				documentPrompt: PromptTemplate.fromTemplate(
+					'Page content:\n{page_content}'
+				),
+				documentSeparator: '\n------\n',
+			})
+		)
+
+		if (combineDocsChain.error)
+			return errResponse(combineDocsChain.error, 'Failed to create document chain')
 
 		const retrievalChain = await createRetrievalChain({
-			combineDocsChain,
-			retriever: historyAwareRetrievalChain,
+			combineDocsChain: combineDocsChain.data,
+			retriever: historyAwareRetrievalChain.data,
 		})
 
 		// 🚀 Run the retrieval chain with streaming output
-		const resultStream = await retrievalChain.stream({
-			input: latestMessage,
-			chat_history: chatHistory,
-		})
+		const resultStream = await tryPromise(
+			retrievalChain.stream({
+				input: latestMessage,
+				chat_history: chatHistory,
+			})
+		)
+
+		if (resultStream.error)
+			return errResponse(resultStream.error, 'Failed to process the message')
 
 		// Map `{ context, answer }` → `AIMessageChunk` for AI SDK v5
 		const answerStream = new ReadableStream<AIMessageChunk>({
 			async start(controller) {
-				for await (const chunk of resultStream) {
+				for await (const chunk of resultStream.data) {
 					if (chunk.answer) {
 						controller.enqueue(new AIMessageChunk({ content: chunk.answer }))
 					}

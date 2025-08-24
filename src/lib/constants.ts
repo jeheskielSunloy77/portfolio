@@ -1,7 +1,7 @@
 import { dictionary } from '@/i18n/dictionary'
 import { DEFAULT_LANGUAGE } from '@/i18n/i18n'
 import type { Experience, Project, Skill } from '@/lib/types'
-import { Github, Globe, Linkedin, Mail } from 'lucide-react'
+import { Github, Globe, Linkedin, Mail, Rss } from 'lucide-react'
 
 const t = dictionary[DEFAULT_LANGUAGE]
 
@@ -198,7 +198,7 @@ export const SKILLS: Skill[] = [
 	},
 	{
 		name: 'SQL',
-		description: 'JOIN pain WITH suffering',
+		description: 'JOIN pain ON suffering',
 		imageUrl: '/skills/postgresql.svg',
 		bgColor: 'bg-[#336791]/20',
 	},
@@ -324,6 +324,31 @@ export const PROJECTS: Project[] = [
 				name: 'Demo',
 				href: 'https://iakn-kupang-profile.vercel.app/',
 				icon: Globe,
+			},
+		],
+	},
+	{
+		name: 'Old Portfolio Website',
+		href: 'https://jeheskielSunloy77.github.io',
+		description:
+			'My old portfolio website, read more about it on my blog post below.',
+		tags: ['react', 'tailwindcss'],
+		image: '/projects/oldPortfolio.webp',
+		links: [
+			{
+				name: 'Demo',
+				href: 'https://jeheskielsunloy.netlify.app',
+				icon: Globe,
+			},
+			{
+				name: 'Source',
+				href: 'https://github.com/jeheskielSunloy77/old-portfolio',
+				icon: Github,
+			},
+			{
+				name: 'Blog Post',
+				href: '/en/blog/redesigning-my-portfolio-making-space-for-what-matters',
+				icon: Rss,
 			},
 		],
 	},

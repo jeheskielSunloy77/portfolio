@@ -1,5 +1,9 @@
 export const dictionary = {
 	en: {
+		'Old Portfolio Website': 'Old Portfolio Website',
+		'My old portfolio website, read more about it on my blog post below.':
+			'My old portfolio website, read more about it on my blog post below.',
+		'Blog Post': 'Blog Post',
 		'minutes read': 'minutes read',
 		'Search for something...': 'Search for something...',
 		'Contact Me': 'Contact Me',
@@ -168,7 +172,7 @@ export const dictionary = {
 		"When you don't need schemas (until you do)":
 			"When you don't need schemas (until you do)",
 		'SET it and forget it': 'SET it and forget it',
-		'JOIN pain WITH suffering': 'JOIN pain WITH suffering',
+		'JOIN pain ON suffering': 'JOIN pain ON suffering',
 		'A full featured academic information system for IAKN Kupang University. It includes features like student registration, course management, academic records, LMS, and more.':
 			'A full featured academic information system for IAKN Kupang University. It includes features like student registration, course management, academic records, LMS, and more.',
 		'A cross-platform mobile application for ordering coffee from local shops.':
@@ -195,6 +199,10 @@ export const dictionary = {
 		'related posts': 'related posts',
 	},
 	id: {
+		'Old Portfolio Website': 'Situs Portofolio Lama',
+		'My old portfolio website, read more about it on my blog post below.':
+			'Situs portofolio lama saya, baca lebih lanjut di postingan blog saya di bawah.',
+		'Blog Post': 'Postingan Blog',
 		'minutes read': 'menit baca',
 		'Search for something...': 'Cari sesuatu...',
 		'Contact Me': 'Hubungi Saya',
@@ -363,7 +371,7 @@ export const dictionary = {
 		"When you don't need schemas (until you do)":
 			'Apa itu skema (sampai membutuhkannya)',
 		'SET it and forget it': 'SET dan lupakan',
-		'JOIN pain WITH suffering': 'JOIN rasa_sakit WITH penderitaan',
+		'JOIN pain ON suffering': 'JOIN rasa_sakit ON penderitaan',
 		'A full featured academic information system for IAKN Kupang University. It includes features like student registration, course management, academic records, LMS, and more.':
 			'Sistem informasi akademik berfitur lengkap untuk Universitas IAKN Kupang. Ini mencakup fitur-fitur seperti pendaftaran mahasiswa, manajemen mata kuliah, catatan akademik, LMS, dan lainnya.',
 		'A cross-platform mobile application for ordering coffee from local shops.':

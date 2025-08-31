@@ -65,7 +65,28 @@ export async function POST({ request }: { request: Request }) {
 		const db = await getDb()
 		const col = db.collection(COLLECTION)
 
-		const doc = { ...parsed.data, createdAt: new Date() }
+		const ip =
+			request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+			request.headers.get('x-real-ip') ||
+			request.headers.get('cf-connecting-ip') ||
+			'unknown'
+
+		const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
+		const recentCount = await col.countDocuments({
+			ip,
+			createdAt: { $gte: oneHourAgo },
+		})
+		if (recentCount >= 5) {
+			return jsonResponse(
+				{
+					error:
+						"Rate limit exceeded. Looks like you've submitted quite a few sketches recently. Please try again later.",
+				},
+				429
+			)
+		}
+
+		const doc = { ...parsed.data, createdAt: new Date(), ip }
 
 		const result = {
 			_id: (await col.insertOne(doc)).insertedId.toString(),

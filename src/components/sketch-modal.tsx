@@ -1,3 +1,4 @@
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -9,7 +10,14 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useQueryClient } from '@tanstack/react-query'
-import { Circle, Eraser, Redo2, RotateCcw, Undo2 } from 'lucide-react'
+import {
+	AlertCircle,
+	Circle,
+	Eraser,
+	Redo2,
+	RotateCcw,
+	Undo2,
+} from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 
 interface Props {
@@ -28,6 +36,8 @@ export function SketchDialog({ isOpen, onOpenChange }: Props) {
 	const [historyIndex, setHistoryIndex] = useState(-1)
 	const [newSketchName, setNewSketchName] = useState('')
 	const [newSketchMessage, setNewSketchMessage] = useState('')
+	const [isSaving, setIsSaving] = useState(false)
+	const [error, setError] = useState<string | null>(null)
 
 	const presetColors = [
 		'#000000',
@@ -191,6 +201,7 @@ export function SketchDialog({ isOpen, onOpenChange }: Props) {
 	}
 
 	const saveSketch = async () => {
+		if (isSaving) return
 		const canvas = canvasRef.current
 		if (!canvas) return
 
@@ -200,14 +211,40 @@ export function SketchDialog({ isOpen, onOpenChange }: Props) {
 			dataUrl: canvas.toDataURL(),
 		}
 
+		setIsSaving(true)
+		setError(null)
 		try {
 			const res = await fetch('/api/sketches', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(payload),
 			})
+
+			// handle rate limit response
+			if (res.status === 429) {
+				let errMsg = 'Rate limit exceeded. Please try again later.'
+				try {
+					const json = await res.json()
+					if (json?.error) errMsg = json.error
+				} catch (_) {}
+				console.error(errMsg)
+				setError(errMsg)
+				setIsSaving(false)
+				return
+			}
+
 			if (!res.ok) {
-				console.error('Failed to save sketch', await res.text())
+				let errMsg = 'Failed to save sketch'
+				try {
+					const json = await res.json()
+					if (json?.error) errMsg = json.error
+				} catch (_) {
+					const text = await res.text().catch(() => null)
+					if (text) errMsg = text
+				}
+				console.error(errMsg)
+				setError(errMsg)
+				setIsSaving(false)
 				return
 			}
 			await res.json()
@@ -218,6 +255,8 @@ export function SketchDialog({ isOpen, onOpenChange }: Props) {
 			onOpenChange(false)
 		} catch (e) {
 			console.error('Error saving sketch', e)
+		} finally {
+			setIsSaving(false)
 		}
 	}
 
@@ -345,6 +384,13 @@ export function SketchDialog({ isOpen, onOpenChange }: Props) {
 								rows={2}
 								className='focus:ring-2 focus:ring-primary/20 resize-none'
 							/>
+							{error && (
+								<Alert variant='destructive'>
+									<AlertCircle />
+									<AlertTitle>Oops! Something went wrong</AlertTitle>
+									<AlertDescription>{error}</AlertDescription>
+								</Alert>
+							)}
 						</div>
 					</div>
 					<DialogFooter className='mt-4'>
@@ -356,8 +402,8 @@ export function SketchDialog({ isOpen, onOpenChange }: Props) {
 						>
 							Cancel
 						</Button>
-						<Button type='submit' className='px-6 shadow-sm'>
-							Save Sketch
+						<Button type='submit' className='px-6 shadow-sm' disabled={isSaving}>
+							{isSaving ? 'Saving...' : 'Save Sketch'}
 						</Button>
 					</DialogFooter>
 				</form>

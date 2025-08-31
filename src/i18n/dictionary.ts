@@ -240,8 +240,6 @@ export const dictionary = {
 		'saving...': 'menyimpan...',
 		'save sketch': 'simpan sketsa',
 		'Rate limit exceeded': 'Batas permintaan terlampaui',
-		'You have made too banyak permintaan dalam waktu singkat. Silakan tunggu dan coba lagi nanti.':
-			'Anda telah membuat terlalu banyak permintaan dalam waktu singkat. Silakan tunggu dan coba lagi nanti.',
 		'You have made too many requests in a short period. Please wait and try again later.':
 			'Anda telah membuat terlalu banyak permintaan dalam waktu singkat. Silakan tunggu dan coba lagi nanti.',
 		'Failed to save sketch': 'Gagal menyimpan sketsa',

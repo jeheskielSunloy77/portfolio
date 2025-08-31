@@ -55,3 +55,11 @@ export interface Skill {
 export type Theme = 'dark' | 'light'
 
 export type Dictionary = typeof dictionary.en
+
+export interface APIResponsePaginated<T> {
+	data: T[]
+	page: number
+	pageSize: number
+	total: number
+	nextPage?: number
+}

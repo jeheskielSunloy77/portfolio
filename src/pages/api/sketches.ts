@@ -11,14 +11,24 @@ function errResponse(message: string, status = 500) {
 	return jsonResponse({ error: message }, status)
 }
 
-export async function GET() {
+export async function GET(request: Request) {
 	try {
+		const url = new URL(request.url)
+		const page = Math.max(0, Number(url.searchParams.get('page') ?? '0'))
+		const pageSize = Math.max(1, Number(url.searchParams.get('pageSize') ?? '9'))
+
 		const db = await getDb()
 		const collectionName = process.env.SKETCHES_COLLECTION || 'sketches'
 		const col = db.collection(collectionName)
+
+		// total count for pagination info
+		const total = await col.countDocuments()
+
 		const docs = await col
 			.find({}, { projection: { dataUrl: 1, name: 1, message: 1, createdAt: 1 } })
 			.sort({ createdAt: -1 })
+			.skip(page * pageSize)
+			.limit(pageSize)
 			.toArray()
 
 		const mapped = docs.map((d: any) => ({
@@ -29,7 +39,15 @@ export async function GET() {
 			createdAt: d.createdAt,
 		}))
 
-		return jsonResponse(mapped)
+		const hasMore = (page + 1) * pageSize < total
+
+		return jsonResponse({
+			data: mapped,
+			page,
+			pageSize,
+			total,
+			nextPage: hasMore ? page + 1 : undefined,
+		})
 	} catch (e: any) {
 		console.error('[SKETCHES_API][GET]', e)
 		return errResponse('Failed to fetch sketches')

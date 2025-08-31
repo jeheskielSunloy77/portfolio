@@ -1,4 +1,5 @@
 import { getDb } from '@/lib/mongodb'
+import z from 'zod'
 
 function jsonResponse(data: unknown, status = 200) {
 	return new Response(JSON.stringify(data), {
@@ -11,6 +12,8 @@ function errResponse(message: string, status = 500) {
 	return jsonResponse({ error: message }, status)
 }
 
+const COLLECTION = import.meta.env.SKETCHES_COLLECTION
+
 export async function GET(request: Request) {
 	try {
 		const url = new URL(request.url)
@@ -18,8 +21,7 @@ export async function GET(request: Request) {
 		const pageSize = Math.max(1, Number(url.searchParams.get('pageSize') ?? '9'))
 
 		const db = await getDb()
-		const collectionName = process.env.SKETCHES_COLLECTION || 'sketches'
-		const col = db.collection(collectionName)
+		const col = db.collection(COLLECTION)
 
 		const total = await col.countDocuments()
 
@@ -56,31 +58,29 @@ export async function GET(request: Request) {
 export async function POST({ request }: { request: Request }) {
 	try {
 		const body = await request.json()
-		const { name, message, dataUrl } = body || {}
 
-		if (!dataUrl) return errResponse('dataUrl is required', 400)
+		const parsed = sketchInsertSchema.safeParse(body)
+		if (!parsed.success) return errResponse('Invalid request body', 400)
 
 		const db = await getDb()
-		const collectionName = process.env.SKETCHES_COLLECTION || 'sketches'
-		const col = db.collection(collectionName)
+		const col = db.collection(COLLECTION)
 
-		const doc = {
-			name: name || 'Untitled Sketch',
-			message: message || '',
-			dataUrl,
-			createdAt: new Date(),
-		}
+		const doc = { ...parsed.data, createdAt: new Date() }
 
-		const result = await col.insertOne(doc)
-
-		const inserted = {
-			_id: result.insertedId.toString(),
+		const result = {
+			_id: (await col.insertOne(doc)).insertedId.toString(),
 			...doc,
 		}
 
-		return jsonResponse(inserted, 201)
+		return jsonResponse(result, 201)
 	} catch (e: any) {
 		console.error('[SKETCHES_API][POST]', e)
 		return errResponse('Failed to save sketch')
 	}
 }
+
+const sketchInsertSchema = z.object({
+	name: z.string(),
+	message: z.string(),
+	dataUrl: z.string(),
+})

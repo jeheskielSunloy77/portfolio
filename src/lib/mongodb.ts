@@ -18,6 +18,6 @@ if (!(globalThis as any)._mongoClientPromise) {
 }
 
 export async function getDb() {
-	const client = await (globalThis as any)._mongoClientPromise!
+	const client: MongoClient = await (globalThis as any)._mongoClientPromise!
 	return client.db(import.meta.env.MONGODB_DB)
 }

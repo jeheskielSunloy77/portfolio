@@ -197,8 +197,10 @@ export const dictionary = {
 		'PWA Weather App': 'PWA Weather App',
 		'IAKN Kupang Profile Website': 'IAKN Kupang Profile Website',
 		'related posts': 'related posts',
+		visitors: 'visitors',
 	},
 	id: {
+		visitors: 'pengunjung',
 		'Old Portfolio Website': 'Situs Portofolio Lama',
 		'My old portfolio website, read more about it on my blog post below.':
 			'Situs portofolio lama saya, baca lebih lanjut di postingan blog saya di bawah.',

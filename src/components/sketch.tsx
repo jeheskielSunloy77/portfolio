@@ -71,6 +71,27 @@ export function Sketch() {
 		}
 	}, [isModalOpen])
 
+	useEffect(() => {
+		const fetchSketches = async () => {
+			try {
+				const res = await fetch('/api/sketches')
+				if (!res.ok) return
+				const data = await res.json()
+				const mapped = (data as any[]).map((s) => ({
+					id: s._id ?? s.id,
+					name: s.name,
+					message: s.message,
+					dataUrl: s.dataUrl,
+					createdAt: new Date(s.createdAt),
+				}))
+				setSketches(mapped)
+			} catch (e) {
+				console.error('Failed to fetch sketches', e)
+			}
+		}
+		fetchSketches()
+	}, [])
+
 	const saveToHistory = () => {
 		const canvas = canvasRef.current
 		if (!canvas) return
@@ -194,23 +215,42 @@ export function Sketch() {
 		saveToHistory()
 	}
 
-	const saveSketch = () => {
+	const saveSketch = async () => {
 		const canvas = canvasRef.current
 		if (!canvas) return
 
-		const dataUrl = canvas.toDataURL()
-		const newSketch: Sketch = {
-			id: Date.now().toString(),
-			name: newSketchName || 'Untitled Sketch',
-			message: newSketchMessage || 'Unknown Message',
-			dataUrl,
-			createdAt: new Date(),
+		const payload = {
+			name: newSketchName,
+			message: newSketchMessage,
+			dataUrl: canvas.toDataURL(),
 		}
 
-		setSketches((prev) => [newSketch, ...prev])
-		setNewSketchName('')
-		setNewSketchMessage('')
-		setIsModalOpen(false)
+		try {
+			const res = await fetch('/api/sketches', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload),
+			})
+			if (!res.ok) {
+				console.error('Failed to save sketch', await res.text())
+				return
+			}
+			const saved = await res.json()
+			const newSketchFromServer: Sketch = {
+				id: saved._id ?? saved.id ?? Date.now().toString(),
+				name: saved.name,
+				message: saved.message,
+				dataUrl: saved.dataUrl,
+				createdAt: new Date(saved.createdAt),
+			}
+
+			setSketches((prev) => [newSketchFromServer, ...prev])
+			setNewSketchName('')
+			setNewSketchMessage('')
+			setIsModalOpen(false)
+		} catch (e) {
+			console.error('Error saving sketch', e)
+		}
 	}
 
 	const handleModalClose = (open: boolean) => {

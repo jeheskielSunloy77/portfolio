@@ -133,3 +133,10 @@ Allow visitors to draw sketches in-browser and save them persistently by storing
 - **v1 (MVP):** Canvas + save sketches to filesystem + gallery display.
 - **v2:** Admin moderation panel, IP-based spam prevention.
 - **v3:** Extra features: download, share, filters, fun animations.
+
+## 11. Code Rules
+
+- Dont "export default" components, use named exports. use the export default only if absolutely necessary like on nextjs pages.
+- use function statements instead of arrow functions for most things, except for anonymous functions.
+- use "interface" instead of "type" for object types.
+- use "type" for union types and other non-object types.

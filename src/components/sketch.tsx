@@ -1,16 +1,8 @@
 import type React from 'react'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import {
 	Select,
 	SelectContent,
@@ -18,7 +10,8 @@ import {
 	SelectTrigger,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { Brush, Circle, Eraser, Plus, Redo2, Trash2, Undo2 } from 'lucide-react'
+import { format } from 'date-fns'
+import { Circle, Eraser, Plus, Redo2, RotateCcw, Undo2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 interface Sketch {
@@ -42,7 +35,16 @@ export function Sketch() {
 	const [newSketchName, setNewSketchName] = useState('')
 	const [newSketchMessage, setNewSketchMessage] = useState('')
 
-	const presetColors = ['#000000', '#FF0000', '#0000FF', '#00FF00', '#FFFF00']
+	const presetColors = [
+		'#000000',
+		'#FFFFFF',
+		'#EF4444',
+		'#3B82F6',
+		'#22C55E',
+		'#EAB308',
+		'#FB923C',
+		'#A855F7',
+	]
 
 	useEffect(() => {
 		if (isModalOpen) {
@@ -58,7 +60,7 @@ export function Sketch() {
 				canvas.height = container.clientHeight
 			}
 
-			ctx.fillStyle = 'hsl(var(--muted))'
+			ctx.fillStyle = '#c5c5c5'
 			ctx.globalAlpha = 0.6
 			ctx.fillRect(0, 0, canvas.width, canvas.height)
 			ctx.globalAlpha = 1.0
@@ -185,7 +187,7 @@ export function Sketch() {
 		const ctx = canvas.getContext('2d')
 		if (!ctx) return
 
-		ctx.fillStyle = 'hsl(var(--muted))'
+		ctx.fillStyle = '#c5c5c5'
 		ctx.globalAlpha = 0.6
 		ctx.fillRect(0, 0, canvas.width, canvas.height)
 		ctx.globalAlpha = 1.0
@@ -200,7 +202,7 @@ export function Sketch() {
 		const newSketch: Sketch = {
 			id: Date.now().toString(),
 			name: newSketchName || 'Untitled Sketch',
-			message: newSketchMessage,
+			message: newSketchMessage || 'Unknown Message',
 			dataUrl,
 			createdAt: new Date(),
 		}
@@ -221,59 +223,40 @@ export function Sketch() {
 		}
 	}
 
-	const deleteSketch = (id: string) => {
-		setSketches((prev) => prev.filter((sketch) => sketch.id !== id))
-	}
-
 	return (
-		<div className='min-h-screen bg-background p-6'>
-			<div className='max-w-6xl mx-auto space-y-8'>
-				{/* Header */}
-				<div className='text-center space-y-4'>
-					<h1 className='text-4xl font-bold text-foreground'>Sketch Studio</h1>
-					<p className='text-muted-foreground'>
-						Create beautiful sketches with our modern drawing tools
-					</p>
-
-					<Dialog open={isModalOpen} onOpenChange={handleModalClose}>
-						<DialogTrigger asChild>
-							<Button size='lg' className='bg-primary hover:bg-primary/90 shadow-lg'>
-								<Plus className='w-5 h-5 mr-2' />
-								Create New Sketch
-							</Button>
-						</DialogTrigger>
-						<DialogContent className='max-w-[95vw] max-h-[95vh] w-full h-full overflow-hidden'>
-							<DialogHeader className='pb-2'>
-								<DialogTitle className='text-2xl font-semibold'>
-									Create Your Sketch
-								</DialogTitle>
-							</DialogHeader>
-
-							<div className='flex flex-col h-full space-y-4'>
-								<div className='flex items-center justify-center gap-1 bg-muted/30 p-1 rounded-lg'>
-									<Button
-										variant={isEraser ? 'default' : 'ghost'}
-										size='sm'
-										onClick={() => setIsEraser(!isEraser)}
-										className='h-8 w-8 p-0'
-									>
-										<Eraser className='w-4 h-4' />
-									</Button>
-
-									<div className='h-4 w-px bg-border mx-1' />
-
+		<div>
+			<div className='space-y-2'>
+				<Header count={sketches.length} onAdd={() => setIsModalOpen(true)} />
+				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+					{sketches.map((sketch) => (
+						<SketchCard key={sketch.id} sketch={sketch} />
+					))}
+				</div>
+			</div>
+			<Dialog open={isModalOpen} onOpenChange={handleModalClose}>
+				<DialogContent className='overflow-hidden p-2' showCloseButton={false}>
+					<form
+						onSubmit={(e) => {
+							e.preventDefault()
+							saveSketch()
+						}}
+					>
+						<div>
+							<div className='flex items-center justify-between'>
+								<div className='flex items-center gap-1'>
 									<div className='flex items-center gap-1'>
 										{presetColors.map((presetColor) => (
-											<button
+											<Button
+												size='iconSm'
+												variant={presetColor === color ? 'secondary' : 'ghost'}
 												key={presetColor}
 												onClick={() => setColor(presetColor)}
-												className={`w-6 h-6 rounded border cursor-pointer transition-all ${
-													color === presetColor
-														? 'border-foreground scale-110'
-														: 'border-border hover:scale-105'
-												}`}
-												style={{ backgroundColor: presetColor }}
-											/>
+											>
+												<div
+													style={{ backgroundColor: presetColor }}
+													className='size-5 rounded-full border cursor-pointer transition-all'
+												/>
+											</Button>
 										))}
 										<input
 											type='color'
@@ -302,152 +285,122 @@ export function Sketch() {
 											<SelectItem value='20'>20px</SelectItem>
 										</SelectContent>
 									</Select>
+									<Button
+										variant={isEraser ? 'default' : 'ghost'}
+										size='iconSm'
+										onClick={() => setIsEraser(!isEraser)}
+									>
+										<Eraser className='w-4 h-4' />
+									</Button>
+								</div>
 
-									<div className='h-4 w-px bg-border mx-1' />
-
+								<div className='flex items-center gap-1'>
 									<Button
 										variant='ghost'
-										size='sm'
+										size='iconSm'
 										onClick={undo}
 										disabled={historyIndex <= 0}
-										className='h-8 w-8 p-0'
 									>
 										<Undo2 className='w-4 h-4' />
 									</Button>
 									<Button
 										variant='ghost'
-										size='sm'
+										size='iconSm'
 										onClick={redo}
 										disabled={historyIndex >= history.length - 1}
-										className='h-8 w-8 p-0'
 									>
 										<Redo2 className='w-4 h-4' />
 									</Button>
-									<Button
-										variant='ghost'
-										size='sm'
-										onClick={clearCanvas}
-										className='h-8 w-8 p-0'
-									>
-										<Trash2 className='w-4 h-4' />
-									</Button>
-								</div>
-
-								<div className='flex-1 flex justify-center items-center bg-muted/20 rounded-lg'>
-									<canvas
-										ref={canvasRef}
-										className='border border-border rounded-lg shadow-sm cursor-crosshair bg-muted/60 w-full h-full'
-										onMouseDown={startDrawing}
-										onMouseMove={handleMouseMove}
-										onMouseUp={stopDrawing}
-										onMouseLeave={stopDrawing}
-									/>
-								</div>
-
-								<div className='grid grid-cols-1 gap-3 bg-muted/30 p-4 rounded-lg'>
-									<div className='space-y-2'>
-										<Label htmlFor='sketch-name' className='text-sm font-medium'>
-											Name <span className='text-muted-foreground'>(optional)</span>
-										</Label>
-										<Input
-											id='sketch-name'
-											placeholder='Enter sketch name...'
-											value={newSketchName}
-											onChange={(e) => setNewSketchName(e.target.value)}
-											className='focus:ring-2 focus:ring-primary/20'
-										/>
-									</div>
-									<div className='space-y-2'>
-										<Label htmlFor='sketch-message' className='text-sm font-medium'>
-											Message <span className='text-muted-foreground'>(optional)</span>
-										</Label>
-										<Textarea
-											id='sketch-message'
-											placeholder='Add a message or description...'
-											value={newSketchMessage}
-											onChange={(e) => setNewSketchMessage(e.target.value)}
-											rows={2}
-											className='focus:ring-2 focus:ring-primary/20 resize-none'
-										/>
-									</div>
-								</div>
-
-								<div className='flex justify-end gap-3 pt-2 border-t'>
-									<Button
-										variant='outline'
-										onClick={() => setIsModalOpen(false)}
-										className='px-6'
-									>
-										Cancel
-									</Button>
-									<Button onClick={saveSketch} className='px-6 shadow-sm'>
-										Save Sketch
+									<Button variant='ghost' size='iconSm' onClick={clearCanvas}>
+										<RotateCcw className='w-4 h-4' />
 									</Button>
 								</div>
 							</div>
-						</DialogContent>
-					</Dialog>
-				</div>
 
-				{sketches.length > 0 ? (
-					<div className='space-y-6'>
-						<h2 className='text-2xl font-semibold text-center'>Your Sketches</h2>
-						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-							{sketches.map((sketch) => (
-								<Card
-									key={sketch.id}
-									className='overflow-hidden hover:shadow-lg transition-shadow'
-								>
-									<CardContent className='p-4 space-y-3'>
-										<div className='aspect-square bg-muted rounded-lg overflow-hidden'>
-											<img
-												src={sketch.dataUrl || '/placeholder.svg'}
-												alt={sketch.name}
-												className='w-full h-full object-cover'
-											/>
-										</div>
-										<div className='space-y-2'>
-											<h3 className='font-medium text-foreground truncate'>
-												{sketch.name}
-											</h3>
-											{sketch.message && (
-												<p className='text-sm text-muted-foreground line-clamp-2'>
-													{sketch.message}
-												</p>
-											)}
-											<div className='flex items-center justify-between'>
-												<span className='text-xs text-muted-foreground'>
-													{sketch.createdAt.toLocaleDateString()}
-												</span>
-												<Button
-													variant='ghost'
-													size='sm'
-													onClick={() => deleteSketch(sketch.id)}
-													className='text-destructive hover:text-destructive hover:bg-destructive/10'
-												>
-													<Trash2 className='w-4 h-4' />
-												</Button>
-											</div>
-										</div>
-									</CardContent>
-								</Card>
-							))}
+							<div className='flex-1 flex justify-center items-center rounded-lg mt-1 mb-4'>
+								<canvas
+									ref={canvasRef}
+									className='rounded-lg shadow-sm cursor-crosshair bg-[#c5c5c5] w-full aspect-square'
+									onMouseDown={startDrawing}
+									onMouseMove={handleMouseMove}
+									onMouseUp={stopDrawing}
+									onMouseLeave={stopDrawing}
+								/>
+							</div>
+
+							<div className='space-y-2'>
+								<Input
+									id='sketch-name'
+									required
+									placeholder='Enter your name...'
+									value={newSketchName}
+									onChange={(e) => setNewSketchName(e.target.value)}
+									className='focus:ring-2 focus:ring-primary/20'
+								/>
+								<Textarea
+									id='sketch-message'
+									required
+									placeholder='Leave a message or description...'
+									value={newSketchMessage}
+									onChange={(e) => setNewSketchMessage(e.target.value)}
+									rows={2}
+									className='focus:ring-2 focus:ring-primary/20 resize-none'
+								/>
+							</div>
 						</div>
-					</div>
-				) : (
-					<div className='text-center py-16 space-y-4'>
-						<div className='w-24 h-24 mx-auto bg-muted rounded-full flex items-center justify-center'>
-							<Brush className='w-12 h-12 text-muted-foreground' />
-						</div>
-						<div className='space-y-2'>
-							<h3 className='text-xl font-medium'>No sketches yet</h3>
-							<p className='text-muted-foreground'>
-								Create your first sketch to get started!
-							</p>
-						</div>
-					</div>
-				)}
+						<DialogFooter className='mt-4'>
+							<Button
+								type='button'
+								variant='outline'
+								onClick={() => setIsModalOpen(false)}
+								className='px-6'
+							>
+								Cancel
+							</Button>
+							<Button type='submit' className='px-6 shadow-sm'>
+								Save Sketch
+							</Button>
+						</DialogFooter>
+					</form>
+				</DialogContent>
+			</Dialog>
+		</div>
+	)
+}
+
+function SketchCard({ sketch }: { sketch: Sketch }) {
+	return (
+		<article className='rounded-lg border border-border p-2 space-y-2'>
+			<div className='aspect-square bg-muted-foreground/25 dark:bg-secondary-foreground/75 rounded-lg overflow-hidden'>
+				<img src={sketch.dataUrl} alt={sketch.name} className='w-full h-full' />
 			</div>
+			<div>
+				<p className='text-xs text-muted-foreground line-clamp-2'>{sketch.name}</p>
+				<h3 className='font-medium text-foreground truncate text-sm'>
+					{sketch.message}
+				</h3>
+				<span className='text-xs text-muted-foreground mt-2'>
+					{format(sketch.createdAt, 'dd MMM yyyy')}
+				</span>
+			</div>
+		</article>
+	)
+}
+
+function Header({ count, onAdd }: { count: number; onAdd: () => void }) {
+	return (
+		<div className='flex items-center justify-between bg-muted/30 px-4 py-2 rounded-lg'>
+			<div className='text-sm text-muted-foreground'>
+				{`${count} ${count === 1 ? 'sketch' : 'sketches'} so far — vibe check ✅🎨`}
+			</div>
+			<Button
+				size='sm'
+				className='bg-primary hover:bg-primary/90 shadow-sm'
+				onClick={onAdd}
+			>
+				<Plus className='w-4 h-4 mr-2' />
+				Leave a Sketch
+			</Button>
 		</div>
 	)
 }

@@ -1,0 +1,20 @@
+---
+import { Sketch } from '@/components/sketch'
+import { getLangPaths } from '@/i18n/i18n'
+import MainLayout from '@/layouts/main.astro'
+
+export const prerender = true
+export const getStaticPaths = getLangPaths
+---
+
+<MainLayout
+	lang={Astro.params.lang}
+	seo={{
+		title: 'Visitor Page',
+		description: 'This is the visitor page.',
+	}}
+>
+	<h1>Visitor Page</h1>
+	<p>This is the visitor page.</p>
+	<Sketch client:idle />
+</MainLayout>

@@ -31,7 +31,7 @@ function Chat({ lang }: { lang: Language }) {
 		<Accordion
 			type='single'
 			collapsible
-			className='flexs relative z-40'
+			className='flex relative z-40'
 			onValueChange={(v) => setIsOpen(v === 'chat')}
 			value={isOpen ? 'chat' : ''}
 		>

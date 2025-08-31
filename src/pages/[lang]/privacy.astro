@@ -21,7 +21,11 @@ const t = dictionary[Astro.params.lang]
 >
 	<article class='prose mt-8 pb-16 dark:prose-invert'>
 		<div class='space-y-4'>
-			<h1 class='title text-5xl'>{t['privacy policy.']}</h1>
+			<h1
+				class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2'
+			>
+				{t['privacy policy.']}
+			</h1>
 			<p>{t['Last Updated:']} {lastUpdated}</p>
 		</div>
 		<div class='space-y-4'>

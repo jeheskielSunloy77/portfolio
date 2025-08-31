@@ -36,7 +36,9 @@ const t = dictionary[Astro.props.lang]
 		height={175}
 	/>
 	<div class='flex max-w-[320px] flex-col sm:max-w-full'>
-		<h1 class='title text-balance text-4xl sm:text-5xl'>
+		<h1
+			class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2 text-balance'
+		>
 			{t['hi {NICK_NAME} here. 👋'].replace('{NICK_NAME}', NICK_NAME)}
 		</h1>
 

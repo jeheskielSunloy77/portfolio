@@ -11,10 +11,8 @@ const schema = z.object({
 	ASTRA_DB_API_ENDPOINT: z.string().url(),
 	ASTRA_DB_APPLICATION_TOKEN: z.string().min(1),
 	ASTRA_DB_COLLECTION: z.string().min(1),
-
 	MONGODB_URI: z.string().min(1),
 	MONGODB_DB: z.string().min(1),
-	SKETCHES_COLLECTION: z.string().min(1).optional(),
 })
 
 export const env = schema.parse(import.meta.env)

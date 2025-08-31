@@ -198,11 +198,41 @@ export const dictionary = {
 		'IAKN Kupang Profile Website': 'IAKN Kupang Profile Website',
 		'related posts': 'related posts',
 		visitors: 'visitors',
+		'visitors marks': 'visitors marks',
+		'load more': 'load more',
+		'sketches so far — vibe check': 'sketches so far — vibe check',
 		'leave your mark': 'leave your mark',
+		'enter your name': 'Enter your name',
+		'leave a message or description...': 'Leave a message or description...',
+		cancel: 'cancel',
+		'saving...': 'saving...',
+		'save sketch': 'save sketch',
+		'Rate limit exceeded': 'Rate limit exceeded',
+		'You have made too many requests in a short period. Please wait and try again later.':
+			'You have made too many requests in a short period. Please wait and try again later.',
+		'Failed to save sketch': 'Failed to save sketch',
+		'An error occurred while saving your sketch. Please try again later.':
+			'An error occurred while saving your sketch. Please try again later.',
 	},
 	id: {
 		visitors: 'pengunjung',
+		'visitors marks': 'tinggalkan jejakmu',
+		'load more': 'muat lebih',
+		'sketches so far — vibe check': 'sketsa sejauh ini — vibe check',
 		'leave your mark': 'tinggalkan jejakmu',
+		'enter your name': 'masukkan nama Anda',
+		'leave a message or description...': 'tinggalkan pesan atau deskripsi...',
+		cancel: 'batal',
+		'saving...': 'menyimpan...',
+		'save sketch': 'simpan sketsa',
+		'Rate limit exceeded': 'Batas permintaan terlampaui',
+		'You have made too banyak permintaan dalam waktu singkat. Silakan tunggu dan coba lagi nanti.':
+			'Anda telah membuat terlalu banyak permintaan dalam waktu singkat. Silakan tunggu dan coba lagi nanti.',
+		'You have made too many requests in a short period. Please wait and try again later.':
+			'Anda telah membuat terlalu banyak permintaan dalam waktu singkat. Silakan tunggu dan coba lagi nanti.',
+		'Failed to save sketch': 'Gagal menyimpan sketsa',
+		'An error occurred while saving your sketch. Please try again later.':
+			'Terjadi kesalahan saat menyimpan sketsa Anda. Silakan coba lagi nanti.',
 		'Old Portfolio Website': 'Situs Portofolio Lama',
 		'My old portfolio website, read more about it on my blog post below.':
 			'Situs portofolio lama saya, baca lebih lanjut di postingan blog saya di bawah.',

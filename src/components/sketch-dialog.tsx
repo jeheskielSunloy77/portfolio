@@ -9,6 +9,8 @@ import {
 	SelectTrigger,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { dictionary } from '@/i18n/dictionary'
+import type { Language } from '@/i18n/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import {
 	AlertCircle,
@@ -23,9 +25,12 @@ import React, { useEffect, useRef, useState } from 'react'
 interface Props {
 	isOpen: boolean
 	onOpenChange: (open: boolean) => void
+	lang: Language
 }
 
-export function SketchDialog({ isOpen, onOpenChange }: Props) {
+export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
+	const t = dictionary[lang]
+
 	const canvasRef = useRef<HTMLCanvasElement | null>(null)
 	const [isDrawing, setIsDrawing] = useState(false)
 	const [isEraser, setIsEraser] = useState(false)
@@ -37,7 +42,10 @@ export function SketchDialog({ isOpen, onOpenChange }: Props) {
 	const [newSketchName, setNewSketchName] = useState('')
 	const [newSketchMessage, setNewSketchMessage] = useState('')
 	const [isSaving, setIsSaving] = useState(false)
-	const [error, setError] = useState<string | null>(null)
+	const [error, setError] = useState<{
+		title: string
+		description: string
+	} | null>(null)
 
 	const presetColors = [
 		'#000000',
@@ -220,30 +228,36 @@ export function SketchDialog({ isOpen, onOpenChange }: Props) {
 				body: JSON.stringify(payload),
 			})
 
-			// handle rate limit response
 			if (res.status === 429) {
-				let errMsg = 'Rate limit exceeded. Please try again later.'
-				try {
-					const json = await res.json()
-					if (json?.error) errMsg = json.error
-				} catch (_) {}
-				console.error(errMsg)
-				setError(errMsg)
+				const errorMessage = {
+					title: t['Rate limit exceeded'],
+					description:
+						t[
+							'You have made too many requests in a short period. Please wait and try again later.'
+						],
+				}
+
+				console.error(errorMessage)
+				setError(errorMessage)
 				setIsSaving(false)
 				return
 			}
 
 			if (!res.ok) {
-				let errMsg = 'Failed to save sketch'
+				let errorMessage: { title: string; description: string } = {
+					title: t['Failed to save sketch'],
+					description:
+						t['An error occurred while saving your sketch. Please try again later.'],
+				}
 				try {
 					const json = await res.json()
-					if (json?.error) errMsg = json.error
+					if (json?.error) errorMessage.title = json.error
 				} catch (_) {
 					const text = await res.text().catch(() => null)
-					if (text) errMsg = text
+					if (text) errorMessage.description = text
 				}
-				console.error(errMsg)
-				setError(errMsg)
+				console.error(errorMessage)
+				setError(errorMessage)
 				setIsSaving(false)
 				return
 			}
@@ -370,7 +384,7 @@ export function SketchDialog({ isOpen, onOpenChange }: Props) {
 							<Input
 								id='sketch-name'
 								required
-								placeholder='Enter your name...'
+								placeholder={t['enter your name']}
 								value={newSketchName}
 								onChange={(e) => setNewSketchName(e.target.value)}
 								className='focus:ring-2 focus:ring-primary/20'
@@ -378,7 +392,7 @@ export function SketchDialog({ isOpen, onOpenChange }: Props) {
 							<Textarea
 								id='sketch-message'
 								required
-								placeholder='Leave a message or description...'
+								placeholder={t['leave a message or description...']}
 								value={newSketchMessage}
 								onChange={(e) => setNewSketchMessage(e.target.value)}
 								rows={2}
@@ -387,8 +401,8 @@ export function SketchDialog({ isOpen, onOpenChange }: Props) {
 							{error && (
 								<Alert variant='destructive'>
 									<AlertCircle />
-									<AlertTitle>Oops! Something went wrong</AlertTitle>
-									<AlertDescription>{error}</AlertDescription>
+									<AlertTitle>{error.title}</AlertTitle>
+									<AlertDescription>{error.description}</AlertDescription>
 								</Alert>
 							)}
 						</div>
@@ -400,10 +414,10 @@ export function SketchDialog({ isOpen, onOpenChange }: Props) {
 							onClick={() => handleClose(false)}
 							className='px-6'
 						>
-							Cancel
+							{t['cancel']}
 						</Button>
 						<Button type='submit' className='px-6 shadow-sm' disabled={isSaving}>
-							{isSaving ? 'Saving...' : 'Save Sketch'}
+							{isSaving ? t['saving...'] : t['save sketch']}
 						</Button>
 					</DialogFooter>
 				</form>

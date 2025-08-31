@@ -21,8 +21,8 @@ const t = dictionary[Astro.params.lang]
 		<h1
 			class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2'
 		>
-			{t['leave your mark']}
+			{t['visitors marks']}
 		</h1>
-		<Sketch client:idle />
+		<Sketch client:idle lang={Astro.params.lang} />
 	</article>
 </MainLayout>

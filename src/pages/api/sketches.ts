@@ -12,7 +12,7 @@ function errResponse(message: string, status = 500) {
 	return jsonResponse({ error: message }, status)
 }
 
-const COLLECTION = import.meta.env.SKETCHES_COLLECTION
+const COLLECTION = 'sketches'
 
 export async function GET(request: Request) {
 	try {
@@ -77,13 +77,7 @@ export async function POST({ request }: { request: Request }) {
 			createdAt: { $gte: oneHourAgo },
 		})
 		if (recentCount >= 5) {
-			return jsonResponse(
-				{
-					error:
-						"Rate limit exceeded. Looks like you've submitted quite a few sketches recently. Please try again later.",
-				},
-				429
-			)
+			return jsonResponse({ error: 'Rate limit exceeded' }, 429)
 		}
 
 		const doc = { ...parsed.data, createdAt: new Date(), ip }

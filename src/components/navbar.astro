@@ -11,7 +11,6 @@ const { lang }: Props = Astro.props
 const t = dictionary[lang]
 
 const navItems = [
-	{ label: t['home'], href: `/${lang}` },
 	{ label: t['projects'], href: `/${lang}/projects` },
 	{ label: t['blog'], href: `/${lang}/blog` },
 	{ label: t['contact'], href: `/${lang}/contact` },
@@ -24,36 +23,38 @@ const pathname = Astro.url.pathname
 <header class='sticky top-0 z-50 bg-background/60 backdrop-blur-2xl'>
 	<div class='mx-auto max-w-3xl px-8 py-6'>
 		<nav class='flex items-center justify-between'>
-			<ul class='flex gap-4 sm:gap-8'>
-				{
-					navItems.map((nav) => {
-						const isHome = nav.href === `/${lang}`
-						const isActive = isHome
-							? pathname === nav.href || pathname === `${nav.href}/`
-							: pathname.startsWith(nav.href)
+			<a href='/' class='hover:text-foreground hover:underline'>
+				{t['home']}
+			</a>
+			<div class='flex items-center gap-4'>
+				<ul class='flex gap-4'>
+					{
+						navItems.map((nav) => {
+							const isActive = pathname === nav.href || pathname === `${nav.href}/`
 
-						return (
-							<li
-								class={
-									isActive
-										? 'underline font-semibold'
-										: 'hover:text-foreground hover:underline'
-								}
-							>
-								<a href={nav.href}>{nav.label}</a>
-							</li>
-						)
-					})
-				}
-			</ul>
-			<div class='flex gap-2 sm:gap-4'>
-				<LanguageToggle
-					lang={lang}
-					pathname={getPathnameWithoutLang(Astro.url.pathname, lang)}
-					client:idle
-				/>
-				<ChatToggle client:idle />
-				<ThemeToggle client:idle />
+							return (
+								<li
+									class={
+										isActive
+											? 'underline font-semibold'
+											: 'hover:text-foreground hover:underline'
+									}
+								>
+									<a href={nav.href}>{nav.label}</a>
+								</li>
+							)
+						})
+					}
+				</ul>
+				<div class='flex gap-2'>
+					<LanguageToggle
+						lang={lang}
+						pathname={getPathnameWithoutLang(Astro.url.pathname, lang)}
+						client:idle
+					/>
+					<ChatToggle client:idle />
+					<ThemeToggle client:idle />
+				</div>
 			</div>
 		</nav>
 	</div>

@@ -19,6 +19,7 @@ export function ChatToggle() {
 	function toggle() {
 		$isChatBotVisible.set(!isVisible)
 	}
+	if (isVisible) return
 
 	return (
 		<Button size='icon' variant='ghost' onClick={toggle}>

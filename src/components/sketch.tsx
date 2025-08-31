@@ -1,5 +1,7 @@
-import { SketchDialog } from '@/components/sketch-modal'
+import { SketchDialog } from '@/components/sketch-dialog'
 import { Button } from '@/components/ui/button'
+import { dictionary } from '@/i18n/dictionary'
+import type { Language } from '@/i18n/i18n'
 import type { APIResponsePaginated } from '@/lib/types'
 import {
 	QueryClient,
@@ -11,7 +13,7 @@ import { ChevronDown, Plus } from 'lucide-react'
 import { useState } from 'react'
 
 interface Sketch {
-	id: string
+	_id: string
 	name: string
 	message: string
 	dataUrl: string
@@ -20,15 +22,17 @@ interface Sketch {
 
 const queryClient = new QueryClient()
 
-export function Sketch() {
+export function Sketch(props: { lang: Language }) {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<SketchInner />
+			<SketchContent lang={props.lang} />
 		</QueryClientProvider>
 	)
 }
 
-function SketchInner() {
+function SketchContent({ lang }: { lang: Language }) {
+	const t = dictionary[lang]
+
 	const q = useInfiniteQuery({
 		queryKey: ['sketches'],
 		initialPageParam: 0,
@@ -49,7 +53,8 @@ function SketchInner() {
 		<div>
 			<div className='space-y-2'>
 				<Header
-					count={q.data?.pages[0].total ?? 0}
+					lang={lang}
+					count={q.data?.pages[0].total}
 					onAdd={() => setIsDialogOpen(true)}
 				/>
 				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
@@ -58,7 +63,7 @@ function SketchInner() {
 					) : (
 						<>
 							{sketches.map((sketch) => (
-								<SketchCard key={sketch.id} sketch={sketch} />
+								<SketchCard key={sketch._id} sketch={sketch} />
 							))}
 							{q.isFetchingNextPage &&
 								Array.from({ length: 3 }).map((_, i) => <SketchSkeleton key={i} />)}
@@ -69,13 +74,18 @@ function SketchInner() {
 				{q.hasNextPage && !q.isFetchingNextPage && (
 					<div className='flex justify-center mt-4'>
 						<Button onClick={() => q.fetchNextPage()} disabled={q.isFetchingNextPage}>
-							Load More <ChevronDown />
+							{t['load more']}
+							<ChevronDown />
 						</Button>
 					</div>
 				)}
 			</div>
 
-			<SketchDialog isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
+			<SketchDialog
+				lang={lang}
+				isOpen={isDialogOpen}
+				onOpenChange={setIsDialogOpen}
+			/>
 		</div>
 	)
 }
@@ -112,19 +122,28 @@ function SketchSkeleton() {
 	)
 }
 
-function Header({ count, onAdd }: { count: number; onAdd: () => void }) {
+function Header({
+	count,
+	onAdd,
+	lang,
+}: {
+	count: number | undefined
+	onAdd: () => void
+	lang: Language
+}) {
+	const t = dictionary[lang]
 	return (
 		<div className='flex items-center justify-between bg-muted/30 px-4 py-2 rounded-lg'>
-			<div className='text-sm text-muted-foreground'>{`${count} ${
-				count === 1 ? 'sketch' : 'sketches'
-			} so far — vibe check ✅🎨`}</div>
+			<div className='text-sm text-muted-foreground'>{`${count ?? '...'} ${
+				t['sketches so far — vibe check']
+			}  ✅🎨`}</div>
 			<Button
 				size='sm'
 				className='bg-primary hover:bg-primary/90 shadow-sm'
 				onClick={onAdd}
 			>
 				<Plus className='w-4 h-4 mr-2' />
-				Leave a Sketch
+				{t['leave your mark']}
 			</Button>
 		</div>
 	)

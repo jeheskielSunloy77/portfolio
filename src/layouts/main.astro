@@ -39,7 +39,7 @@ const { seo, articleSchema, lang } = Astro.props
 		{articleSchema && <ArticleSchema {...articleSchema} />}
 		<ClientRouter />
 	</head>
-	<body>
+	<body class='font-sans text-foreground bg-background'>
 		<Navbar lang={lang} />
 		<div class='mx-auto flex max-w-3xl flex-col px-8'>
 			<main class='grow'>

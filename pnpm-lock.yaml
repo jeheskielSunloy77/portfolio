@@ -32,6 +32,12 @@ importers:
       '@datastax/astra-db-ts':
         specifier: ^2.0.2
         version: 2.0.2
+      '@fontsource/calistoga':
+        specifier: ^5.2.6
+        version: 5.2.6
+      '@fontsource/inter':
+        specifier: ^5.2.6
+        version: 5.2.6
       '@google/generative-ai':
         specifier: ^0.24.1
         version: 0.24.1
@@ -698,6 +704,12 @@ packages:
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
+
+  '@fontsource/calistoga@5.2.6':
+    resolution: {integrity: sha512-svMC62o3RMVVtUbv1+vLTZZBYPt4+28NxaDTfLmmFN7ZNTk3w5VwYVbxTXHpMDzT3tAClQ+0GsIniKot5xQB+A==}
+
+  '@fontsource/inter@5.2.6':
+    resolution: {integrity: sha512-CZs9S1CrjD0jPwsNy9W6j0BhsmRSQrgwlTNkgQXTsAeDRM42LBRLo3eo9gCzfH4GvV7zpyf78Ozfl773826csw==}
 
   '@google/generative-ai@0.24.1':
     resolution: {integrity: sha512-MqO+MLfM6kjxcKoy0p1wRzG3b4ZZXtPI+z2IE26UogS2Cm/XHO+7gGRBh6gcJsOiIVoH93UwKvW4HdgiOZCy9Q==}
@@ -5529,6 +5541,10 @@ snapshots:
       react-dom: 19.1.1(react@19.1.1)
 
   '@floating-ui/utils@0.2.10': {}
+
+  '@fontsource/calistoga@5.2.6': {}
+
+  '@fontsource/inter@5.2.6': {}
 
   '@google/generative-ai@0.24.1': {}
 

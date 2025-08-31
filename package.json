@@ -17,6 +17,8 @@
 		"@astrojs/rss": "^4.0.12",
 		"@astrojs/sitemap": "^3.5.0",
 		"@datastax/astra-db-ts": "^2.0.2",
+		"@fontsource/calistoga": "^5.2.6",
+		"@fontsource/inter": "^5.2.6",
 		"@google/generative-ai": "^0.24.1",
 		"@hookform/resolvers": "^5.2.1",
 		"@langchain/community": "^0.3.53",

@@ -198,9 +198,11 @@ export const dictionary = {
 		'IAKN Kupang Profile Website': 'IAKN Kupang Profile Website',
 		'related posts': 'related posts',
 		visitors: 'visitors',
+		'leave your mark': 'leave your mark',
 	},
 	id: {
 		visitors: 'pengunjung',
+		'leave your mark': 'tinggalkan jejakmu',
 		'Old Portfolio Website': 'Situs Portofolio Lama',
 		'My old portfolio website, read more about it on my blog post below.':
 			'Situs portofolio lama saya, baca lebih lanjut di postingan blog saya di bawah.',

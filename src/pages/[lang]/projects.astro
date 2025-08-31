@@ -21,7 +21,11 @@ const t = dictionary[Astro.params.lang]
 	}}
 >
 	<article class='mt-8 flex flex-col gap-8 pb-16'>
-		<h1 class='title'>{t['my projects.']}</h1>
+		<h1
+			class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2'
+		>
+			{t['my projects.']}
+		</h1>
 		<ProjectList lang={Astro.params.lang} />
 	</article>
 </MainLayout>

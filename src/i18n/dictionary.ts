@@ -213,8 +213,22 @@ export const dictionary = {
 		'Failed to save sketch': 'Failed to save sketch',
 		'An error occurred while saving your sketch. Please try again later.':
 			'An error occurred while saving your sketch. Please try again later.',
+		"Beep boop... I'm currently offline.": "Beep boop... I'm currently offline.",
+		"Come back later when I've recharged my batteries!":
+			"Come back later when I've recharged my batteries!",
+		'Beep boop! Systems online — fire away, human!':
+			'Beep boop! Systems online — fire away, human!',
+		"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).":
+			"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).",
 	},
 	id: {
+		"Beep boop... I'm currently offline.": 'Beep boop... Saya sedang offline.',
+		"Come back later when I've recharged my batteries!":
+			'Kembali lagi nanti ketika saya sudah mengisi ulang baterai saya!',
+		'Beep boop! Systems online — fire away, human!':
+			'Beep boop! Sistem online — silakan tanya, manusia!',
+		"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).":
+			'Saya adalah robot kecil yang membantu dan mengetahui tentang Jay — tanyakan apa saja dan saya akan mengambil bagian terbaik (dengan tambahan beep).',
 		visitors: 'pengunjung',
 		'visitors marks': 'tinggalkan jejakmu',
 		'load more': 'muat lebih',

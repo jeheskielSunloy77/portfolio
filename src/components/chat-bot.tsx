@@ -6,7 +6,7 @@ import { $isChatBotVisible } from '@/stores/chat-bot'
 import { useChat, type UIMessage } from '@ai-sdk/react'
 import { useStore } from '@nanostores/react'
 import { type ChatStatus, type UIDataTypes, type UITools } from 'ai'
-import { Bot, Loader2, SendHorizontal, Trash } from 'lucide-react'
+import { Bot, BotOff, Loader2, SendHorizontal, Trash } from 'lucide-react'
 import { useEffect, useRef, useState, type HTMLAttributes } from 'react'
 import Markdown from 'react-markdown'
 import {
@@ -20,10 +20,10 @@ import { Input } from './ui/input'
 
 export function ChatBot(props: { lang: Language }) {
 	const isVisible = useStore($isChatBotVisible)
-	if (isVisible) return <Chat lang={props.lang} />
+	if (isVisible) return <Chat lang={props.lang} isAvailable={false} />
 }
 
-function Chat({ lang }: { lang: Language }) {
+function Chat({ lang, isAvailable }: { lang: Language; isAvailable: boolean }) {
 	const { messages, setMessages, error, status, sendMessage } = useChat()
 	const [isOpen, setIsOpen] = useState(false)
 
@@ -40,12 +40,13 @@ function Chat({ lang }: { lang: Language }) {
 				className='fixed bottom-8 right-8 w-80 rounded-md border bg-background'
 			>
 				<AccordionTrigger className='border-b px-6'>
-					<ChatHeader isOpen={isOpen} lang={lang} />
+					<ChatHeader isOpen={isOpen} lang={lang} isAvailable={isAvailable} />
 				</AccordionTrigger>
 				<AccordionContent className='flex max-h-96 min-h-80 flex-col justify-between p-0'>
 					<ChatMessages
 						messages={messages}
 						error={error}
+						isAvailable={isAvailable}
 						status={status}
 						lang={lang}
 					/>
@@ -53,6 +54,7 @@ function Chat({ lang }: { lang: Language }) {
 						sendMessage={sendMessage}
 						setMessages={setMessages}
 						status={status}
+						isAvailable={isAvailable}
 						isClearable={messages.length > 0}
 						lang={lang}
 					/>
@@ -62,15 +64,28 @@ function Chat({ lang }: { lang: Language }) {
 	)
 }
 
-function ChatHeader(props: { isOpen: boolean; lang: Language }) {
+function ChatHeader(props: {
+	isOpen: boolean
+	lang: Language
+	isAvailable: boolean
+}) {
 	const t = dictionary[props.lang]
 	return (
 		<section className='flex w-full items-center justify-start gap-3'>
-			{!props.isOpen && <Bot className='size-5' />}
+			{!props.isOpen &&
+				(props.isAvailable ? (
+					<Bot className='size-5' />
+				) : (
+					<BotOff className='size-5' />
+				))}
 			<div className='flex flex-col items-start'>
 				<p className='text-xs text-muted-foreground'>{t['Chat with']}</p>
 				<div className='flex items-center gap-2'>
-					<span className='size-2 animate-pulse rounded-full bg-emerald-500' />
+					<span
+						className={`size-2 rounded-full ${
+							props.isAvailable ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'
+						}`}
+					/>
 					<p className='text-sm font-medium'>{BOT_NAME}</p>
 				</div>
 			</div>
@@ -88,6 +103,7 @@ interface ChatInputProps extends HTMLAttributes<HTMLFormElement> {
 	isClearable: boolean
 	status: ChatStatus
 	lang: Language
+	isAvailable: boolean
 }
 
 function ChatInput({
@@ -96,6 +112,7 @@ function ChatInput({
 	status,
 	isClearable,
 	lang,
+	isAvailable,
 }: ChatInputProps) {
 	const t = dictionary[lang]
 
@@ -125,7 +142,7 @@ function ChatInput({
 					variant='outline'
 					onClick={() => setMessages([])}
 					className='px-3 py-2'
-					disabled={!isReady}
+					disabled={!isReady || !isAvailable}
 					type='button'
 				>
 					<Trash className='size-4 text-rose-500' />
@@ -136,7 +153,7 @@ function ChatInput({
 				placeholder={t['Ask something...']}
 				value={input}
 				onChange={(e) => setInput(e.target.value)}
-				disabled={!isReady}
+				disabled={!isReady || !isAvailable}
 				onKeyDown={(e) => {
 					if (e.key !== 'Enter') return
 					e.preventDefault()
@@ -161,9 +178,16 @@ interface ChatMessagesProps {
 	error: Error | undefined
 	status: ChatStatus
 	lang: Language
+	isAvailable: boolean
 }
 
-function ChatMessages({ messages, error, status, lang }: ChatMessagesProps) {
+function ChatMessages({
+	messages,
+	error,
+	status,
+	lang,
+	isAvailable,
+}: ChatMessagesProps) {
 	const t = dictionary[lang]
 
 	const scrollRef = useRef<HTMLDivElement>(null)
@@ -184,14 +208,26 @@ function ChatMessages({ messages, error, status, lang }: ChatMessagesProps) {
 				))}
 			</ul>
 
-			{!error && messages.length === 0 && (
+			{!isAvailable && (
+				<div className='mt-16 flex h-full flex-col items-center justify-center gap-2'>
+					<BotOff className='size-6' />
+					<p className='font-medium'>{t["Beep boop... I'm currently offline."]}</p>
+					<p className='text-center text-xs text-muted-foreground'>
+						{t["Come back later when I've recharged my batteries!"]}
+					</p>
+				</div>
+			)}
+
+			{!error && messages.length === 0 && isAvailable && (
 				<div className='mt-16 flex h-full flex-col items-center justify-center gap-2'>
 					<Bot />
-					<p className='font-medium'>{t['Send a message to start the chat!']}</p>
+					<p className='font-medium'>
+						{t['Beep boop! Systems online — fire away, human!']}
+					</p>
 					<p className='text-center text-xs text-muted-foreground'>
 						{
 							t[
-								'You can ask the bot anything about me and it will help to find the relevant information!'
+								"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps)."
 							]
 						}
 					</p>

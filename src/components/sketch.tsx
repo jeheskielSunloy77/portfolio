@@ -48,7 +48,10 @@ function SketchInner() {
 	return (
 		<div>
 			<div className='space-y-2'>
-				<Header count={sketches.length} onAdd={() => setIsDialogOpen(true)} />
+				<Header
+					count={q.data?.pages[0].total ?? 0}
+					onAdd={() => setIsDialogOpen(true)}
+				/>
 				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 					{sketches.map((sketch) => (
 						<SketchCard key={sketch.id} sketch={sketch} />
@@ -56,12 +59,10 @@ function SketchInner() {
 				</div>
 
 				<div className='flex justify-center mt-4'>
-					{q.hasNextPage ? (
+					{q.hasNextPage && (
 						<Button onClick={() => q.fetchNextPage()} disabled={q.isFetchingNextPage}>
 							{q.isFetchingNextPage ? 'Loading...' : 'Load more'}
 						</Button>
-					) : (
-						<span className='text-sm text-muted-foreground'>No more sketches</span>
 					)}
 				</div>
 			</div>

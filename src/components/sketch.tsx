@@ -7,7 +7,7 @@ import {
 	useInfiniteQuery,
 } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { Plus } from 'lucide-react'
+import { ChevronDown, Plus } from 'lucide-react'
 import { useState } from 'react'
 
 interface Sketch {
@@ -53,18 +53,26 @@ function SketchInner() {
 					onAdd={() => setIsDialogOpen(true)}
 				/>
 				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-					{sketches.map((sketch) => (
-						<SketchCard key={sketch.id} sketch={sketch} />
-					))}
-				</div>
-
-				<div className='flex justify-center mt-4'>
-					{q.hasNextPage && (
-						<Button onClick={() => q.fetchNextPage()} disabled={q.isFetchingNextPage}>
-							{q.isFetchingNextPage ? 'Loading...' : 'Load more'}
-						</Button>
+					{q.isLoading ? (
+						Array.from({ length: 9 }).map((_, i) => <SketchSkeleton key={i} />)
+					) : (
+						<>
+							{sketches.map((sketch) => (
+								<SketchCard key={sketch.id} sketch={sketch} />
+							))}
+							{q.isFetchingNextPage &&
+								Array.from({ length: 3 }).map((_, i) => <SketchSkeleton key={i} />)}
+						</>
 					)}
 				</div>
+
+				{q.hasNextPage && !q.isFetchingNextPage && (
+					<div className='flex justify-center mt-4'>
+						<Button onClick={() => q.fetchNextPage()} disabled={q.isFetchingNextPage}>
+							Load More <ChevronDown />
+						</Button>
+					</div>
+				)}
 			</div>
 
 			<SketchDialog isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
@@ -86,6 +94,19 @@ function SketchCard({ sketch }: { sketch: Sketch }) {
 				<span className='text-xs text-muted-foreground mt-2'>
 					{format(sketch.createdAt, 'dd MMM yyyy')}
 				</span>
+			</div>
+		</article>
+	)
+}
+
+function SketchSkeleton() {
+	return (
+		<article className='rounded-lg border border-border p-2 space-y-2 animate-pulse'>
+			<div className='aspect-square bg-muted-foreground/10 dark:bg-secondary-foreground/20 rounded-lg overflow-hidden' />
+			<div>
+				<div className='h-3 bg-muted rounded w-3/4 mb-2' />
+				<div className='h-4 bg-muted rounded w-full mb-1' />
+				<div className='h-3 bg-muted rounded w-1/2 mt-2' />
 			</div>
 		</article>
 	)

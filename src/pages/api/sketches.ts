@@ -21,7 +21,6 @@ export async function GET(request: Request) {
 		const collectionName = process.env.SKETCHES_COLLECTION || 'sketches'
 		const col = db.collection(collectionName)
 
-		// total count for pagination info
 		const total = await col.countDocuments()
 
 		const docs = await col

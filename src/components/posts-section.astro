@@ -28,7 +28,7 @@ const t = dictionary[Astro.props.lang]
 	]}
 	viewMoreHref={`/${Astro.props.lang}/blog`}
 >
-	<Card>
+	<Card className='py-4'>
 		<ul class='flex flex-col'>
 			{
 				posts.map((post, i) => (

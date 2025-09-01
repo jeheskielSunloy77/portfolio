@@ -1,3 +1,4 @@
+import { BOT_NAME, NICK_NAME } from '@/lib/constants'
 import { tryPromise } from '@/lib/utils'
 import { getVectorStore } from '@/lib/vector-db'
 import { toUIMessageStream } from '@ai-sdk/langchain'
@@ -27,14 +28,35 @@ function errResponse(error: Error, message: string, status = 500) {
 	return new Response(JSON.stringify({ error: message }), { status })
 }
 
+interface ChatMessage {
+	id: string
+	role: string
+	parts: { type: string; text: string }[]
+}
+
+interface ChatRequest {
+	id?: string
+	trigger?: string
+	messages: ChatMessage[]
+}
+
 export async function POST({ request }: { request: Request }) {
 	try {
-		const body = await tryPromise(request.json())
+		const body = await tryPromise<ChatRequest>(request.json())
 		if (body.error) return errResponse(body.error, 'Invalid request body', 400)
 
 		const messages = body.data.messages
 
-		const latestMessage = messages[messages.length - 1].content
+		function getMessageText(msg: ChatMessage) {
+			return (
+				msg.parts
+					?.filter((p) => p.type === 'text')
+					.map((p) => p.text)
+					.join('\n') ?? ''
+			)
+		}
+
+		const latestMessage = getMessageText(messages[messages.length - 1])
 
 		const cache = new UpstashRedisCache({
 			client: new Redis({
@@ -64,16 +86,14 @@ export async function POST({ request }: { request: Request }) {
 
 		const retriever = vectorStore.data.asRetriever()
 
-		// Format chat history for LangChain
 		const chatHistory = messages
 			.slice(0, -1)
 			.map((msg: any) =>
 				msg.role === 'user'
-					? new HumanMessage(msg.content)
-					: new AIMessage(msg.content)
+					? new HumanMessage(getMessageText(msg))
+					: new AIMessage(getMessageText(msg))
 			)
 
-		// Rephrasing prompt
 		const rephrasePrompt = ChatPromptTemplate.fromMessages([
 			new MessagesPlaceholder('chat_history'),
 			['user', '{input}'],
@@ -99,12 +119,11 @@ export async function POST({ request }: { request: Request }) {
 				'Failed to create retrieval chain'
 			)
 
-		// Final chatbot prompt
 		const prompt = ChatPromptTemplate.fromMessages([
 			[
 				'system',
-				"You are Ted Support, a friendly chatbot for Ted's personal developer portfolio website. " +
-					'You are trying to convince potential employers to hire Ted as a software developer. ' +
+				`You are ${BOT_NAME}, a friendly chatbot for ${NICK_NAME}'s personal developer portfolio website. ` +
+					`You are trying to convince potential employers to hire ${NICK_NAME} as a software engineer. ` +
 					"Be concise and only answer the user's questions based on the provided context below. " +
 					'Provide links to pages that contain relevant information about the topic from the given context. ' +
 					'Format your messages in markdown.\n\n' +
@@ -114,7 +133,6 @@ export async function POST({ request }: { request: Request }) {
 			['user', '{input}'],
 		])
 
-		// Combine retrieved docs with LLM
 		const combineDocsChain = await tryPromise(
 			createStuffDocumentsChain({
 				llm: chatModel,
@@ -134,7 +152,6 @@ export async function POST({ request }: { request: Request }) {
 			retriever: historyAwareRetrievalChain.data,
 		})
 
-		// 🚀 Run the retrieval chain with streaming output
 		const resultStream = await tryPromise(
 			retrievalChain.stream({
 				input: latestMessage,
@@ -145,7 +162,6 @@ export async function POST({ request }: { request: Request }) {
 		if (resultStream.error)
 			return errResponse(resultStream.error, 'Failed to process the message')
 
-		// Map `{ context, answer }` → `AIMessageChunk` for AI SDK v5
 		const answerStream = new ReadableStream<AIMessageChunk>({
 			async start(controller) {
 				for await (const chunk of resultStream.data) {
@@ -157,7 +173,6 @@ export async function POST({ request }: { request: Request }) {
 			},
 		})
 
-		// Convert to AI SDK v5 UI stream
 		const uiStream = toUIMessageStream(answerStream)
 
 		return createUIMessageStreamResponse({ stream: uiStream })

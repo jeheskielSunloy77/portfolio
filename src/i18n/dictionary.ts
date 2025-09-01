@@ -169,8 +169,7 @@ export const dictionary = {
 		'Coding, but cozy': 'Coding, but cozy',
 		'One codebase, twice the bugs': 'One codebase, twice the bugs',
 		'But it works on my machine™': 'But it works on my machine™',
-		"When you don't need schemas (until you do)":
-			"When you don't need schemas (until you do)",
+		'SQL, but feral': 'SQL, but feral',
 		'SET it and forget it': 'SET it and forget it',
 		'JOIN pain ON suffering': 'JOIN pain ON suffering',
 		'A full featured academic information system for IAKN Kupang University. It includes features like student registration, course management, academic records, LMS, and more.':
@@ -213,24 +212,18 @@ export const dictionary = {
 		'Failed to save sketch': 'Failed to save sketch',
 		'An error occurred while saving your sketch. Please try again later.':
 			'An error occurred while saving your sketch. Please try again later.',
-		"Beep boop... I'm currently offline.": "Beep boop... I'm currently offline.",
-		"Come back later when I've recharged my batteries!":
-			"Come back later when I've recharged my batteries!",
 		'Beep boop! Systems online — fire away, human!':
 			'Beep boop! Systems online — fire away, human!',
 		"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).":
 			"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).",
 	},
 	id: {
-		"Beep boop... I'm currently offline.": 'Beep boop... Saya sedang offline.',
-		"Come back later when I've recharged my batteries!":
-			'Kembali lagi nanti ketika saya sudah mengisi ulang baterai saya!',
 		'Beep boop! Systems online — fire away, human!':
 			'Beep boop! Sistem online — silakan tanya, manusia!',
 		"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).":
 			'Saya adalah robot kecil yang membantu dan mengetahui tentang Jay — tanyakan apa saja dan saya akan mengambil bagian terbaik (dengan tambahan beep).',
 		visitors: 'pengunjung',
-		'visitors marks': 'tinggalkan jejakmu',
+		'visitors marks': 'jejak pengunjung',
 		'load more': 'muat lebih',
 		'sketches so far — vibe check': 'sketsa sejauh ini — vibe check',
 		'leave your mark': 'tinggalkan jejakmu',
@@ -414,8 +407,7 @@ export const dictionary = {
 		'Coding, but cozy': 'Coding, tapi nyaman',
 		'One codebase, twice the bugs': 'Satu codebase, dua kali lipat bug',
 		'But it works on my machine™': 'Tapi ini jalan di mesin saya™',
-		"When you don't need schemas (until you do)":
-			'Apa itu skema (sampai membutuhkannya)',
+		'SQL, but feral': 'SQL, tapi liar',
 		'SET it and forget it': 'SET dan lupakan',
 		'JOIN pain ON suffering': 'JOIN rasa_sakit ON penderitaan',
 		'A full featured academic information system for IAKN Kupang University. It includes features like student registration, course management, academic records, LMS, and more.':

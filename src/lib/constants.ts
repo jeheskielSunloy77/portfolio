@@ -186,7 +186,7 @@ export const SKILLS: Skill[] = [
 	},
 	{
 		name: 'MongoDB',
-		description: "When you don't need schemas (until you do)",
+		description: 'SQL, but feral',
 		imageUrl: '/skills/mongodb.svg',
 		bgColor: 'bg-[#599636]/30',
 	},

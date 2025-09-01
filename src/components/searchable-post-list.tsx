@@ -43,7 +43,7 @@ export function SearchablePostList({ posts, placeholder }: Props) {
 				</Button>
 			</div>
 
-			<Card>
+			<Card className='py-4'>
 				<ul className='flex flex-col'>
 					{filtered.map((post, i) => (
 						<PostCard

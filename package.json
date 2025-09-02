@@ -25,7 +25,7 @@
 		"@langchain/core": "^0.3.72",
 		"@langchain/google-genai": "^0.2.16",
 		"@langchain/openai": "^0.6.9",
-		"@nanostores/react": "github:ai/react",
+		"@nanostores/react": "^1.0.0",
 		"@radix-ui/react-accordion": "^1.2.12",
 		"@radix-ui/react-alert-dialog": "^1.1.15",
 		"@radix-ui/react-avatar": "^1.1.10",

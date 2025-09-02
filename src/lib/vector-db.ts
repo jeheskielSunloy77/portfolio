@@ -5,7 +5,7 @@ const endpoint = import.meta.env.ASTRA_DB_API_ENDPOINT
 const token = import.meta.env.ASTRA_DB_APPLICATION_TOKEN
 const collection = import.meta.env.ASTRA_DB_COLLECTION
 
-import { GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai'
+import { type GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai'
 
 /**
  * Wrapper to use Gemini for embeddings in LangChain-style.

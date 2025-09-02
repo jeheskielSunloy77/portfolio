@@ -12,18 +12,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 export function ExperienceSection(props: { lang: Language }) {
 	const t = dictionary[props.lang]
 	return (
-		<Tabs defaultValue='work'>
-			<TabsList className='mb-2 grid w-full grid-cols-2'>
-				<TabsTrigger value='work'>{t['Work']}</TabsTrigger>
-				<TabsTrigger value='education'>{t['Education']}</TabsTrigger>
-			</TabsList>
-			<TabsContent value='work'>
-				<Timeline experiences={CAREERS} lang={props.lang} />
-			</TabsContent>
-			<TabsContent value='education'>
-				<Timeline experiences={EDUCATIONS} lang={props.lang} />
-			</TabsContent>
-		</Tabs>
+		<section id='experiences'>
+			<Tabs defaultValue='work'>
+				<TabsList className='mb-2 grid w-full grid-cols-2'>
+					<TabsTrigger value='work'>{t['Work']}</TabsTrigger>
+					<TabsTrigger value='education'>{t['Education']}</TabsTrigger>
+				</TabsList>
+				<TabsContent value='work'>
+					<Timeline experiences={CAREERS} lang={props.lang} />
+				</TabsContent>
+				<TabsContent value='education'>
+					<Timeline experiences={EDUCATIONS} lang={props.lang} />
+				</TabsContent>
+			</Tabs>
+		</section>
 	)
 }
 

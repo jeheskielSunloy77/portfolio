@@ -1,0 +1,193 @@
+{
+	"personalInformation": {
+		"fullName": "Jeheskiel Ventioky Sunloy",
+		"nickname": "Jay",
+		"email": "jeheskielventiokysunloy@gmail.com",
+		"location": "Sleman, Yogyakarta, Indonesia",
+		"origin": "Ambon, Maluku, Indonesia",
+		"website": "https://jeheskielsunloy.com",
+		"linkedIn": "https://www.linkedin.com/in/jeheskiel-ventioky-sunloy",
+		"github": "https://github.com/jeheskielSunloy77",
+		"twitter": "https://x.com/jayquery_",
+		"instagram": "https://www.instagram.com/jeheskielsunloy/",
+		"birthDate": "30-12-2000",
+		"languages": ["English (fluent)", "Indonesian (native)"]
+	},
+	"summary": "Jeheskiel 'Jay' Sunloy is a passionate software engineer specializing in web and mobile development. He is proficient in a wide range of technologies including TypeScript, Go, React, Next.js, and Kotlin Multiplatform. He has experience building full-stack applications, from backend services to frontend interfaces. He is a lifelong learner, constantly exploring new technologies and sharing his knowledge through his blog.",
+	"skills": {
+		"programmingLanguagesAndFrameworks": [
+			"TypeScript",
+			"Go (Golang)",
+			"React & React Native",
+			"Next.js",
+			"Node.js",
+			"Kotlin & Kotlin Multiplatform",
+			"Laravel (PHP)",
+			"Tailwind CSS"
+		],
+		"databasesAndCloud": ["PostgreSQL", "MongoDB", "Redis", "AWS", "Docker"],
+		"other": [
+			"Git & GitHub",
+			"Clean Architecture",
+			"Design Patterns",
+			"Agile Methodologies"
+		]
+	},
+	"workExperience": [
+		{
+			"company": "PéMad International Transearch",
+			"title": "Software Engineer",
+			"duration": "Mar 2024 - Present",
+			"description": "Builds and maintains mobile and web applications. Part of the digipémad team, focusing on software development products and services. Collaborates with cross-functional teams to deliver high-quality software."
+		},
+		{
+			"company": "Refactory",
+			"title": "Software Engineer Intern",
+			"duration": "Jul 2022 - Sep 2022",
+			"description": "Completed an intensive 7-week program on full-stack web development. Gained experience with React, Node.js, and Go. Worked on a real-world project with mentorship from experienced engineers."
+		},
+		{
+			"company": "PT. KreasiX, Salatiga",
+			"title": "Developer Intern",
+			"duration": "May 2022 - Jul 2022",
+			"description": "First internship experience. Built a backend for the company website using Node.js and Firebase."
+		}
+	],
+	"education": [
+		{
+			"institution": "Satya Wacana Christian University",
+			"degree": "Bachelor of Science in Computer Science",
+			"duration": "2017 - 2022",
+			"details": "GPA: 3.2. Senior project on real-time collaboration tools."
+		},
+		{
+			"institution": "SMA 1 Ambon",
+			"degree": "High School Diploma",
+			"duration": "2014 - 2017",
+			"details": ""
+		}
+	],
+	"projects": [
+		{
+			"name": "Academic Information System",
+			"description": "A full-featured academic information system for IAKN Kupang University.",
+			"technologies": ["Next.js", "PostgreSQL", "Tailwind CSS", "TypeScript"]
+		},
+		{
+			"name": "Cross-Platform Coffee Shop App",
+			"description": "A mobile app for ordering coffee.",
+			"technologies": [
+				"React Native",
+				"Expo",
+				"Supabase",
+				"TypeScript",
+				"Tailwind CSS"
+			]
+		},
+		{
+			"name": "Ecommerce App",
+			"description": "A full-stack e-commerce application.",
+			"technologies": ["PHP", "Laravel", "Tailwind CSS"]
+		},
+		{
+			"name": "Ecommerce Web Scraper",
+			"description": "A web scraper for finding products online.",
+			"technologies": ["Go", "Colly"]
+		},
+		{
+			"name": "IAKN Kupang Profile Website",
+			"description": "A full-stack website for IAKN Kupang University.",
+			"technologies": ["Astro", "PostgreSQL", "Tailwind CSS"]
+		},
+		{
+			"name": "PWA Weather App",
+			"description": "A progressive web app for weather reports.",
+			"technologies": ["Next.js", "Tailwind CSS", "TypeScript"]
+		},
+		{
+			"name": "CRUD App",
+			"description": "A simple CRUD application.",
+			"technologies": ["React", "Ant Design", "Tailwind CSS"]
+		}
+	],
+	"website": {
+		"dateLaunched": "January 2025",
+		"description": "My personal portfolio website showcasing my skills, projects, and blog posts. Built with Astro + React and Tailwind CSS for optimal performance and SEO. Supports multiple languages (English and Indonesian) and features a clean, modern design. In the home page you can find sections like Hero, Experience, Skills, Projects, and Posts which can be navigated easily like '#experiences' to jump directly to the Experience section.",
+		"languages": ["en", "id"],
+		"resumeLink": {
+			"en": "resume_en.pdf",
+			"id": "resume_id.pdf"
+		},
+		"routes": [
+			"/",
+			"/[lang]/contact",
+			"/[lang]/privacy",
+			"/[lang]/projects",
+			"/[lang]/visitors",
+			"/[lang]/blog",
+			"/[lang]/blog/[slug]"
+		],
+		"homePageSections": [
+			{
+				"id": "hero",
+				"name": "Hero Section"
+			},
+			{
+				"id": "experiences",
+				"name": "Experience Section"
+			},
+			{
+				"id": "skills",
+				"name": "Skills Section"
+			},
+			{
+				"id": "projects",
+				"name": "Projects Section"
+			},
+			{
+				"id": "posts",
+				"name": "Posts Section"
+			}
+		]
+	},
+	"blogPosts": [
+		{
+			"title": "How I Keep My Go Code Clean (Without Going Crazy)",
+			"summary": "Learn how to structure Go applications with clean architecture principles that actually work. Discover why pure Clean Architecture doesn't fit Go, and get a practical approach using services and repositories that keeps code maintainable without over-engineering.",
+			"url_en": "/en/blog/how-i-keep-my-go-code-clean-without-going-crazy",
+			"url_id": "/id/blog/cara-saya-menjaga-kode-go-tetap-bersih-tanpa-jadi-gila"
+		},
+		{
+			"title": "How I Made My Portfolio Load Faster Than My Attention Span",
+			"summary": "I rebuilt my portfolio website from Next.js to Astro.js and got a massive performance boost. Next.js is amazing for web applications, but for a static site like my portfolio, Astro delivers blazing-fast load times, better SEO, and a leaner codebase—while still letting me use React for interactive components.",
+			"url_en": "/en/blog/how-i-made-my-portfolio-load-faster-than-my-attention-span",
+			"url_id": "/id/blog/cara-saya-membuat-portofolio-muat-lebih-cepat-daripada-rentang-perhatian-saya"
+		},
+		{
+			"title": "Kotlin Multiplatform vs React Native: Which Cross-Platform Framework Should You Choose?",
+			"summary": "Honest comparison of Kotlin Multiplatform vs React Native from a developer who has used both. Performance, DX, and real-world insights to help you choose the right cross-platform framework in 2025.",
+			"url_en": "/en/blog/kotlin-multiplatform-vs-react-native",
+			"url_id": "/id/blog/kotlin-multiplatform-vs-react-native"
+		},
+		{
+			"title": "Redesigning My Portfolio: Making Space for What Matters",
+			"summary": "A behind-the-scenes look at how I simplified my portfolio website. I went from a crowded, colorful design to a clean, minimal, and modern look that puts my work front and center. See the before & after, check out the live demos, and explore the open-source code on GitHub.",
+			"url_en": "/en/blog/redesigning-my-portfolio-making-space-for-what-matters",
+			"url_id": "/id/blog/mendesain-ulang-portofolio-memberi-ruang-untuk-hal-yang-penting"
+		}
+	],
+	"personalInterests": [
+		"Reading technical tech blogs, articles, and books",
+		"Contributing to open source projects",
+		"Building side projects",
+		"Sports (badminton and running)"
+	],
+	"openSourceContributions": [
+		{
+			"project": "Langchain AI",
+			"repository": "https://github.com/langchain-ai/langchainjs",
+			"role": "Contributor",
+			"contribution": "Fixed some bugs found while using the library."
+		}
+	]
+}

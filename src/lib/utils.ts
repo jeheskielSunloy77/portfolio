@@ -18,3 +18,11 @@ export async function tryPromise<T>(
 		}
 	}
 }
+
+export function log(
+	level: 'info' | 'warn' | 'error',
+	tag: string,
+	...messages: any[]
+) {
+	console[level](`[${level.toUpperCase()}] [${tag}]`, ...messages)
+}

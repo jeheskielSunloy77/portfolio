@@ -1,5 +1,5 @@
 import { BOT_NAME, NICK_NAME } from '@/lib/constants'
-import { tryPromise } from '@/lib/utils'
+import { log, tryPromise } from '@/lib/utils'
 import { getVectorStore } from '@/lib/vector-db'
 import { toUIMessageStream } from '@ai-sdk/langchain'
 import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis'
@@ -21,9 +21,13 @@ import { createStuffDocumentsChain } from 'langchain/chains/combine_documents'
 import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever'
 import { createRetrievalChain } from 'langchain/chains/retrieval'
 
+const TAG = '[ChatBotAPI]'
+
 function errResponse(error: Error, message: string, status = 500) {
-	console.error(
-		`[CHAT_BOT_API] [ERROR] message: ${message}\n error: ${error.message} stack: ${error.stack}`
+	log(
+		'error',
+		TAG,
+		`message: ${message}\n error: ${error.message} stack: ${error.stack}`
 	)
 	return new Response(JSON.stringify({ error: message }), { status })
 }
@@ -177,7 +181,7 @@ export async function POST({ request }: { request: Request }) {
 
 		return createUIMessageStreamResponse({ stream: uiStream })
 	} catch (error) {
-		console.error(error)
+		log('error', TAG, 'Unexpected error:', error)
 		return new Response(JSON.stringify({ error: 'Internal server error' }), {
 			status: 500,
 		})

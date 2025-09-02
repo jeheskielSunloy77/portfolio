@@ -1,4 +1,5 @@
 import { getDb } from '@/lib/mongodb'
+import { log } from '@/lib/utils'
 import z from 'zod'
 
 function jsonResponse(data: unknown, status = 200) {
@@ -8,13 +9,16 @@ function jsonResponse(data: unknown, status = 200) {
 	})
 }
 
-function errResponse(message: string, status = 500) {
+function errResponse(tag: string, message: string, status = 500) {
+	log('error', tag, message)
 	return jsonResponse({ error: message }, status)
 }
 
 const COLLECTION = 'sketches'
 
 export async function GET(request: Request) {
+	const TAG = '[SketchesApiGet]'
+
 	try {
 		const url = new URL(request.url)
 		const page = Math.max(0, Number(url.searchParams.get('page') ?? '0'))
@@ -50,17 +54,18 @@ export async function GET(request: Request) {
 			nextPage: hasMore ? page + 1 : undefined,
 		})
 	} catch (e: any) {
-		console.error('[SKETCHES_API][GET]', e)
-		return errResponse('Failed to fetch sketches')
+		return errResponse(TAG, 'Failed to fetch sketches')
 	}
 }
 
 export async function POST({ request }: { request: Request }) {
+	const TAG = '[SketchesApiPOST]'
+
 	try {
 		const body = await request.json()
 
 		const parsed = sketchInsertSchema.safeParse(body)
-		if (!parsed.success) return errResponse('Invalid request body', 400)
+		if (!parsed.success) return errResponse(TAG, 'Invalid request body', 400)
 
 		const db = await getDb()
 		const col = db.collection(COLLECTION)
@@ -87,10 +92,10 @@ export async function POST({ request }: { request: Request }) {
 			...doc,
 		}
 
+		log('info', TAG, `New sketch submitted from IP ${ip} with id ${result._id}`)
 		return jsonResponse(result, 201)
 	} catch (e: any) {
-		console.error('[SKETCHES_API][POST]', e)
-		return errResponse('Failed to save sketch')
+		return errResponse(TAG, 'Failed to save sketch')
 	}
 }
 

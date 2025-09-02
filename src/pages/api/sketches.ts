@@ -17,7 +17,7 @@ function errResponse(tag: string, message: string, status = 500) {
 const COLLECTION = 'sketches'
 
 export async function GET(request: Request) {
-	const TAG = '[SketchesApiGet]'
+	const TAG = 'SketchesApiGet'
 
 	try {
 		const url = new URL(request.url)
@@ -59,7 +59,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST({ request }: { request: Request }) {
-	const TAG = '[SketchesApiPOST]'
+	const TAG = 'SketchesApiPOST'
 
 	try {
 		const body = await request.json()

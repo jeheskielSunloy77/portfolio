@@ -21,7 +21,7 @@ import { createStuffDocumentsChain } from 'langchain/chains/combine_documents'
 import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever'
 import { createRetrievalChain } from 'langchain/chains/retrieval'
 
-const TAG = '[ChatBotAPI]'
+const TAG = 'ChatBotApi'
 
 function errResponse(error: Error, message: string, status = 500) {
 	log(

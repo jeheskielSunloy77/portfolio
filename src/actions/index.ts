@@ -22,7 +22,7 @@ export const server = {
 			message: z.string().min(5),
 		}),
 		handler: async ({ name, email, message }) => {
-			const TAG = '[SendEmailAction]'
+			const TAG = 'SendEmailAction'
 			try {
 				const payload = {
 					from: `"${name}" <${email}>`,
@@ -35,6 +35,8 @@ export const server = {
 				}
 
 				await transporter.sendMail(payload)
+
+				console.log('Email sent:', payload)
 
 				log('info', TAG, `Email sent successfully from ${name} <${email}>`)
 

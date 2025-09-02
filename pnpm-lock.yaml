@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@langchain/community@0.3.53':
-    hash: 252df4572605bb39e6a33a43634e5c0a1f61a345afa0ff78a21484d2a775f632
+    hash: cc515b470188ad2b389a2d91bb8d4168ee26556137cbb094763df21fc5ae7d0f
     path: patches/@langchain__community@0.3.53.patch
 
 importers:
@@ -51,7 +51,7 @@ importers:
         version: 5.2.1(react-hook-form@7.62.0(react@19.1.1))
       '@langchain/community':
         specifier: ^0.3.53
-        version: 0.3.53(patch_hash=252df4572605bb39e6a33a43634e5c0a1f61a345afa0ff78a21484d2a775f632)(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/credential-provider-node@3.879.0)(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.55.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))(zod@4.1.5))(@datastax/astra-db-ts@2.0.2)(@ibm-cloud/watsonx-ai@1.6.12)(@langchain/core@0.3.72(@opentelemetry/api@1.9.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5)))(@langchain/google-genai@0.2.16(@langchain/core@0.3.72(@opentelemetry/api@1.9.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))))(@opentelemetry/api@1.9.0)(@smithy/util-utf8@2.3.0)(@upstash/redis@1.35.3)(axios@1.11.0)(fast-xml-parser@5.2.5)(ibm-cloud-sdk-core@5.4.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(mongodb@6.19.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))(playwright@1.55.0)(weaviate-client@3.8.1)(ws@8.18.3)
+        version: 0.3.53(patch_hash=cc515b470188ad2b389a2d91bb8d4168ee26556137cbb094763df21fc5ae7d0f)(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/credential-provider-node@3.879.0)(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.55.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))(zod@4.1.5))(@datastax/astra-db-ts@2.0.2)(@ibm-cloud/watsonx-ai@1.6.12)(@langchain/core@0.3.72(@opentelemetry/api@1.9.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5)))(@langchain/google-genai@0.2.16(@langchain/core@0.3.72(@opentelemetry/api@1.9.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))))(@opentelemetry/api@1.9.0)(@smithy/util-utf8@2.3.0)(@upstash/redis@1.35.3)(axios@1.11.0)(fast-xml-parser@5.2.5)(ibm-cloud-sdk-core@5.4.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(mongodb@6.19.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))(playwright@1.55.0)(weaviate-client@3.8.1)(ws@8.18.3)
       '@langchain/core':
         specifier: ^0.3.72
         version: 0.3.72(@opentelemetry/api@1.9.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))
@@ -5836,7 +5836,7 @@ snapshots:
 
   '@js-sdsl/ordered-map@4.4.2': {}
 
-  '@langchain/community@0.3.53(patch_hash=252df4572605bb39e6a33a43634e5c0a1f61a345afa0ff78a21484d2a775f632)(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/credential-provider-node@3.879.0)(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.55.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))(zod@4.1.5))(@datastax/astra-db-ts@2.0.2)(@ibm-cloud/watsonx-ai@1.6.12)(@langchain/core@0.3.72(@opentelemetry/api@1.9.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5)))(@langchain/google-genai@0.2.16(@langchain/core@0.3.72(@opentelemetry/api@1.9.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))))(@opentelemetry/api@1.9.0)(@smithy/util-utf8@2.3.0)(@upstash/redis@1.35.3)(axios@1.11.0)(fast-xml-parser@5.2.5)(ibm-cloud-sdk-core@5.4.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(mongodb@6.19.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))(playwright@1.55.0)(weaviate-client@3.8.1)(ws@8.18.3)':
+  '@langchain/community@0.3.53(patch_hash=cc515b470188ad2b389a2d91bb8d4168ee26556137cbb094763df21fc5ae7d0f)(@aws-crypto/sha256-js@5.2.0)(@aws-sdk/credential-provider-node@3.879.0)(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.55.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))(zod@4.1.5))(@datastax/astra-db-ts@2.0.2)(@ibm-cloud/watsonx-ai@1.6.12)(@langchain/core@0.3.72(@opentelemetry/api@1.9.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5)))(@langchain/google-genai@0.2.16(@langchain/core@0.3.72(@opentelemetry/api@1.9.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))))(@opentelemetry/api@1.9.0)(@smithy/util-utf8@2.3.0)(@upstash/redis@1.35.3)(axios@1.11.0)(fast-xml-parser@5.2.5)(ibm-cloud-sdk-core@5.4.2)(jsonwebtoken@9.0.2)(lodash@4.17.21)(mongodb@6.19.0)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))(playwright@1.55.0)(weaviate-client@3.8.1)(ws@8.18.3)':
     dependencies:
       '@browserbasehq/stagehand': 1.14.0(@playwright/test@1.55.0)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@5.12.2(ws@8.18.3)(zod@4.1.5))(zod@4.1.5)
       '@ibm-cloud/watsonx-ai': 1.6.12

@@ -23,7 +23,7 @@ const pathname = Astro.url.pathname
 <header class='sticky top-0 z-50 bg-background/60 backdrop-blur-2xl'>
 	<div class='mx-auto max-w-3xl px-8 py-6'>
 		<nav class='flex items-center justify-between'>
-			<a href='/' class='hover:text-foreground hover:underline'>
+			<a href={`/${lang}`} class='hover:text-foreground hover:underline'>
 				{t['home']}
 			</a>
 			<div class='flex items-center gap-4'>

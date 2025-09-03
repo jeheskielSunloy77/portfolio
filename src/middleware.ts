@@ -1,7 +1,7 @@
 import { defineMiddleware } from 'astro:middleware'
 import { DEFAULT_LANGUAGE, LANGUAGES, type Language } from './i18n/i18n'
 
-const omitedPaths = ['/api', '/_actions']
+const omitedPaths = ['/api', '/robots.txt', '/_']
 
 export const onRequest = defineMiddleware((context, next) => {
 	const url = new URL(context.request.url)

@@ -11,7 +11,7 @@ const { href, position = 'left', text, class: className = '' } = Astro.props
 
 <a
 	href={href}
-	class={`link flex group items-center gap-2 font-light ${className}`}
+	class={`link flex group items-center gap-2 font-light ${className} hover:underline`}
 >
 	{
 		position === 'left' && (

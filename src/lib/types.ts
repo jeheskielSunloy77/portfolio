@@ -27,7 +27,7 @@ export interface Experience {
 
 export interface Project {
 	isFeatured?: boolean
-	image?: string
+	image?: ImageMetadata
 	name: LocalizedString
 	description: LocalizedString
 	href?: string

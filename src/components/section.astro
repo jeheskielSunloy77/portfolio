@@ -23,9 +23,11 @@ const t = dictionary[Astro.props.lang]
 <section id={id} class='space-y-8'>
 	<div class='space-y-4'>
 		<div class='flex justify-between w-full'>
-			<h1 class='text-2xl md:text-3xl font-extrabold flex-1 max-w-lg'>
+			<h2
+				class='font-serif text-4xl tracking-wide decoration-border/75 decoration-2 flex-1 max-w-lg'
+			>
 				{title}
-			</h1>
+			</h2>
 			{
 				viewMoreHref && (
 					<LinkWithIcon href={viewMoreHref} position='right' text={t['view more']}>

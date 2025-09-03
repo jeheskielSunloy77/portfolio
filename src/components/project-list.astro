@@ -2,6 +2,7 @@
 import { dictionary } from '@/i18n/dictionary'
 import type { Language } from '@/i18n/i18n'
 import { PROJECTS } from '@/lib/constants'
+import { Image } from 'astro:assets'
 import { Badge } from './ui/badge'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 
@@ -28,13 +29,13 @@ const t = dictionary[Astro.props.lang]
 			<Card className='flex flex-col'>
 				<CardHeader>
 					{project.image && (
-						<a href={project.href || project.image}>
-							<img
+						<a href={project.href || project.image?.src}>
+							<Image
 								src={project.image}
 								alt={t[project.name]}
 								width={500}
 								height={300}
-								class='h-40 w-full object-cover object-top'
+								class='h-40 w-full object-cover object-top rounded-lg'
 							/>
 						</a>
 					)}

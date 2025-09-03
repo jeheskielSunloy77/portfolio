@@ -6,7 +6,10 @@ import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
+import { loadEnv } from 'vite';
 // import "./src/env";
+
+const env = loadEnv(process.env.NODE_ENV ?? 'development', process.cwd(), "");
 
 
 // https://astro.build/config
@@ -16,7 +19,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  site: import.meta.env.APP_URL || 'http://localhost:4321',
+  site: env.APP_URL || 'http://localhost:4321',
   integrations: [react(), mdx(), sitemap()],
 
   adapter: vercel(),

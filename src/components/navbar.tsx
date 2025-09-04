@@ -104,7 +104,7 @@ function DockNavbar(props: { lang: Language; pathname: string }) {
 	const isChatBotVisible = useStore($isChatBotVisible)
 
 	const navItems = [
-		{ label: t['home'], href: `/${props.lang}/`, icon: HomeIcon },
+		{ label: t['home'], href: `/${props.lang}`, icon: HomeIcon },
 		{
 			label: t['projects'],
 			href: `/${props.lang}/projects`,
@@ -118,21 +118,26 @@ function DockNavbar(props: { lang: Language; pathname: string }) {
 	return (
 		<TooltipProvider>
 			<Dock direction='middle'>
-				{navItems.map((item, i) => (
-					<DockNavbarItem key={i} label={item.label}>
-						<a
-							href={item.href}
-							aria-label={item.label}
-							className={cn(
-								buttonVariants({ variant: 'ghost', size: 'icon' }),
-								item.href === props.pathname && 'bg-accent',
-								'size-12 rounded-full'
-							)}
-						>
-							<item.icon className='size-4' />
-						</a>
-					</DockNavbarItem>
-				))}
+				{navItems.map((item, i) => {
+					const isActive =
+						props.pathname === item.href || props.pathname === `${item.href}/`
+
+					return (
+						<DockNavbarItem key={i} label={item.label}>
+							<a
+								href={item.href}
+								aria-label={item.label}
+								className={cn(
+									buttonVariants({ variant: 'ghost', size: 'icon' }),
+									isActive && 'bg-accent',
+									'size-12 rounded-full'
+								)}
+							>
+								<item.icon className='size-4' />
+							</a>
+						</DockNavbarItem>
+					)
+				})}
 				<Separator orientation='vertical' className='h-full' />
 				<DockNavbarItem label={t['toggle theme']}>
 					<Button

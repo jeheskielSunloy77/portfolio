@@ -1,11 +1,11 @@
 ---
 import photoOfMe from '@/assets/me/me.webp'
-import { Button } from '@/components/ui/button'
 import { dictionary } from '@/i18n/dictionary'
 import { type Language } from '@/i18n/i18n'
 import { BIRTH_DATE, BOT_NAME, NICK_NAME } from '@/lib/constants'
 import { Image } from 'astro:assets'
 import { ArrowDown, ArrowDownRight, Bot, FileDown } from 'lucide-react'
+import { RainbowButton } from './magicui/rainbow-button'
 import Socials from './socials.astro'
 
 function getAge(birthDate: Date) {
@@ -87,10 +87,10 @@ const t = dictionary[Astro.props.lang]
 
 		<section class='mt-6 flex flex-wrap items-center gap-4'>
 			<a href='/resume.pdf' target='_blank'>
-				<Button variant='outline'>
-					<span class='font-semibold'>{t['Resume']}</span>
-					<FileDown className='ml-2 size-5' />
-				</Button>
+				<RainbowButton variant='outline'>
+					Resume
+					<FileDown />
+				</RainbowButton>
 			</a>
 			<Socials />
 		</section>

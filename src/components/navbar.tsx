@@ -123,79 +123,96 @@ function DockNavbar(props: { lang: Language; pathname: string }) {
 						props.pathname === item.href || props.pathname === `${item.href}/`
 
 					return (
-						<DockNavbarItem key={i} label={item.label}>
-							<a
-								href={item.href}
-								aria-label={item.label}
-								className={cn(
-									buttonVariants({ variant: 'ghost', size: 'icon' }),
-									isActive && 'bg-accent',
-									'size-12 rounded-full'
-								)}
-							>
-								<item.icon className='size-4' />
-							</a>
-						</DockNavbarItem>
+						<DockIcon key={i}>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<a
+										href={item.href}
+										aria-label={item.label}
+										className={cn(
+											buttonVariants({
+												variant: isActive ? 'default' : 'ghost',
+												size: 'icon',
+											}),
+											'size-12 rounded-full'
+										)}
+									>
+										<item.icon className='size-4' />
+									</a>
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>{item.label}</p>
+								</TooltipContent>
+							</Tooltip>
+						</DockIcon>
 					)
 				})}
 				<Separator orientation='vertical' className='h-full' />
-				<DockNavbarItem label={t['toggle theme']}>
-					<Button
-						onClick={toggleTheme}
-						ref={themeButtonRef}
-						aria-label={t['toggle theme']}
-						variant='ghost'
-						size='icon'
-						className='size-12 rounded-full'
-					>
-						{theme === 'dark' ? (
-							<Sun className='size-4' />
-						) : (
-							<Moon className='size-4' />
-						)}
-					</Button>
-				</DockNavbarItem>
-				<DockNavbarItem label={t['toggle language']}>
-					<LanguageDropdown
-						lang={props.lang}
-						pathname={getPathnameWithoutLang(props.pathname, props.lang)}
-					>
-						<Button
-							aria-label={t['toggle language']}
-							variant='ghost'
-							size='icon'
-							className='size-12 rounded-full'
-						>
-							<Languages className='size-4' />
-						</Button>
-					</LanguageDropdown>
-				</DockNavbarItem>
-				<DockNavbarItem label={t['toggle chat']}>
-					<Button
-						aria-label={t['toggle chat']}
-						variant='ghost'
-						size='icon'
-						className='size-12 rounded-full'
-						onClick={() => ($isChatBotVisible.set(!isChatBotVisible), true)}
-					>
-						<Bot className='size-4' />
-					</Button>
-				</DockNavbarItem>
+				<DockIcon>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								onClick={toggleTheme}
+								ref={themeButtonRef}
+								aria-label={t['toggle theme']}
+								variant='ghost'
+								size='icon'
+								className='size-12 rounded-full'
+							>
+								{theme === 'dark' ? (
+									<Sun className='size-4' />
+								) : (
+									<Moon className='size-4' />
+								)}
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>{t['toggle theme']}</p>
+						</TooltipContent>
+					</Tooltip>
+				</DockIcon>
+				<DockIcon>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<LanguageDropdown
+								lang={props.lang}
+								pathname={getPathnameWithoutLang(props.pathname, props.lang)}
+							>
+								<Button
+									aria-label={t['toggle language']}
+									variant='ghost'
+									size='icon'
+									className='size-12 rounded-full'
+								>
+									<Languages className='size-4' />
+								</Button>
+							</LanguageDropdown>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>{t['toggle language']}</p>
+						</TooltipContent>
+					</Tooltip>
+				</DockIcon>
+				<DockIcon>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								aria-label={t['toggle chat']}
+								variant='ghost'
+								size='icon'
+								className='size-12 rounded-full'
+								onClick={() => ($isChatBotVisible.set(!isChatBotVisible), true)}
+							>
+								<Bot className='size-4' />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>{t['toggle chat']}</p>
+						</TooltipContent>
+					</Tooltip>
+				</DockIcon>
 			</Dock>
 		</TooltipProvider>
-	)
-}
-
-function DockNavbarItem(props: { children: React.ReactNode; label: string }) {
-	return (
-		<DockIcon>
-			<Tooltip>
-				<TooltipTrigger asChild>{props.children}</TooltipTrigger>
-				<TooltipContent>
-					<p>{props.label}</p>
-				</TooltipContent>
-			</Tooltip>
-		</DockIcon>
 	)
 }
 

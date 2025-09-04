@@ -11,6 +11,7 @@ import {
 import { format } from 'date-fns'
 import { ChevronDown, Plus } from 'lucide-react'
 import { useState } from 'react'
+import { RainbowButton } from './magicui/rainbow-button'
 
 interface Sketch {
 	_id: string
@@ -137,14 +138,10 @@ function Header({
 			<div className='text-sm text-muted-foreground'>{`${count ?? '...'} ${
 				t['sketches so far — vibe check']
 			}  ✅🎨`}</div>
-			<Button
-				size='sm'
-				className='bg-primary hover:bg-primary/90 shadow-sm'
-				onClick={onAdd}
-			>
-				<Plus className='w-4 h-4 mr-2' />
+			<RainbowButton onClick={onAdd}>
+				<Plus />
 				{t['leave your mark']}
-			</Button>
+			</RainbowButton>
 		</div>
 	)
 }

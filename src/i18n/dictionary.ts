@@ -106,7 +106,7 @@ export const dictionary = {
 		"I'd love to hear from you!": "I'd love to hear from you!",
 		'Welcome to {APP_NAME}, the personal portfolio of {FULL_NAME}. Explore my projects, blog posts, and more.':
 			'Welcome to {APP_NAME}, the personal portfolio of {FULL_NAME}. Explore my projects, blog posts, and more.',
-		'hi {NICK_NAME} here. 👋': 'hi {NICK_NAME} here. 👋',
+		'hi {NICK_NAME} here 👋': 'hi {NICK_NAME} here 👋',
 		'{AGE} yo software engineer hailing from Indonesia 🇮🇩':
 			'{AGE} yo software engineer hailing from Indonesia 🇮🇩',
 		'Backend by trade, full-stack by passion. I build and self-host the lot.':
@@ -346,7 +346,7 @@ export const dictionary = {
 		"I'd love to hear from you!": 'Saya senang mendengarnya dari Anda!',
 		'Welcome to {APP_NAME}, the personal portfolio of {FULL_NAME}. Explore my projects, blog posts, and more.':
 			'Selamat datang di {APP_NAME}, portofolio pribadi {FULL_NAME}. Jelajahi proyek-proyek, postingan blog, dan lainnya.',
-		'hi {NICK_NAME} here. 👋': 'halo {NICK_NAME} di sini. 👋',
+		'hi {NICK_NAME} here 👋': 'hai {NICK_NAME} di sini 👋',
 		'{AGE} yo software engineer hailing from Indonesia 🇮🇩':
 			'sofware engineer {AGE} tahun dari Indonesia 🇮🇩',
 		'Backend by trade, full-stack by passion. I build and self-host the lot.':

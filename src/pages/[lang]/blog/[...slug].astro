@@ -109,7 +109,11 @@ const shareURL = {
 		}
 
 		<header class='space-y-3'>
-			<h1 class='text-5xl font-extrabold'>{post.data.title}</h1>
+			<h1
+				class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2'
+			>
+				{post.data.title}
+			</h1>
 			<div class='flex items-center gap-4'>
 				<p class='text-sm text-muted-foreground'>
 					{formatDate(post.data.publishedAt, 'MMMM dd, yyyy')}

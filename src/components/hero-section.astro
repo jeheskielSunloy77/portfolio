@@ -4,8 +4,8 @@ import { dictionary } from '@/i18n/dictionary'
 import { type Language } from '@/i18n/i18n'
 import { BIRTH_DATE, BOT_NAME, NICK_NAME } from '@/lib/constants'
 import { Image } from 'astro:assets'
-import { ArrowDown, ArrowDownRight, Bot, FileDown } from 'lucide-react'
-import { RainbowButton } from './magicui/rainbow-button'
+import { ArrowDown, ArrowDownRight, Bot } from 'lucide-react'
+import { ResumeButton } from './hero-section.client'
 import Socials from './socials.astro'
 
 function getAge(birthDate: Date) {
@@ -42,7 +42,7 @@ const t = dictionary[Astro.props.lang]
 		<h1
 			class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2 text-balance'
 		>
-			{t['hi {NICK_NAME} here. 👋'].replace('{NICK_NAME}', NICK_NAME)}
+			{t['hi {NICK_NAME} here 👋'].replace('{NICK_NAME}', NICK_NAME)}
 		</h1>
 
 		<p class='mt-2 whitespace-nowrap text-sm font-medium sm:text-base'>
@@ -85,13 +85,8 @@ const t = dictionary[Astro.props.lang]
 			{t['instead.']}
 		</p>
 
-		<section class='mt-6 flex flex-wrap items-center gap-4'>
-			<a href='/resume.pdf' target='_blank'>
-				<RainbowButton variant='outline'>
-					Resume
-					<FileDown />
-				</RainbowButton>
-			</a>
+		<section class='mt-6 flex flex-wrap items-center gap-6'>
+			<ResumeButton client:idle />
 			<Socials />
 		</section>
 	</div>

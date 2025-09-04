@@ -60,10 +60,10 @@ function ChatToggle() {
 }
 
 function ThemeToggle() {
-	const { theme, toggle } = useTheme()
+	const { theme, toggle, buttonRef } = useTheme()
 
 	return (
-		<Button size='icon' variant='ghost' onClick={toggle}>
+		<Button size='icon' variant='ghost' ref={buttonRef} onClick={toggle}>
 			{theme === 'dark' ? (
 				<Sun className='size-4 text-orange-300' />
 			) : (
@@ -99,7 +99,7 @@ function LanguageDropdown(props: {
 function DockNavbar(props: { lang: Language; pathname: string }) {
 	const t = dictionary[props.lang]
 
-	const { theme, toggle } = useTheme()
+	const { theme, toggle: toggleTheme, buttonRef: themeButtonRef } = useTheme()
 
 	const isChatBotVisible = useStore($isChatBotVisible)
 
@@ -141,7 +141,8 @@ function DockNavbar(props: { lang: Language; pathname: string }) {
 				<Separator orientation='vertical' className='h-full' />
 				<DockNavbarItem label={t['toggle theme']}>
 					<Button
-						onClick={toggle}
+						onClick={toggleTheme}
+						ref={themeButtonRef}
 						aria-label={t['toggle theme']}
 						variant='ghost'
 						size='icon'

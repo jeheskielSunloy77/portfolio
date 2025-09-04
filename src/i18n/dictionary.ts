@@ -1,5 +1,8 @@
 export const dictionary = {
 	en: {
+		'toggle theme': 'toggle theme',
+		'toggle language': 'toggle language',
+		'toggle chat': 'toggle chat',
 		'Old Portfolio Website': 'Old Portfolio Website',
 		'My old portfolio website, read more about it on my blog post below.':
 			'My old portfolio website, read more about it on my blog post below.',
@@ -218,6 +221,9 @@ export const dictionary = {
 			"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).",
 	},
 	id: {
+		'toggle theme': 'ganti tema',
+		'toggle language': 'ganti bahasa',
+		'toggle chat': 'ganti chat',
 		'Beep boop! Systems online — fire away, human!':
 			'Beep boop! Sistem online — silakan tanya, manusia!',
 		"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).":

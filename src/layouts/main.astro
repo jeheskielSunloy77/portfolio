@@ -5,9 +5,9 @@ import { ChatBot } from '@/components/chat-bot'
 import { ClientRouter } from 'astro:transitions'
 import Seo from '@/components/seo.astro'
 import type { ComponentProps } from 'astro/types'
-import Navbar from '@/components/navbar.astro'
 import ArticleSchema from '@/components/article-schema.astro'
-import { DEFAULT_LANGUAGE, type Language } from '@/i18n/i18n'
+import { type Language } from '@/i18n/i18n'
+import { Navbar } from '@/components/navbar'
 
 export interface Props {
 	seo: ComponentProps<typeof Seo>
@@ -40,8 +40,8 @@ const { seo, articleSchema, lang } = Astro.props
 		<ClientRouter />
 	</head>
 	<body class='font-sans text-foreground bg-background'>
-		<Navbar lang={lang} />
-		<div class='mx-auto flex max-w-3xl flex-col px-8'>
+		<Navbar lang={lang} pathname={Astro.url.pathname} client:load />
+		<div class='mx-auto flex max-w-3xl flex-col px-8 py-24'>
 			<main class='grow'>
 				<slot />
 			</main>

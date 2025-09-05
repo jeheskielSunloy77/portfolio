@@ -7,6 +7,8 @@ import {
 	QueryClient,
 	QueryClientProvider,
 	useInfiniteQuery,
+	useMutation,
+	useQueryClient,
 } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { ChevronDown, Plus } from 'lucide-react'
@@ -51,6 +53,118 @@ function SketchContent({ lang }: { lang: Language }) {
 
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
 
+	const qc = useQueryClient()
+	const queryKey = ['sketches'] as const
+
+	type CreateSketchPayload = { name: string; message: string; svg: string }
+	type CreatedSketch = {
+		_id: string
+		name: string
+		message: string
+		createdAt: string | Date
+		svg: string
+		ip?: string
+	}
+
+	const createSketchMutationFn = async (
+		payload: CreateSketchPayload
+	): Promise<CreatedSketch> => {
+		const res = await fetch('/api/sketches', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(payload),
+		})
+
+		if (res.status === 429) {
+			throw { type: 'rate', status: 429 }
+		}
+
+		if (!res.ok) {
+			let json = null
+			try {
+				json = await res.json()
+			} catch (_) {
+				/* ignore */
+			}
+			throw {
+				type: 'error',
+				status: res.status,
+				message: json?.error ?? 'Failed to save',
+			}
+		}
+
+		return (await res.json()) as CreatedSketch
+	}
+
+	const createSketchMutation = useMutation<
+		CreatedSketch,
+		unknown,
+		CreateSketchPayload,
+		{ previous: any; optimisticSketch: any }
+	>({
+		mutationFn: createSketchMutationFn,
+		onMutate: async (payload: CreateSketchPayload) => {
+			await qc.cancelQueries({ queryKey })
+			const previous = qc.getQueryData(queryKey)
+			const optimisticSketch = {
+				_id: `temp-${Date.now()}`,
+				createdAt: new Date(),
+				...payload,
+			}
+
+			qc.setQueryData(queryKey, (old: any) => {
+				if (!old) {
+					return {
+						pages: [{ data: [optimisticSketch], total: 1 }],
+						pageParams: [],
+					}
+				}
+				const newPages = old.pages.map((p: any, i: number) => {
+					if (i !== 0) return p
+					return {
+						...p,
+						data: [optimisticSketch, ...(p.data ?? [])],
+						total: typeof p.total === 'number' ? p.total + 1 : p.total,
+					}
+				})
+				return { ...old, pages: newPages }
+			})
+
+			return { previous, optimisticSketch }
+		},
+
+		onError: (err: unknown, _variables: CreateSketchPayload, context: any) => {
+			// rollback
+			qc.setQueryData(queryKey, context?.previous)
+		},
+
+		onSuccess: (
+			data: CreatedSketch,
+			_variables: CreateSketchPayload,
+			context: any
+		) => {
+			// replace optimistic item with server response
+			qc.setQueryData(queryKey, (old: any) => {
+				if (!old) return old
+				const newPages = old.pages.map((p: any, i: number) => {
+					if (i !== 0) return p
+					const dataArr = (p.data ?? []).map((item: any) =>
+						item._id === context?.optimisticSketch?._id ? data : item
+					)
+					return { ...p, data: dataArr }
+				})
+				return { ...old, pages: newPages }
+			})
+
+			// close the dialog (dialog clears its inputs when closed)
+			setIsDialogOpen(false)
+		},
+
+		onSettled: () => {
+			qc.invalidateQueries({ queryKey })
+		},
+	})
+
 	return (
 		<div>
 			<div className='space-y-2'>
@@ -58,6 +172,7 @@ function SketchContent({ lang }: { lang: Language }) {
 					lang={lang}
 					count={q.data?.pages[0].total}
 					onAdd={() => setIsDialogOpen(true)}
+					isSaving={createSketchMutation.status === 'pending'}
 				/>
 				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 					{q.isLoading ? (
@@ -87,6 +202,7 @@ function SketchContent({ lang }: { lang: Language }) {
 				lang={lang}
 				isOpen={isDialogOpen}
 				onOpenChange={setIsDialogOpen}
+				createSketchMutation={createSketchMutation}
 			/>
 		</div>
 	)
@@ -94,17 +210,19 @@ function SketchContent({ lang }: { lang: Language }) {
 
 function SketchCard({ sketch }: { sketch: Sketch }) {
 	return (
-		<article className='rounded-lg border border-border p-2 space-y-2'>
+		<article className='rounded-lg border border-border p-2 flex flex-col gap-2'>
 			<div
 				dangerouslySetInnerHTML={{ __html: sketch.svg }}
 				className='aspect-square bg-muted-foreground/25 dark:bg-secondary-foreground/75 rounded-lg overflow-hidden'
 			></div>
-			<div>
-				<p className='text-xs text-muted-foreground line-clamp-2'>{sketch.name}</p>
-				<h3 className='font-medium text-foreground truncate text-sm'>
-					{sketch.message}
-				</h3>
-				<span className='text-xs text-muted-foreground mt-2'>
+			<div className='flex-1 flex-col flex justify-between gap-2'>
+				<div>
+					<p className='text-xs text-muted-foreground line-clamp-2'>{sketch.name}</p>
+					<h3 className='font-medium text-foreground text-sm line-clamp-2'>
+						{sketch.message}
+					</h3>
+				</div>
+				<span className='text-xs text-muted-foreground'>
 					{format(sketch.createdAt, 'dd MMM yyyy')}
 				</span>
 			</div>
@@ -129,10 +247,12 @@ function Header({
 	count,
 	onAdd,
 	lang,
+	isSaving,
 }: {
 	count: number | undefined
 	onAdd: () => void
 	lang: Language
+	isSaving?: boolean
 }) {
 	const t = dictionary[lang]
 	return (
@@ -140,9 +260,9 @@ function Header({
 			<div className='text-sm text-muted-foreground'>{`${count ?? '...'} ${
 				t['sketches so far — vibe check']
 			}  ✅🎨`}</div>
-			<RainbowButton onClick={onAdd}>
+			<RainbowButton onClick={onAdd} disabled={isSaving}>
 				<Plus />
-				{t['leave your mark']}
+				{isSaving ? t['saving...'] : t['leave your mark']}
 			</RainbowButton>
 		</div>
 	)

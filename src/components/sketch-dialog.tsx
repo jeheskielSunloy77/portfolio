@@ -11,7 +11,7 @@ import { Slider } from '@/components/ui/slider'
 import { Textarea } from '@/components/ui/textarea'
 import { dictionary } from '@/i18n/dictionary'
 import type { Language } from '@/i18n/i18n'
-import { useQueryClient } from '@tanstack/react-query'
+import type { UseMutationResult } from '@tanstack/react-query'
 import {
 	AlertCircle,
 	Circle,
@@ -29,6 +29,7 @@ interface Props {
 	isOpen: boolean
 	onOpenChange: (open: boolean) => void
 	lang: Language
+	createSketchMutation?: UseMutationResult<any, unknown, any, any>
 }
 
 type Point = [number, number, number?] // x, y, pressure (optional)
@@ -84,7 +85,12 @@ async function svgStringToPngDataUrl(
 	})
 }
 
-export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
+export function SketchDialog({
+	lang,
+	isOpen,
+	onOpenChange,
+	createSketchMutation,
+}: Props) {
 	const t = dictionary[lang]
 
 	const containerRef = useRef<HTMLDivElement | null>(null)
@@ -114,7 +120,6 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 
 	const [newSketchName, setNewSketchName] = useState('')
 	const [newSketchMessage, setNewSketchMessage] = useState('')
-	const [isSaving, setIsSaving] = useState(false)
 	const [error, setError] = useState<{
 		title: string
 		description: string
@@ -131,7 +136,7 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 		'#A855F7',
 	]
 
-	const qc = useQueryClient()
+	/* Mutation is provided by parent via props (createSketchMutation) */
 
 	// For drawing in-progress points
 	const currentPointsRef = useRef<Point[]>([])
@@ -337,121 +342,21 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 		return lines.join('')
 	}
 
-	const saveSketch = async () => {
-		if (isSaving) return
-		setIsSaving(true)
+	const saveSketch = () => {
+		if (createSketchMutation?.status === 'pending') return
 		setError(null)
+		handleClose(false)
 
-		// prepare svg/data first (this can fail before the network request)
+		// build payload (can throw if svg build fails)
 		const width = sizePx.width
 		const height = sizePx.height
-
 		const payload = {
 			name: newSketchName,
 			message: newSketchMessage,
 			svg: buildSvgString(width, height, strokes),
 		}
 
-		const queryKey = ['sketches']
-		const previous = qc.getQueryData(queryKey)
-
-		const optimisticSketch = {
-			_id: `temp-${Date.now()}`,
-			createdAt: new Date(),
-			...payload,
-		}
-
-		// optimistic update: prepend to first page and bump total if present
-		qc.setQueryData(queryKey, (old: any) => {
-			if (!old) {
-				return {
-					pages: [{ data: [optimisticSketch], total: 1 }],
-					pageParams: [],
-				}
-			}
-			const newPages = old.pages.map((p: any, i: number) => {
-				if (i !== 0) return p
-				return {
-					...p,
-					data: [optimisticSketch, ...(p.data ?? [])],
-					total: typeof p.total === 'number' ? p.total + 1 : p.total,
-				}
-			})
-			return { ...old, pages: newPages }
-		})
-
-		try {
-			const res = await fetch('/api/sketches', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(payload),
-			})
-
-			if (res.status === 429) {
-				const errorMessage = {
-					title: t['Rate limit exceeded'],
-					description:
-						t[
-							'You have made too many requests in a short period. Please wait and try again later.'
-						],
-				}
-				console.error(errorMessage)
-				// rollback
-				qc.setQueryData(queryKey, previous)
-				setError(errorMessage)
-				setIsSaving(false)
-				return
-			}
-
-			if (!res.ok) {
-				let errorMessage: { title: string; description: string } = {
-					title: t['Failed to save sketch'],
-					description:
-						t['An error occurred while saving your sketch. Please try again later.'],
-				}
-				try {
-					const json = await res.json()
-					if (json?.error) errorMessage.title = json.error
-				} catch (_) {
-					const text = await res.text().catch(() => null)
-					if (text) errorMessage.description = text
-				}
-				// rollback
-				qc.setQueryData(queryKey, previous)
-				setError(errorMessage)
-				setIsSaving(false)
-				return
-			}
-
-			// server created sketch
-			const created = await res.json()
-
-			// replace the optimistic item (by tempId) with the real server response
-			qc.setQueryData(queryKey, (old: any) => {
-				if (!old) return old
-				const newPages = old.pages.map((p: any, i: number) => {
-					if (i !== 0) return p
-					const data = (p.data ?? []).map((item: any) =>
-						item._id === optimisticSketch._id ? created : item
-					)
-					return { ...p, data }
-				})
-				return { ...old, pages: newPages }
-			})
-
-			setNewSketchName('')
-			setNewSketchMessage('')
-			onOpenChange(false)
-		} catch (e) {
-			console.error('Error saving sketch', e)
-			qc.setQueryData(queryKey, previous)
-			setError({
-				title: t['Failed to save sketch'],
-				description: String(e),
-			})
-		} finally {
-			setIsSaving(false)
-		}
+		createSketchMutation?.mutate(payload)
 	}
 
 	const handleClose = (open: boolean) => {
@@ -826,8 +731,14 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 						>
 							{t['cancel']}
 						</Button>
-						<Button type='submit' className='px-6 shadow-sm' disabled={isSaving}>
-							{isSaving ? t['saving...'] : t['save sketch']}
+						<Button
+							type='submit'
+							className='px-6 shadow-sm'
+							disabled={createSketchMutation?.status === 'pending'}
+						>
+							{createSketchMutation?.status === 'pending'
+								? t['saving...']
+								: t['save sketch']}
 						</Button>
 					</DialogFooter>
 				</form>

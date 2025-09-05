@@ -63,7 +63,6 @@ function SketchContent({ lang }: { lang: Language }) {
 						Array.from({ length: 9 }).map((_, i) => <SketchSkeleton key={i} />)
 					) : (
 						<>
-							{q.isRefetching && <SketchSkeleton />}
 							{sketches.map((sketch) => (
 								<SketchCard key={sketch._id} sketch={sketch} />
 							))}

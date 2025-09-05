@@ -319,19 +319,63 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 		if (isSaving) return
 		setIsSaving(true)
 		setError(null)
+
+		// prepare svg/data first (this can fail before the network request)
+		const width = sizePx.width
+		const height = sizePx.height
+		let dataUrl: string
 		try {
-			// build final svg from strokes
-			const width = sizePx.width
-			const height = sizePx.height
 			const svgString = buildSvgString(width, height, strokes)
-			const dataUrl = await svgStringToPngDataUrl(svgString, width, height)
+			dataUrl = await svgStringToPngDataUrl(svgString, width, height)
+		} catch (e) {
+			console.error('Error building image', e)
+			setError({
+				title: t['Failed to save sketch'],
+				description: String(e),
+			})
+			setIsSaving(false)
+			return
+		}
 
-			const payload = {
-				name: newSketchName,
-				message: newSketchMessage,
-				dataUrl,
+		const payload = {
+			name: newSketchName,
+			message: newSketchMessage,
+			dataUrl,
+		}
+
+		const queryKey = ['sketches']
+		const previous = qc.getQueryData(queryKey)
+
+		// optimistic sketch (temporary id)
+		const tempId = `temp-${Date.now()}`
+		const optimisticSketch = {
+			_id: tempId,
+			name: newSketchName,
+			message: newSketchMessage,
+			dataUrl,
+			createdAt: new Date(),
+		}
+
+		// optimistic update: prepend to first page and bump total if present
+		qc.setQueryData(queryKey, (old: any) => {
+			if (!old) {
+				return {
+					pages: [{ data: [optimisticSketch], total: 1 }],
+					pageParams: [],
+				}
 			}
+			const newPages = old.pages.map((p: any, i: number) => {
+				if (i !== 0) return p
+				return {
+					...p,
+					data: [optimisticSketch, ...(p.data ?? [])],
+					total: typeof p.total === 'number' ? p.total + 1 : p.total,
+				}
+			})
+			return { ...old, pages: newPages }
+		})
 
+		try {
 			const res = await fetch('/api/sketches', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -346,8 +390,9 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 							'You have made too many requests in a short period. Please wait and try again later.'
 						],
 				}
-
 				console.error(errorMessage)
+				// rollback
+				qc.setQueryData(queryKey, previous)
 				setError(errorMessage)
 				setIsSaving(false)
 				return
@@ -367,18 +412,36 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 					if (text) errorMessage.description = text
 				}
 				console.error(errorMessage)
+				// rollback
+				qc.setQueryData(queryKey, previous)
 				setError(errorMessage)
 				setIsSaving(false)
 				return
 			}
-			await res.json()
 
-			qc.invalidateQueries({ queryKey: ['sketches'] })
+			// server created sketch
+			const created = await res.json()
+
+			// replace the optimistic item (by tempId) with the real server response
+			qc.setQueryData(queryKey, (old: any) => {
+				if (!old) return old
+				const newPages = old.pages.map((p: any, i: number) => {
+					if (i !== 0) return p
+					const data = (p.data ?? []).map((item: any) =>
+						item._id === tempId ? created : item
+					)
+					return { ...p, data }
+				})
+				return { ...old, pages: newPages }
+			})
+
 			setNewSketchName('')
 			setNewSketchMessage('')
 			onOpenChange(false)
 		} catch (e) {
 			console.error('Error saving sketch', e)
+			// rollback on unexpected error
+			qc.setQueryData(queryKey, previous)
 			setError({
 				title: t['Failed to save sketch'],
 				description: String(e),

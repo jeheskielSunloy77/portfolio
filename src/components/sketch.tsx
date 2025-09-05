@@ -1,5 +1,4 @@
 import { SketchDialog } from '@/components/sketch-dialog'
-import { Button } from '@/components/ui/button'
 import type { APIResponsePaginated, Dictionary } from '@/lib/types'
 import {
 	QueryClient,
@@ -9,8 +8,8 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { ChevronDown, Plus } from 'lucide-react'
-import { useState } from 'react'
+import { Plus } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { RainbowButton } from './magicui/rainbow-button'
 
 interface Sketch {
@@ -48,6 +47,28 @@ function SketchContent({ t }: { t: Dictionary }) {
 	const sketches: Sketch[] = q.data?.pages.flatMap((p) => p.data) ?? []
 
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+	const [reachedBottom, setReachedBottom] = useState(false)
+
+	const loadMoreRef = useRef<HTMLDivElement | null>(null)
+
+	useEffect(() => {
+		const el = loadMoreRef.current
+		if (!el) return
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					setReachedBottom(entry.isIntersecting)
+					if (entry.isIntersecting && q.hasNextPage && !q.isFetchingNextPage) {
+						q.fetchNextPage()
+					}
+				})
+			},
+			{ root: null, rootMargin: '200px' }
+		)
+		observer.observe(el)
+		return () => observer.disconnect()
+	}, [q.hasNextPage, q.isFetchingNextPage, q.fetchNextPage])
 
 	const qc = useQueryClient()
 	const queryKey = ['sketches'] as const
@@ -184,14 +205,14 @@ function SketchContent({ t }: { t: Dictionary }) {
 					)}
 				</div>
 
-				{q.hasNextPage && !q.isFetchingNextPage && (
-					<div className='flex justify-center mt-4'>
-						<Button onClick={() => q.fetchNextPage()} disabled={q.isFetchingNextPage}>
-							{t['load more']}
-							<ChevronDown />
-						</Button>
-					</div>
-				)}
+				<div className='flex flex-col items-center mt-4'>
+					<div ref={loadMoreRef} className='h-2' />
+					{!q.hasNextPage && (
+						<div className='text-sm text-muted-foreground mt-2'>
+							such end. very empty. much art. wow. 🐶
+						</div>
+					)}
+				</div>
 			</div>
 
 			<SketchDialog

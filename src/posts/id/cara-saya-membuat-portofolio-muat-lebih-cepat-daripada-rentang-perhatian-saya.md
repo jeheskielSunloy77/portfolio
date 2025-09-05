@@ -1,6 +1,6 @@
 ---
 title: Bagaimana Saya Membuat Portofolio Saya Memuat Lebih Cepat daripada Rentang Perhatian Saya 🏃‍♂️💨
-publishedAt: 2025-05-24
+publishedAt: 2025-04-24
 description: Saya membangun ulang website portofolio saya dari Next.js ke Astro.js dan mendapatkan peningkatan performa yang besar. Next.js luar biasa untuk web application, tapi untuk situs statis seperti portofolio saya, Astro memberikan waktu muat yang super cepat, SEO yang lebih baik, dan kode yang lebih ramping—sambil tetap memungkinkan saya menggunakan React untuk komponen interaktif.
 tags: ['astro', 'nextjs', 'react', 'performa', 'seo']
 keywords: 'astro js portofolio, astro vs nextjs, performa astro, nextjs situs statis, react dengan astro, astro peningkatan seo, arsitektur islands astro, kecepatan situs astro, astro untuk portofolio, alternatif nextjs'

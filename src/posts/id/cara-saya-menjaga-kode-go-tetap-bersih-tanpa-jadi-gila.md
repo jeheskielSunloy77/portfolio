@@ -1,6 +1,6 @@
 ---
 title: Cara Saya Menjaga Kode Go Tetap Bersih (Tanpa Jadi Gila) 🧹
-publishedAt: 2025-02-15
+publishedAt: 2024-12-15
 description: Pelajari cara menyusun aplikasi Go dengan prinsip clean architecture yang benar-benar berfungsi. Temukan mengapa Clean Architecture murni tidak cocok untuk Go, dan dapatkan pendekatan praktis menggunakan services dan repositories yang menjaga kode tetap mudah dipelihara tanpa over-engineering. Termasuk contoh kode nyata dan strategi testing.
 tags: ['go', 'design patterns', 'clean architecture']
 keywords: 'golang architecture, go clean code, golang project structure, go services pattern, golang repositories, go best practices, golang testing, go code organization, clean architecture go, golang design patterns'

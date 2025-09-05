@@ -1,6 +1,6 @@
 ---
 title: 'Mendesain Ulang Portofolio: Memberi Ruang untuk Hal yang Penting ✨'
-publishedAt: 2025-01-02
+publishedAt: 2024-09-02
 description: Kisah di balik bagaimana aku menyederhanakan website portofolio. Dari desain lama yang penuh warna dan berantakan menjadi tampilan baru yang minimalis, modern, dan bersih. Lihat perbedaan sebelum & sesudah, cek demo langsung, dan eksplor kode open-source di GitHub.
 tags: ['portofolio', 'desain web', 'frontend', 'nextjs', 'tailwind']
 keywords: 'redesign portofolio, desain web minimalis, portofolio developer, nextjs portofolio, tailwind portofolio, shadcn ui, perbedaan portofolio, tips portofolio software engineer'

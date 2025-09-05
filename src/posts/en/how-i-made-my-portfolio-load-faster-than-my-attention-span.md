@@ -1,6 +1,6 @@
 ---
 title: How I Made My Portfolio Load Faster Than My Attention Span 🏃‍♂️💨
-publishedAt: 2025-05-24
+publishedAt: 2025-04-24
 description: I rebuilt my portfolio website from Next.js to Astro.js and got a massive performance boost. Next.js is amazing for web applications, but for a static site like my portfolio, Astro delivers blazing-fast load times, better SEO, and a leaner codebase—while still letting me use React for interactive components.
 tags: ['astro', 'nextjs', 'react', 'performance', 'seo']
 keywords: 'astro js portfolio, astro vs nextjs, astro performance, nextjs static site, react with astro, astro seo boost, astro islands architecture, astro site speed, astro for portfolio, nextjs alternatives'

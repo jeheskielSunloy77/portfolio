@@ -1,6 +1,6 @@
 ---
 title: 'Redesigning My Portfolio: Making Space for What Matters ✨'
-publishedAt: 2025-01-02
+publishedAt: 2024-09-02
 description: A behind-the-scenes look at how I simplified my portfolio website. I went from a crowded, colorful design to a clean, minimal, and modern look that puts my work front and center. See the before & after, check out the live demos, and explore the open-source code on GitHub.
 tags: ['portfolio', 'web design', 'frontend', 'nextjs', 'tailwind']
 keywords: 'portfolio redesign, clean web design, minimal portfolio website, frontend portfolio, nextjs portfolio, tailwind portfolio, shadcn ui, portfolio before and after, developer portfolio tips, software engineer portfolio'

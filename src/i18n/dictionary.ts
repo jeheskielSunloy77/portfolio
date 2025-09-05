@@ -1,5 +1,7 @@
 export const dictionary = {
 	en: {
+		'such end. very empty. much art. wow. 🐶':
+			'such end. very empty. much art. wow. 🐶',
 		languages: 'languages',
 		'toggle theme': 'toggle theme',
 		'toggle language': 'toggle language',
@@ -221,6 +223,8 @@ export const dictionary = {
 			"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).",
 	},
 	id: {
+		'such end. very empty. much art. wow. 🐶':
+			'Waduh tamat. Kosong banget. Seni parah. Wow. 🐶',
 		languages: 'bahasa',
 		'toggle theme': 'ganti tema',
 		'toggle language': 'ganti bahasa',

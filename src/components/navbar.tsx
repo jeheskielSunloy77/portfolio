@@ -40,7 +40,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { dictionary } from '@/i18n/dictionary'
+import type { Dictionary, LocalizedString } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
 function ChatToggle() {
@@ -77,12 +77,13 @@ function LanguageDropdown(props: {
 	lang: Language
 	pathname: string
 	children: React.ReactNode
+	label: LocalizedString
 }) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>{props.children}</DropdownMenuTrigger>
 			<DropdownMenuContent>
-				<DropdownMenuLabel>Languages</DropdownMenuLabel>
+				<DropdownMenuLabel>{props.label}</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				{LANGUAGES.map((lang) => (
 					<DropdownMenuItem key={lang} asChild>
@@ -96,31 +97,34 @@ function LanguageDropdown(props: {
 	)
 }
 
-function DockNavbar(props: { lang: Language; pathname: string }) {
-	const t = dictionary[props.lang]
+function DockNavbar(props: {
+	lang: Language
+	pathname: string
+	t: Dictionary
+}) {
+	const { t, lang, pathname } = props
 
 	const { theme, toggle: toggleTheme, buttonRef: themeButtonRef } = useTheme()
 
 	const isChatBotVisible = useStore($isChatBotVisible)
 
 	const navItems = [
-		{ label: t['home'], href: `/${props.lang}`, icon: HomeIcon },
+		{ label: t['home'], href: `/${lang}`, icon: HomeIcon },
 		{
 			label: t['projects'],
-			href: `/${props.lang}/projects`,
+			href: `/${lang}/projects`,
 			icon: CalendarIcon,
 		},
-		{ label: t['blog'], href: `/${props.lang}/blog`, icon: PenLineIcon },
-		{ label: t['contact'], href: `/${props.lang}/contact`, icon: MailIcon },
-		{ label: t['visitors'], href: `/${props.lang}/visitors`, icon: UsersIcon },
+		{ label: t['blog'], href: `/${lang}/blog`, icon: PenLineIcon },
+		{ label: t['contact'], href: `/${lang}/contact`, icon: MailIcon },
+		{ label: t['visitors'], href: `/${lang}/visitors`, icon: UsersIcon },
 	]
 
 	return (
 		<TooltipProvider>
 			<Dock direction='middle'>
 				{navItems.map((item, i) => {
-					const isActive =
-						props.pathname === item.href || props.pathname === `${item.href}/`
+					const isActive = pathname === item.href || pathname === `${item.href}/`
 
 					return (
 						<DockIcon key={i}>
@@ -175,8 +179,9 @@ function DockNavbar(props: { lang: Language; pathname: string }) {
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<LanguageDropdown
-								lang={props.lang}
-								pathname={getPathnameWithoutLang(props.pathname, props.lang)}
+								label='languages'
+								lang={lang}
+								pathname={getPathnameWithoutLang(pathname, lang)}
 							>
 								<Button
 									aria-label={t['toggle language']}
@@ -216,14 +221,18 @@ function DockNavbar(props: { lang: Language; pathname: string }) {
 	)
 }
 
-export function Navbar(props: { lang: Language; pathname: string }) {
-	const t = dictionary[props.lang]
+export function Navbar(props: {
+	lang: Language
+	pathname: string
+	t: Dictionary
+}) {
+	const { t, lang, pathname } = props
 
 	const navItems = [
-		{ label: t['projects'], href: `/${props.lang}/projects` },
-		{ label: t['blog'], href: `/${props.lang}/blog` },
-		{ label: t['contact'], href: `/${props.lang}/contact` },
-		{ label: t['visitors'], href: `/${props.lang}/visitors` },
+		{ label: t['projects'], href: `/${lang}/projects` },
+		{ label: t['blog'], href: `/${lang}/blog` },
+		{ label: t['contact'], href: `/${lang}/contact` },
+		{ label: t['visitors'], href: `/${lang}/visitors` },
 	]
 
 	const [isHeaderNavbarVisible, setIsHeaderNavbarVisible] =
@@ -235,22 +244,11 @@ export function Navbar(props: { lang: Language; pathname: string }) {
 		const mq = window.matchMedia('(max-width: 639px)')
 		const onChange = (e: any) => setIsMobile(!!e.matches)
 
-		if (mq.addEventListener) {
-			mq.addEventListener('change', onChange)
-		} else {
-			mq.addListener(onChange)
-		}
+		mq.addEventListener('change', onChange)
 
-		// ensure initial value
 		setIsMobile(mq.matches)
 
-		return () => {
-			if (mq.removeEventListener) {
-				mq.removeEventListener('change', onChange)
-			} else {
-				mq.removeListener(onChange)
-			}
-		}
+		return () => mq.removeEventListener('change', onChange)
 	}, [])
 
 	useEffect(() => {
@@ -293,17 +291,13 @@ export function Navbar(props: { lang: Language; pathname: string }) {
 				>
 					<div className='mx-auto max-w-3xl px-8 py-6'>
 						<nav className='flex items-center justify-between'>
-							<a
-								href={`/${props.lang}`}
-								className='hover:text-foreground hover:underline'
-							>
+							<a href={`/${lang}`} className='hover:text-foreground hover:underline'>
 								{t['home']}
 							</a>
 							<div className='flex items-center gap-4'>
 								<ul className='flex gap-4'>
 									{navItems.map((nav) => {
-										const isActive =
-											props.pathname === nav.href || props.pathname === `${nav.href}/`
+										const isActive = pathname === nav.href || pathname === `${nav.href}/`
 
 										return (
 											<li
@@ -321,12 +315,13 @@ export function Navbar(props: { lang: Language; pathname: string }) {
 								</ul>
 								<div className='flex gap-2'>
 									<LanguageDropdown
-										lang={props.lang}
-										pathname={getPathnameWithoutLang(props.pathname, props.lang)}
+										label='languages'
+										lang={lang}
+										pathname={getPathnameWithoutLang(pathname, lang)}
 									>
 										<Button size='icon' variant='ghost'>
 											<Languages />
-											<span className='sr-only'>Language Toggle</span>
+											<span className='sr-only'>{t['toggle language']}</span>
 										</Button>
 									</LanguageDropdown>
 									<ChatToggle />
@@ -346,7 +341,7 @@ export function Navbar(props: { lang: Language; pathname: string }) {
 						transition={{ duration: 0.25 }}
 						className='fixed bottom-4 left-1/2 -translate-x-1/2 z-50'
 					>
-						<DockNavbar lang={props.lang} pathname={props.pathname} />
+						<DockNavbar lang={lang} pathname={pathname} t={t} />
 					</motion.nav>
 				)}
 			</AnimatePresence>

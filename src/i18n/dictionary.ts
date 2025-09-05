@@ -1,5 +1,6 @@
 export const dictionary = {
 	en: {
+		languages: 'languages',
 		'toggle theme': 'toggle theme',
 		'toggle language': 'toggle language',
 		'toggle chat': 'toggle chat',
@@ -220,6 +221,7 @@ export const dictionary = {
 			"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).",
 	},
 	id: {
+		languages: 'bahasa',
 		'toggle theme': 'ganti tema',
 		'toggle language': 'ganti bahasa',
 		'toggle chat': 'ganti chat',

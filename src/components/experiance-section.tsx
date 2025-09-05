@@ -1,7 +1,5 @@
-import { dictionary } from '@/i18n/dictionary'
-import { type Language } from '@/i18n/i18n'
 import { CAREERS, EDUCATIONS } from '@/lib/constants'
-import type { Experience } from '@/lib/types'
+import type { Dictionary, Experience } from '@/lib/types'
 import { AvatarFallback } from '@radix-ui/react-avatar'
 import Markdown from 'react-markdown'
 import { Avatar, AvatarImage } from './ui/avatar'
@@ -9,8 +7,7 @@ import { Badge } from './ui/badge'
 import { Card, CardContent } from './ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 
-export function ExperienceSection(props: { lang: Language }) {
-	const t = dictionary[props.lang]
+export function ExperienceSection({ t }: { t: Dictionary }) {
 	return (
 		<section id='experiences'>
 			<Tabs defaultValue='work'>
@@ -19,23 +16,28 @@ export function ExperienceSection(props: { lang: Language }) {
 					<TabsTrigger value='education'>{t['Education']}</TabsTrigger>
 				</TabsList>
 				<TabsContent value='work'>
-					<Timeline experiences={CAREERS} lang={props.lang} />
+					<Timeline experiences={CAREERS} t={t} />
 				</TabsContent>
 				<TabsContent value='education'>
-					<Timeline experiences={EDUCATIONS} lang={props.lang} />
+					<Timeline experiences={EDUCATIONS} t={t} />
 				</TabsContent>
 			</Tabs>
 		</section>
 	)
 }
 
-function Timeline(props: { experiences: Experience[]; lang: Language }) {
-	const t = dictionary[props.lang]
+function Timeline({
+	t,
+	experiences,
+}: {
+	experiences: Experience[]
+	t: Dictionary
+}) {
 	return (
 		<Card>
 			<CardContent className='p-0'>
 				<ul className='ml-10 border-l'>
-					{props.experiences.map((exp, id) => (
+					{experiences.map((exp, id) => (
 						<li key={id} className='relative ml-10 py-4'>
 							<a
 								href={exp.href}

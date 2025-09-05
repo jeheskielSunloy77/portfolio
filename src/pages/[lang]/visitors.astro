@@ -23,6 +23,6 @@ const t = dictionary[Astro.params.lang]
 		>
 			{t['visitors marks']}
 		</h1>
-		<Sketch client:idle lang={Astro.params.lang} />
+		<Sketch client:idle t={t} />
 	</article>
 </MainLayout>

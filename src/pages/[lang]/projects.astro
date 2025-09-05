@@ -26,6 +26,6 @@ const t = dictionary[Astro.params.lang]
 		>
 			{t['my projects.']}
 		</h1>
-		<ProjectList lang={Astro.params.lang} />
+		<ProjectList t={t} />
 	</article>
 </MainLayout>

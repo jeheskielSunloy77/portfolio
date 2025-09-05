@@ -1,8 +1,6 @@
 import { SketchDialog } from '@/components/sketch-dialog'
 import { Button } from '@/components/ui/button'
-import { dictionary } from '@/i18n/dictionary'
-import type { Language } from '@/i18n/i18n'
-import type { APIResponsePaginated } from '@/lib/types'
+import type { APIResponsePaginated, Dictionary } from '@/lib/types'
 import {
 	QueryClient,
 	QueryClientProvider,
@@ -26,17 +24,15 @@ interface Sketch {
 
 const queryClient = new QueryClient()
 
-export function Sketch(props: { lang: Language }) {
+export function Sketch(props: { t: Dictionary }) {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<SketchContent lang={props.lang} />
+			<SketchContent t={props.t} />
 		</QueryClientProvider>
 	)
 }
 
-function SketchContent({ lang }: { lang: Language }) {
-	const t = dictionary[lang]
-
+function SketchContent({ t }: { t: Dictionary }) {
 	const q = useInfiniteQuery({
 		queryKey: ['sketches'],
 		initialPageParam: 0,
@@ -169,7 +165,7 @@ function SketchContent({ lang }: { lang: Language }) {
 		<div>
 			<div className='space-y-2'>
 				<Header
-					lang={lang}
+					t={t}
 					count={q.data?.pages[0].total}
 					onAdd={() => setIsDialogOpen(true)}
 					isSaving={createSketchMutation.status === 'pending'}
@@ -199,7 +195,7 @@ function SketchContent({ lang }: { lang: Language }) {
 			</div>
 
 			<SketchDialog
-				lang={lang}
+				t={t}
 				isOpen={isDialogOpen}
 				onOpenChange={setIsDialogOpen}
 				createSketchMutation={createSketchMutation}
@@ -246,15 +242,14 @@ function SketchSkeleton() {
 function Header({
 	count,
 	onAdd,
-	lang,
+	t,
 	isSaving,
 }: {
 	count: number | undefined
 	onAdd: () => void
-	lang: Language
+	t: Dictionary
 	isSaving?: boolean
 }) {
-	const t = dictionary[lang]
 	return (
 		<div className='flex items-center justify-between bg-muted/30 px-4 py-2 rounded-lg'>
 			<div className='text-sm text-muted-foreground'>{`${count ?? '...'} ${

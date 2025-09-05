@@ -27,6 +27,6 @@ const t = dictionary[Astro.params.lang]
 			{t['contact me']}
 		</h1>
 
-		<ContactForm client:load lang={Astro.params.lang} />
+		<ContactForm client:load lang={Astro.params.lang} t={t} />
 	</article>
 </MainLayout>

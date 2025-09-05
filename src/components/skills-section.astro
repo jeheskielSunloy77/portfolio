@@ -1,21 +1,20 @@
 ---
-import { dictionary } from '@/i18n/dictionary'
-import { type Language } from '@/i18n/i18n'
 import { SKILLS } from '@/lib/constants'
+import type { Dictionary } from '@/lib/types'
 import Section from './section.astro'
 
 const featuredSkills = SKILLS.filter((s) => !s.hide)
 
 export interface Props {
-	lang: Language
+	t: Dictionary
 }
 
-const t = dictionary[Astro.props.lang]
+const { t }: Props = Astro.props
 ---
 
 <Section
 	id='skills'
-	lang={Astro.props.lang}
+	t={t}
 	title={t['Current technologies']}
 	description={t[
 		"I'm proficient in a range of modern technologies that empower me to build highly functional solutions. These are some of my main technologies."

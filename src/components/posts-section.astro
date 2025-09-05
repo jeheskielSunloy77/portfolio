@@ -1,7 +1,7 @@
 ---
-import { dictionary } from '@/i18n/dictionary'
 import { type Language } from '@/i18n/i18n'
 import { FEATURED_POSTS_LIMIT } from '@/lib/constants'
+import type { Dictionary } from '@/lib/types'
 import { getPosts } from '@/posts/posts'
 import { PostCard } from './post-card'
 import Section from './section.astro'
@@ -9,6 +9,7 @@ import { Card } from './ui/card'
 
 export interface Props {
 	lang: Language
+	t: Dictionary
 }
 
 const posts = await getPosts({
@@ -16,17 +17,17 @@ const posts = await getPosts({
 	limit: FEATURED_POSTS_LIMIT,
 })
 
-const t = dictionary[Astro.props.lang]
+const { t, lang }: Props = Astro.props
 ---
 
 <Section
 	id='posts'
-	lang={Astro.props.lang}
+	t={t}
 	title={t['Recent Posts']}
 	description={t[
 		'Read my latest articles on web development, programming, and technology.'
 	]}
-	viewMoreHref={`/${Astro.props.lang}/blog`}
+	viewMoreHref={`/${lang}/blog`}
 >
 	<Card className='py-4'>
 		<ul class='flex flex-col'>

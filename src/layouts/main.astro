@@ -8,6 +8,8 @@ import type { ComponentProps } from 'astro/types'
 import ArticleSchema from '@/components/article-schema.astro'
 import { type Language } from '@/i18n/i18n'
 import { Navbar } from '@/components/navbar'
+import type { Dictionary } from '@/lib/types'
+import { dictionary } from '@/i18n/dictionary'
 
 export interface Props {
 	seo: ComponentProps<typeof Seo>
@@ -16,6 +18,7 @@ export interface Props {
 }
 
 const { seo, articleSchema, lang } = Astro.props
+const t = dictionary[lang]
 ---
 
 <html lang={lang} class='scroll-smooth'>
@@ -40,12 +43,12 @@ const { seo, articleSchema, lang } = Astro.props
 		<ClientRouter />
 	</head>
 	<body class='font-sans text-foreground bg-background'>
-		<Navbar lang={lang} pathname={Astro.url.pathname} client:load />
+		<Navbar lang={lang} pathname={Astro.url.pathname} t={t} client:load />
 		<div class='mx-auto flex max-w-3xl flex-col px-8 py-24'>
 			<main class='grow'>
 				<slot />
 			</main>
-			<ChatBot client:idle lang={lang} />
+			<ChatBot client:idle t={t} />
 		</div>
 		<Footer lang={lang} />
 	</body>

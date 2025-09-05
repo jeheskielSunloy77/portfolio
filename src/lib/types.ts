@@ -54,7 +54,7 @@ export interface Skill {
 
 export type Theme = 'dark' | 'light'
 
-export type Dictionary = typeof dictionary.en
+export type Dictionary = (typeof dictionary)[keyof typeof dictionary]
 
 export interface APIResponsePaginated<T> {
 	data: T[]

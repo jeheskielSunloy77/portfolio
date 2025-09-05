@@ -1,8 +1,7 @@
 ---
 import photoOfMe from '@/assets/me/me.webp'
-import { dictionary } from '@/i18n/dictionary'
-import { type Language } from '@/i18n/i18n'
 import { BIRTH_DATE, BOT_NAME, NICK_NAME } from '@/lib/constants'
+import type { Dictionary } from '@/lib/types'
 import { Image } from 'astro:assets'
 import { ArrowDown, ArrowDownRight, Bot } from 'lucide-react'
 import { ResumeButton } from './hero-section.client'
@@ -21,10 +20,10 @@ function getAge(birthDate: Date) {
 	return age
 }
 export interface Props {
-	lang: Language
+	t: Dictionary
 }
 
-const t = dictionary[Astro.props.lang]
+const { t }: Props = Astro.props
 ---
 
 <section

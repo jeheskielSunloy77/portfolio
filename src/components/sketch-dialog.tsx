@@ -9,8 +9,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Slider } from '@/components/ui/slider'
 import { Textarea } from '@/components/ui/textarea'
-import { dictionary } from '@/i18n/dictionary'
-import type { Language } from '@/i18n/i18n'
+import type { Dictionary } from '@/lib/types'
 import type { UseMutationResult } from '@tanstack/react-query'
 import {
 	AlertCircle,
@@ -28,8 +27,8 @@ import { Checkbox } from './ui/checkbox'
 interface Props {
 	isOpen: boolean
 	onOpenChange: (open: boolean) => void
-	lang: Language
 	createSketchMutation?: UseMutationResult<any, unknown, any, any>
+	t: Dictionary
 }
 
 type Point = [number, number, number?] // x, y, pressure (optional)
@@ -52,47 +51,12 @@ function pointsToSvgPath(stroke: number[][]) {
 	return d + ' Z'
 }
 
-async function svgStringToPngDataUrl(
-	svgString: string,
-	width: number,
-	height: number
-) {
-	return await new Promise<string>((resolve, reject) => {
-		const img = new Image()
-		const svg = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
-			svgString
-		)}`
-		img.onload = () => {
-			try {
-				const canvas = document.createElement('canvas')
-				canvas.width = width
-				canvas.height = height
-				const ctx = canvas.getContext('2d')
-				if (!ctx) {
-					reject(new Error('2D context not available'))
-					return
-				}
-				// white (or transparent) background is fine — original used grey background
-				ctx.drawImage(img, 0, 0, width, height)
-				const dataUrl = canvas.toDataURL()
-				resolve(dataUrl)
-			} catch (e) {
-				reject(e)
-			}
-		}
-		img.onerror = (e) => reject(e)
-		img.src = svg
-	})
-}
-
 export function SketchDialog({
-	lang,
 	isOpen,
 	onOpenChange,
 	createSketchMutation,
+	t,
 }: Props) {
-	const t = dictionary[lang]
-
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const svgRef = useRef<SVGSVGElement | null>(null)
 

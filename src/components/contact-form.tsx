@@ -1,7 +1,7 @@
 'use client'
 
-import { dictionary } from '@/i18n/dictionary'
 import type { Language } from '@/i18n/i18n'
+import type { Dictionary } from '@/lib/types'
 import { actions } from 'astro:actions'
 import { RotateCcw, Send } from 'lucide-react'
 import { useState } from 'react'
@@ -24,9 +24,13 @@ type FormState = {
 	state: 'idle' | 'submitting' | 'success' | 'error' | 'waiting-confirmation'
 }
 
-export default function ContactForm({ lang }: { lang: Language }) {
-	const t = dictionary[lang]
-
+export default function ContactForm({
+	lang,
+	t,
+}: {
+	t: Dictionary
+	lang: Language
+}) {
 	const [form, setForm] = useState<FormState>({ state: 'idle' })
 
 	const [name, setName] = useState('')

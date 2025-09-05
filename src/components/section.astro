@@ -1,6 +1,5 @@
 ---
-import { dictionary } from '@/i18n/dictionary'
-import { type Language } from '@/i18n/i18n'
+import type { Dictionary } from '@/lib/types'
 import { ArrowRightIcon } from 'lucide-react'
 import LinkWithIcon from './link-with-icon.astro'
 
@@ -9,15 +8,10 @@ export interface Props {
 	title: string
 	description: string
 	viewMoreHref?: string
+	t: Dictionary
 }
 
-const { id, title, description, viewMoreHref } = Astro.props
-
-export interface Props {
-	lang: Language
-}
-
-const t = dictionary[Astro.props.lang]
+const { t, id, title, description, viewMoreHref } = Astro.props
 ---
 
 <section id={id} class='space-y-8'>

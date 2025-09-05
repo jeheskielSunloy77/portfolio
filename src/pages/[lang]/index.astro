@@ -29,10 +29,10 @@ const t = dictionary[lang]
 	}}
 >
 	<article class='flex flex-col gap-28'>
-		<HeroSection lang={lang} />
-		<ExperienceSection client:idle lang={lang} />
-		<SkillsSection lang={lang} />
-		<ProjectsSection lang={lang} />
-		<PostsSection lang={lang} />
+		<HeroSection t={t} />
+		<ExperienceSection client:idle t={t} />
+		<SkillsSection t={t} />
+		<ProjectsSection lang={lang} t={t} />
+		<PostsSection lang={lang} t={t} />
 	</article>
 </MainLayout>

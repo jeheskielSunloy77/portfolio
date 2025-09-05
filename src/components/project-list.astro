@@ -1,7 +1,6 @@
 ---
-import { dictionary } from '@/i18n/dictionary'
-import type { Language } from '@/i18n/i18n'
 import { PROJECTS } from '@/lib/constants'
+import type { Dictionary } from '@/lib/types'
 import { Image } from 'astro:assets'
 import { Badge } from './ui/badge'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
@@ -9,18 +8,16 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 export interface Props {
 	limit?: number
 	isFeatured?: boolean
-	lang: Language
+	t: Dictionary
 }
 
-const { limit, isFeatured }: Props = Astro.props
+const { limit, isFeatured, t }: Props = Astro.props
 
 const filteredProjects = isFeatured
 	? PROJECTS.filter((p) => p.isFeatured)
 	: PROJECTS
 
 const projects = limit ? filteredProjects.slice(0, limit) : filteredProjects
-
-const t = dictionary[Astro.props.lang]
 ---
 
 <section class='grid grid-cols-1 gap-4 sm:grid-cols-2'>

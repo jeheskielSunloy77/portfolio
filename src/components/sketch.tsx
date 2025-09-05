@@ -17,8 +17,9 @@ interface Sketch {
 	_id: string
 	name: string
 	message: string
-	dataUrl: string
 	createdAt: Date
+	svg: string
+	ip: string
 }
 
 const queryClient = new QueryClient()
@@ -94,9 +95,10 @@ function SketchContent({ lang }: { lang: Language }) {
 function SketchCard({ sketch }: { sketch: Sketch }) {
 	return (
 		<article className='rounded-lg border border-border p-2 space-y-2'>
-			<div className='aspect-square bg-muted-foreground/25 dark:bg-secondary-foreground/75 rounded-lg overflow-hidden'>
-				<img src={sketch.dataUrl} alt={sketch.name} className='w-full h-full' />
-			</div>
+			<div
+				dangerouslySetInnerHTML={{ __html: sketch.svg }}
+				className='aspect-square bg-muted-foreground/25 dark:bg-secondary-foreground/75 rounded-lg overflow-hidden'
+			></div>
 			<div>
 				<p className='text-xs text-muted-foreground line-clamp-2'>{sketch.name}</p>
 				<h3 className='font-medium text-foreground truncate text-sm'>

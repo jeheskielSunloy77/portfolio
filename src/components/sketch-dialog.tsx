@@ -282,7 +282,7 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 	) => {
 		const lines: string[] = []
 		lines.push(
-			`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`
+			`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">`
 		)
 		// background rectangle (mimic original canvas fill)
 		lines.push(
@@ -323,37 +323,20 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 		// prepare svg/data first (this can fail before the network request)
 		const width = sizePx.width
 		const height = sizePx.height
-		let dataUrl: string
-		try {
-			const svgString = buildSvgString(width, height, strokes)
-			dataUrl = await svgStringToPngDataUrl(svgString, width, height)
-		} catch (e) {
-			console.error('Error building image', e)
-			setError({
-				title: t['Failed to save sketch'],
-				description: String(e),
-			})
-			setIsSaving(false)
-			return
-		}
 
 		const payload = {
 			name: newSketchName,
 			message: newSketchMessage,
-			dataUrl,
+			svg: buildSvgString(width, height, strokes),
 		}
 
 		const queryKey = ['sketches']
 		const previous = qc.getQueryData(queryKey)
 
-		// optimistic sketch (temporary id)
-		const tempId = `temp-${Date.now()}`
 		const optimisticSketch = {
-			_id: tempId,
-			name: newSketchName,
-			message: newSketchMessage,
-			dataUrl,
+			_id: `temp-${Date.now()}`,
 			createdAt: new Date(),
+			...payload,
 		}
 
 		// optimistic update: prepend to first page and bump total if present
@@ -411,7 +394,6 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 					const text = await res.text().catch(() => null)
 					if (text) errorMessage.description = text
 				}
-				console.error(errorMessage)
 				// rollback
 				qc.setQueryData(queryKey, previous)
 				setError(errorMessage)
@@ -428,7 +410,7 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 				const newPages = old.pages.map((p: any, i: number) => {
 					if (i !== 0) return p
 					const data = (p.data ?? []).map((item: any) =>
-						item._id === tempId ? created : item
+						item._id === optimisticSketch._id ? created : item
 					)
 					return { ...p, data }
 				})
@@ -440,7 +422,6 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 			onOpenChange(false)
 		} catch (e) {
 			console.error('Error saving sketch', e)
-			// rollback on unexpected error
 			qc.setQueryData(queryKey, previous)
 			setError({
 				title: t['Failed to save sketch'],

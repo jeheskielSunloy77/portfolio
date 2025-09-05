@@ -14,6 +14,16 @@ function errResponse(tag: string, message: string, status = 500) {
 	return jsonResponse({ error: message }, status)
 }
 
+function sanitizeSvg(svg: string) {
+	try {
+		return svg
+			.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+			.replace(/\son\w+=(?:'[^']*'|"[^"]*")/gi, '')
+	} catch {
+		return svg
+	}
+}
+
 const COLLECTION = 'sketches'
 
 export async function GET(request: Request) {
@@ -30,7 +40,10 @@ export async function GET(request: Request) {
 		const total = await col.countDocuments()
 
 		const docs = await col
-			.find({}, { projection: { dataUrl: 1, name: 1, message: 1, createdAt: 1 } })
+			.find(
+				{},
+				{ projection: { svg: 1, dataUrl: 1, name: 1, message: 1, createdAt: 1 } }
+			)
 			.sort({ createdAt: -1 })
 			.skip(page * pageSize)
 			.limit(pageSize)
@@ -38,10 +51,7 @@ export async function GET(request: Request) {
 
 		const mapped = docs.map((d: any) => ({
 			_id: d._id.toString(),
-			name: d.name,
-			message: d.message,
-			dataUrl: d.dataUrl,
-			createdAt: d.createdAt,
+			...d,
 		}))
 
 		const hasMore = (page + 1) * pageSize < total
@@ -85,7 +95,13 @@ export async function POST({ request }: { request: Request }) {
 			return jsonResponse({ error: 'Rate limit exceeded' }, 429)
 		}
 
-		const doc = { ...parsed.data, createdAt: new Date(), ip }
+		const doc = {
+			name: parsed.data.name,
+			message: parsed.data.message,
+			svg: sanitizeSvg(parsed.data.svg),
+			createdAt: new Date(),
+			ip,
+		}
 
 		const result = {
 			_id: (await col.insertOne(doc)).insertedId.toString(),
@@ -102,5 +118,5 @@ export async function POST({ request }: { request: Request }) {
 const sketchInsertSchema = z.object({
 	name: z.string(),
 	message: z.string(),
-	dataUrl: z.string(),
+	svg: z.string(),
 })

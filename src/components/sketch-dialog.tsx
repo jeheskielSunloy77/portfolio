@@ -136,6 +136,7 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 	// For drawing in-progress points
 	const currentPointsRef = useRef<Point[]>([])
 	const pointerIdRef = useRef<number | null>(null)
+	const maskIdRef = useRef(`eraser-mask-${Math.random().toString(36).slice(2)}`)
 	const [sizePx, setSizePx] = useState<{ width: number; height: number }>({
 		width: 512,
 		height: 512,
@@ -285,11 +286,17 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 			`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">`
 		)
 		// background rectangle (mimic original canvas fill)
-		lines.push(
-			`<rect width="100%" height="100%" fill="${BG_COLOR}" fill-opacity="${BG_OPACITY}"/>`
-		)
-		// render each stroke as a filled polygon using perfect-freehand
+		lines.push(`<rect width="100%" height="100%"  fill-opacity="0"/>`)
+
+		// use a mask so eraser strokes actually cut out pixels
+		const maskId =
+			maskIdRef.current || `eraser-mask-${Math.random().toString(36).slice(2)}`
+		lines.push(`<defs>`)
+		lines.push(`<mask id="${maskId}">`)
+		// white = show, black = hide (eraser)
+		lines.push(`<rect width="100%" height="100%" fill="white"/>`)
 		for (const s of strokesToRender) {
+			if (!s.isEraser) continue
 			if (!s.points || s.points.length === 0) continue
 			const strokePolygon = getStroke(s.points as number[][], {
 				size: s.size,
@@ -302,15 +309,30 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 			})
 			if (!strokePolygon || strokePolygon.length === 0) continue
 			const pathD = pointsToSvgPath(strokePolygon)
-			// eraser strokes are drawn with background color and low opacity to mimic destination-out
-			if (s.isEraser) {
-				lines.push(
-					`<path d="${pathD}" fill="${BG_COLOR}" fill-opacity="${BG_OPACITY}" stroke="none" />`
-				)
-			} else {
-				lines.push(`<path d="${pathD}" fill="${s.color}" stroke="none" />`)
-			}
+			lines.push(`<path d="${pathD}" fill="black" stroke="none" />`)
 		}
+		lines.push(`</mask>`)
+		lines.push(`</defs>`)
+
+		// render normal strokes inside group with mask applied so eraser areas are transparent
+		lines.push(`<g mask="url(#${maskId})">`)
+		for (const s of strokesToRender) {
+			if (!s.points || s.points.length === 0) continue
+			if (s.isEraser) continue
+			const strokePolygon = getStroke(s.points as number[][], {
+				size: s.size,
+				thinning: strokeOptions.thinning,
+				smoothing: strokeOptions.smoothing,
+				streamline: strokeOptions.streamline,
+				simulatePressure: strokeOptions.simulatePressure,
+				start: { taper: strokeOptions.startTaper },
+				end: { taper: strokeOptions.endTaper },
+			})
+			if (!strokePolygon || strokePolygon.length === 0) continue
+			const pathD = pointsToSvgPath(strokePolygon)
+			lines.push(`<path d="${pathD}"  stroke="none" />`)
+		}
+		lines.push(`</g>`)
 		lines.push(`</svg>`)
 		return lines.join('')
 	}
@@ -472,16 +494,9 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 		})
 		if (!polygon || polygon.length === 0) return null
 		const d = pointsToSvgPath(polygon)
+		// eraser strokes are handled via an SVG mask; skip rendering them here
 		if (s.isEraser) {
-			return (
-				<path
-					key={idx}
-					d={d}
-					fill={BG_COLOR}
-					fillOpacity={BG_OPACITY}
-					stroke='none'
-				/>
-			)
+			return null
 		}
 		return <path key={idx} d={d} fill={s.color} stroke='none' />
 	}
@@ -717,8 +732,60 @@ export function SketchDialog({ lang, isOpen, onOpenChange }: Props) {
 										fill={BG_COLOR}
 										fillOpacity={BG_OPACITY}
 									/>
-									{strokes.map((s, i) => renderStrokeElement(s, i))}
-									{preview ? renderStrokeElement(preview, -1) : null}
+
+									{/* build mask from eraser strokes so they actually cut out pixels */}
+									<defs>
+										<mask id={maskIdRef.current}>
+											{/* white = show, black = hide */}
+											<rect width='100%' height='100%' fill='white' />
+											{strokes
+												.filter((s) => s.isEraser)
+												.map((s, i) => {
+													const polygon = getStroke(s.points as number[][], {
+														size: s.size,
+														thinning: strokeOptions.thinning,
+														smoothing: strokeOptions.smoothing,
+														streamline: strokeOptions.streamline,
+														simulatePressure: strokeOptions.simulatePressure,
+														start: { taper: strokeOptions.startTaper },
+														end: { taper: strokeOptions.endTaper },
+													})
+													if (!polygon || polygon.length === 0) return null
+													const d = pointsToSvgPath(polygon)
+													return <path key={`mask-${i}`} d={d} fill='black' stroke='none' />
+												})}
+											{/* include preview eraser in mask */}
+											{preview && preview.isEraser
+												? (() => {
+														const polygon = getStroke(preview.points as number[][], {
+															size: preview.size,
+															thinning: strokeOptions.thinning,
+															smoothing: strokeOptions.smoothing,
+															streamline: strokeOptions.streamline,
+															simulatePressure: strokeOptions.simulatePressure,
+															start: { taper: strokeOptions.startTaper },
+															end: { taper: strokeOptions.endTaper },
+														})
+														if (!polygon || polygon.length === 0) return null
+														const d = pointsToSvgPath(polygon)
+														return (
+															<path key='mask-preview' d={d} fill='black' stroke='none' />
+														)
+												  })()
+												: null}
+										</mask>
+									</defs>
+
+									{/* render normal strokes inside masked group */}
+									<g mask={`url(#${maskIdRef.current})`}>
+										{strokes
+											.filter((s) => !s.isEraser)
+											.map((s, i) => renderStrokeElement(s, i))}
+										{/* render preview if it's a normal stroke */}
+										{preview && !preview.isEraser
+											? renderStrokeElement(preview, -1)
+											: null}
+									</g>
 								</svg>
 							</div>
 						</div>

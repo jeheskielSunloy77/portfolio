@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const schema = z.object({
+export const envSchema = z.object({
 	SMTP_USER: z.email(),
 	SMTP_PASS: z.string().min(1),
 	SMTP_HOST: z.string().min(1),
@@ -14,5 +14,3 @@ const schema = z.object({
 	MONGODB_URI: z.string().min(1),
 	MONGODB_DB: z.string().min(1),
 })
-
-export const env = schema.parse(import.meta.env)

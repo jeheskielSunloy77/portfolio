@@ -147,6 +147,7 @@ export default function ContactForm({
 				<div className='mt-2'>
 					<Button
 						type='submit'
+						formNoValidate
 						disabled={form.state === 'submitting'}
 						className='w-full disabled:opacity-50'
 					>
@@ -166,6 +167,19 @@ export default function ContactForm({
 					</p>
 				</div>
 			</form>
+
+			{form.state === 'success' && (
+				<p className='text-center text-xs text-green-500'>{form.message}</p>
+			)}
+
+			{form.state === 'error' && (
+				<div>
+					<p className='text-center text-xs text-destructive'>{form.message}</p>
+					<p className='text-center text-xs text-destructive'>
+						{t['Something went wrong. Please try again!']}
+					</p>
+				</div>
+			)}
 
 			<AlertDialog
 				open={form.state === 'waiting-confirmation'}

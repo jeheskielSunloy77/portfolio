@@ -36,8 +36,6 @@ export const server = {
 
 				await transporter.sendMail(payload)
 
-				console.log('Email sent:', payload)
-
 				log('info', TAG, `Email sent successfully from ${name} <${email}>`)
 
 				return { success: true }

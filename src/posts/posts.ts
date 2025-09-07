@@ -6,16 +6,21 @@ export async function getPosts(params: {
 	limit?: number
 	filter?: (post: CollectionEntry<'post'>) => any
 }) {
-	const posts = await getCollection(
-		'post',
-		params.filter ?? ((post) => post.data.lang === params.lang)
-	)
+	const {
+		lang,
+		limit,
+		filter = lang
+			? (post: CollectionEntry<'post'>) => post.data.lang === lang
+			: undefined,
+	} = params
+
+	const posts = await getCollection('post', filter)
 
 	const sorted = posts.sort(
 		(a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
 	)
 
-	if (!params.limit) return sorted
+	if (!limit) return sorted
 
-	return sorted.slice(0, params.limit)
+	return sorted.slice(0, limit)
 }

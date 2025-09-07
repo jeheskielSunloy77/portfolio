@@ -9,7 +9,7 @@
 		"astro": "astro",
 		"test": "vitest --run",
 		"test:watch": "vitest",
-		"coverage": "vitest --coverage"
+		"coverage": "vitest --coverage --run"
 	},
 	"dependencies": {
 		"@ai-sdk/langchain": "^1.0.22",

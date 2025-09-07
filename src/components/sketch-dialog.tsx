@@ -20,7 +20,6 @@ import {
 	RotateCcw,
 	Undo2,
 } from 'lucide-react'
-import getStroke from 'perfect-freehand'
 import React, { useEffect, useRef, useState } from 'react'
 import { Checkbox } from './ui/checkbox'
 
@@ -37,6 +36,7 @@ type Stroke = {
 	color: string
 	size: number
 	isEraser?: boolean
+	polygon?: number[][] // optional cached polygon (from perfect-freehand)
 }
 
 const BG_COLOR = '#c5c5c5'
@@ -111,6 +111,17 @@ export function SketchDialog({
 		height: 512,
 	})
 
+	// lightweight sampling refs to reduce pointermove churn
+	const lastPointRef = useRef<{ x: number; y: number; t: number } | null>(null)
+	const lastSampleTimeRef = useRef<number>(0)
+	const MIN_DIST = 2 // pixels
+	const MIN_TIME = 16 // ms (~60fps)
+
+	// dynamic import reference for perfect-freehand
+	const getStrokeRef = useRef<
+		null | ((points: number[][], options?: any) => number[][])
+	>(null)
+
 	useEffect(() => {
 		if (isOpen) {
 			// when opening, initialize strokes and history with empty background snapshot
@@ -127,7 +138,6 @@ export function SketchDialog({
 				setSizePx({ width, height })
 			}
 		} else {
-			// cleanup
 			setStrokes([])
 			setHistory([])
 			setHistoryIndex(-1)
@@ -136,6 +146,42 @@ export function SketchDialog({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isOpen])
 
+	// lazy-load perfect-freehand when component mounts
+	useEffect(() => {
+		let mounted = true
+		import('perfect-freehand')
+			.then((mod) => {
+				if (!mounted) return
+				// support both default and named export
+				// @ts-ignore
+				getStrokeRef.current = mod.default ?? mod.getStroke ?? Object.values(mod)[0]
+				// once loaded, compute polygons for any existing strokes that lack them
+				setStrokes((prev) =>
+					prev.map((s) => {
+						if (s.polygon || !s.points || s.points.length === 0) return s
+						try {
+							const poly = getStrokeRef.current!(s.points as number[][], {
+								size: s.size,
+								thinning: strokeOptions.thinning,
+								smoothing: strokeOptions.smoothing,
+								streamline: strokeOptions.streamline,
+								simulatePressure: strokeOptions.simulatePressure,
+								start: { taper: strokeOptions.startTaper },
+								end: { taper: strokeOptions.endTaper },
+							})
+							return { ...s, polygon: poly }
+						} catch {
+							return s
+						}
+					})
+				)
+			})
+			.catch((e) => console.warn('failed to load perfect-freehand', e))
+		return () => {
+			mounted = false
+		}
+	}, [])
+
 	// Save snapshot of strokes to history
 	const saveToHistory = (nextStrokes?: Stroke[]) => {
 		const snap = (nextStrokes ?? strokes).map((s) => ({
@@ -143,6 +189,7 @@ export function SketchDialog({
 			color: s.color,
 			size: s.size,
 			isEraser: !!s.isEraser,
+			polygon: s.polygon ? s.polygon.map((p) => [...p]) : undefined,
 		}))
 		const newHistory = history.slice(0, historyIndex + 1)
 		newHistory.push(snap)
@@ -205,33 +252,102 @@ export function SketchDialog({
 		const x = (e.clientX - rect.left) * scaleX
 		const y = (e.clientY - rect.top) * scaleY
 		const pressure = (e as React.PointerEvent).pressure ?? 0.5
+
+		// sampling: only add a point if moved enough distance or enough time passed
+		const now = performance.now()
+		const last = lastPointRef.current
+		if (last) {
+			const dx = x - last.x
+			const dy = y - last.y
+			const dist2 = dx * dx + dy * dy
+			if (
+				dist2 < MIN_DIST * MIN_DIST &&
+				now - lastSampleTimeRef.current < MIN_TIME
+			) {
+				return
+			}
+		}
+		lastPointRef.current = { x, y, t: now }
+		lastSampleTimeRef.current = now
+
 		currentPointsRef.current.push([x, y, pressure])
-		// trigger re-render for live preview by updating a dummy state
-		// but to keep things simple, we'll update strokes with a temporary preview stroke
+
+		// create a lightweight preview stroke (with polygon if getStroke is available)
+		// prefer reusing cached polygon computation if available
+		const previewPoints = currentPointsRef.current.slice()
 		const previewStroke: Stroke = {
-			points: currentPointsRef.current.slice(),
+			points: previewPoints,
 			color: isEraser ? BG_COLOR : color,
 			size: brushSize,
 			isEraser,
 		}
-		// replace last preview if present (we keep a temporary flag by making last stroke a preview if it has _preview property - avoid complexity: keep separate preview state)
+
+		if (getStrokeRef.current) {
+			try {
+				// compute polygon but keep preview lightweight — don't block or heavy-handle errors
+				const poly = getStrokeRef.current(previewPoints as number[][], {
+					size: brushSize,
+					thinning: strokeOptions.thinning,
+					smoothing: strokeOptions.smoothing,
+					streamline: strokeOptions.streamline,
+					simulatePressure: strokeOptions.simulatePressure,
+					start: { taper: strokeOptions.startTaper },
+					end: { taper: strokeOptions.endTaper },
+				})
+				previewStroke.polygon = poly
+			} catch {
+				// fall back to no polygon on preview
+			}
+		}
+
+		// update preview by using state; keep lightweight
 		setPreview(previewStroke)
 	}
 
 	const onPointerUp = (e: React.PointerEvent) => {
 		if (!isDrawing) return
 		setIsDrawing(false)
+		const svg = svgRef.current
+		if (!svg) {
+			pointerIdRef.current = null
+			currentPointsRef.current = []
+			return
+		}
+		try {
+			;(e.target as Element).releasePointerCapture?.(e.pointerId)
+		} catch {
+			// ignore
+		}
 		pointerIdRef.current = null
 		// finalize stroke
 		const rawPoints = currentPointsRef.current.slice()
 		if (rawPoints.length >= 2) {
-			const stroke: Stroke = {
+			const baseStroke: Stroke = {
 				points: rawPoints,
 				color: isEraser ? BG_COLOR : color,
 				size: brushSize,
 				isEraser,
 			}
-			const next = [...strokes, stroke]
+
+			// compute polygon immediately if possible and attach to stroke to avoid recompute
+			if (getStrokeRef.current) {
+				try {
+					const poly = getStrokeRef.current(rawPoints as number[][], {
+						size: brushSize,
+						thinning: strokeOptions.thinning,
+						smoothing: strokeOptions.smoothing,
+						streamline: strokeOptions.streamline,
+						simulatePressure: strokeOptions.simulatePressure,
+						start: { taper: strokeOptions.startTaper },
+						end: { taper: strokeOptions.endTaper },
+					})
+					baseStroke.polygon = poly
+				} catch {
+					/* ignore */
+				}
+			}
+
+			const next = [...strokes, baseStroke]
 			setStrokes(next)
 			setPreview(null)
 			saveToHistory(next)
@@ -267,15 +383,23 @@ export function SketchDialog({
 		for (const s of strokesToRender) {
 			if (!s.isEraser) continue
 			if (!s.points || s.points.length === 0) continue
-			const strokePolygon = getStroke(s.points as number[][], {
-				size: s.size,
-				thinning: strokeOptions.thinning,
-				smoothing: strokeOptions.smoothing,
-				streamline: strokeOptions.streamline,
-				simulatePressure: strokeOptions.simulatePressure,
-				start: { taper: strokeOptions.startTaper },
-				end: { taper: strokeOptions.endTaper },
-			})
+			// prefer cached polygon if available
+			let strokePolygon = s.polygon
+			if (!strokePolygon && getStrokeRef.current) {
+				try {
+					strokePolygon = getStrokeRef.current(s.points as number[][], {
+						size: s.size,
+						thinning: strokeOptions.thinning,
+						smoothing: strokeOptions.smoothing,
+						streamline: strokeOptions.streamline,
+						simulatePressure: strokeOptions.simulatePressure,
+						start: { taper: strokeOptions.startTaper },
+						end: { taper: strokeOptions.endTaper },
+					})
+				} catch {
+					strokePolygon = undefined
+				}
+			}
 			if (!strokePolygon || strokePolygon.length === 0) continue
 			const pathD = pointsToSvgPath(strokePolygon)
 			lines.push(`<path d="${pathD}" fill="black" stroke="none" />`)
@@ -288,15 +412,22 @@ export function SketchDialog({
 		for (const s of strokesToRender) {
 			if (!s.points || s.points.length === 0) continue
 			if (s.isEraser) continue
-			const strokePolygon = getStroke(s.points as number[][], {
-				size: s.size,
-				thinning: strokeOptions.thinning,
-				smoothing: strokeOptions.smoothing,
-				streamline: strokeOptions.streamline,
-				simulatePressure: strokeOptions.simulatePressure,
-				start: { taper: strokeOptions.startTaper },
-				end: { taper: strokeOptions.endTaper },
-			})
+			let strokePolygon = s.polygon
+			if (!strokePolygon && getStrokeRef.current) {
+				try {
+					strokePolygon = getStrokeRef.current(s.points as number[][], {
+						size: s.size,
+						thinning: strokeOptions.thinning,
+						smoothing: strokeOptions.smoothing,
+						streamline: strokeOptions.streamline,
+						simulatePressure: strokeOptions.simulatePressure,
+						start: { taper: strokeOptions.startTaper },
+						end: { taper: strokeOptions.endTaper },
+					})
+				} catch {
+					strokePolygon = undefined
+				}
+			}
 			if (!strokePolygon || strokePolygon.length === 0) continue
 			const pathD = pointsToSvgPath(strokePolygon)
 			lines.push(`<path d="${pathD}"  stroke="none" />`)
@@ -352,17 +483,10 @@ export function SketchDialog({
 	// Rendered strokes as SVG elements
 	const renderStrokeElement = (s: Stroke, idx: number) => {
 		if (!s.points || s.points.length === 0) return null
-		const polygon = getStroke(s.points as number[][], {
-			size: s.size,
-			thinning: strokeOptions.thinning,
-			smoothing: strokeOptions.smoothing,
-			streamline: strokeOptions.streamline,
-			simulatePressure: strokeOptions.simulatePressure,
-			start: { taper: strokeOptions.startTaper },
-			end: { taper: strokeOptions.endTaper },
-		})
-		if (!polygon || polygon.length === 0) return null
-		const d = pointsToSvgPath(polygon)
+		const polygon = s.polygon
+		const effectivePolygon = polygon && polygon.length > 0 ? polygon : undefined
+		if (!effectivePolygon) return null
+		const d = pointsToSvgPath(effectivePolygon)
 		// eraser strokes are handled via an SVG mask; skip rendering them here
 		if (s.isEraser) {
 			return null
@@ -610,15 +734,7 @@ export function SketchDialog({
 											{strokes
 												.filter((s) => s.isEraser)
 												.map((s, i) => {
-													const polygon = getStroke(s.points as number[][], {
-														size: s.size,
-														thinning: strokeOptions.thinning,
-														smoothing: strokeOptions.smoothing,
-														streamline: strokeOptions.streamline,
-														simulatePressure: strokeOptions.simulatePressure,
-														start: { taper: strokeOptions.startTaper },
-														end: { taper: strokeOptions.endTaper },
-													})
+													const polygon = s.polygon
 													if (!polygon || polygon.length === 0) return null
 													const d = pointsToSvgPath(polygon)
 													return <path key={`mask-${i}`} d={d} fill='black' stroke='none' />
@@ -626,15 +742,7 @@ export function SketchDialog({
 											{/* include preview eraser in mask */}
 											{preview && preview.isEraser
 												? (() => {
-														const polygon = getStroke(preview.points as number[][], {
-															size: preview.size,
-															thinning: strokeOptions.thinning,
-															smoothing: strokeOptions.smoothing,
-															streamline: strokeOptions.streamline,
-															simulatePressure: strokeOptions.simulatePressure,
-															start: { taper: strokeOptions.startTaper },
-															end: { taper: strokeOptions.endTaper },
-														})
+														const polygon = preview.polygon
 														if (!polygon || polygon.length === 0) return null
 														const d = pointsToSvgPath(polygon)
 														return (

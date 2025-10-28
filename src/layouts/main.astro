@@ -44,7 +44,7 @@ const t = dictionary[lang]
 	</head>
 	<body class='font-sans text-foreground bg-background'>
 		<Navbar lang={lang} pathname={Astro.url.pathname} t={t} client:load />
-		<div class='mx-auto flex max-w-3xl flex-col px-8 py-24'>
+		<div class='mx-auto flex max-w-3xl flex-col px-4 sm:px-8 py-24'>
 			<main class='grow'>
 				<slot />
 			</main>

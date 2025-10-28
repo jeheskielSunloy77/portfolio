@@ -508,18 +508,19 @@ export function SketchDialog({
 				>
 					<div>
 						<div className='flex items-center justify-between'>
-							<div className='flex items-center gap-1'>
-								<div className='flex items-center gap-1'>
-									{presetColors.map((presetColor) => (
+							<div className='flex items-center gap-0.5'>
+								<div className='flex items-center gap-0.5'>
+									{presetColors.map((presetColor, i) => (
 										<Button
 											size='iconSm'
 											variant={presetColor === color ? 'secondary' : 'ghost'}
 											key={presetColor}
 											onClick={() => setColor(presetColor)}
+											className={i > 3 ? 'hidden sm:block' : ''}
 										>
 											<div
 												style={{ backgroundColor: presetColor }}
-												className='size-5 rounded-full border cursor-pointer transition-all'
+												className='size-4 sm:size-5 rounded-full border cursor-pointer transition-all'
 											/>
 										</Button>
 									))}

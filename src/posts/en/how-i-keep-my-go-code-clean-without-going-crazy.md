@@ -1,61 +1,58 @@
 ---
 title: How I Keep My Go Code Clean (Without Going Crazy) 🧹
-publishedAt: 2024-12-15
-description: Learn how to structure Go applications with clean architecture principles that actually work. Discover why pure Clean Architecture doesn't fit Go, and get a practical approach using services and repositories that keeps code maintainable without over-engineering. Includes real code examples and testing strategies.
+publishedAt: 2025-03-02
+description: Learn how to structure Go applications with clean, practical patterns that fit the language. I explain a pragmatic approach—services, repositories, and simple interfaces—that keeps code maintainable without over-engineering.
 tags: ['go', 'design patterns', 'clean architecture']
 keywords: 'golang architecture, go clean code, golang project structure, go services pattern, golang repositories, go best practices, golang testing, go code organization, clean architecture go, golang design patterns'
 readTime: 9
 lang: en
 ---
 
-Okay, let's be real for a sec. I used to be _that_ developer who tried to force Clean Architecture patterns into every Go project. Spoiler alert: it was a mess. 😅
+I used to be the person who tried to bend "Clean Architecture" into every Go project. It rarely helped. After a few over-engineered APIs and some raised eyebrows, I found a simpler, more Go-friendly way to keep things tidy and testable.
 
-After building way too many over-engineered APIs and getting weird looks from teammates, I finally figured out how to write Go code that's actually clean AND feels natural. Here's what I learned about structuring Go apps without losing my sanity.
+The core idea is: prefer clarity over ceremony. Keep packages straightforward, put interfaces where they're actually used, and use small, focused services for business logic. Below is what worked for me in real projects.
 
-## Why Clean Architecture Feels Weird in Go 🤔
+## Why classic Clean Architecture feels off in Go
 
-Here's the thing: Uncle Bob's Clean Architecture is awesome, but it was designed for Java/C# folks who love their abstract factories and dependency injection containers. Go? Not so much.
+Uncle Bob's patterns shine in languages with heavy DI frameworks and lots of abstractions. Go prefers flatter, simpler code:
 
-**Go likes things flat** 📏 - All those rigid layers and circular dependencies make Go developers cry. We prefer simple, composable pieces.
+- Go likes plain packages and direct wiring; deep layering adds noise.
+- Creating interfaces for everything is usually overkill.
+- Go's explicit error handling clashes with exception-heavy examples in most Clean Architecture write-ups.
+- Adding extra "interface" packages often fragments the codebase rather than improving it.
 
-**Interfaces everywhere = overkill** 🎭 - Go's implicit interfaces are magical, but Clean Architecture wants you to create interfaces for everything. Sometimes a simple function is better than an interface with one method!
+That said, the principles behind Clean Architecture—separation of concerns, testability, and decoupling—are still valuable. They just need a lighter, Go-centric application.
 
-**Error handling clash** ⚠️ - Go's explicit error returns don't play nice with the exception-heavy patterns you see in most Clean Architecture examples.
+## A practical project layout that works
 
-**Package conflicts** 📦 - Go's package system already gives us great organization. Adding more layers on top can make things confusing rather than clearer.
-
-But hey! The _ideas_ behind Clean Architecture—keeping things separate, making code testable, not coupling everything together—those are gold in Go too. ✨
-
-## My "Good Enough" Go Structure 🏗️
-
-After trying every pattern under the sun, here's what actually works for me:
+Here's a layout I use that keeps things organized without unnecessary complexity:
 
 ```
 project/
 ├── cmd/
 │   └── server/
-│       └── main.go          # 🎯 Entry point
+│       └── main.go          # Entry point
 ├── internal/
-│   ├── domain/              # 📝 Your business stuff
+│   ├── domain/              # Your business stuff
 │   │   ├── user.go
 │   │   └── errors.go
-│   ├── service/             # 🔧 Business logic lives here
+│   ├── service/             # Business logic lives here
 │   │   └── user.go
-│   ├── repository/          # 💾 Data access
+│   ├── repository/          # Data access
 │   │   ├── postgres/
 │   │   └── memory/
-│   └── transport/           # 🌐 HTTP/gRPC/CLI stuff
+│   └── transport/           # HTTP/gRPC/CLI stuff
 │       ├── http/
 │       └── grpc/
-├── pkg/                     # 📦 Reusable bits
+├── pkg/                     # Reusable bits
 └── go.mod
 ```
 
-The secret sauce? **Services instead of "use cases"** and letting Go's packages do the heavy lifting. Way less ceremony, way more clarity! 🎉
+The difference: I favor "services" over abstract "use cases" and let Go packages express boundaries naturally.
 
-## Domain Layer: Keep It Stupidly Simple 🧠
+## Keep the domain small and clear
 
-Your domain is where the important business stuff lives, but I keep it lightweight. No fancy constructors or complex validation—just the essentials:
+Domain types should be plain and easy to reason about:
 
 ```go
 type User struct {
@@ -76,11 +73,11 @@ func (u *User) Validate() error {
 }
 ```
 
-See? No magic, no weird constructor patterns. Just a struct and a simple validation method. Go's zero values got our back! 💪
+No magic constructors, no unnecessary patterns—just a clear data shape and straightforward validation.
 
-## Services: Where the Magic Happens ✨
+## Services: where business logic lives
 
-Instead of confusing "use cases," I just call them services. They're basically structs with methods that do stuff—very Go-like!
+Services coordinate domain logic and repositories. They keep complexity out of handlers:
 
 ```go
 type UserService struct {
@@ -90,17 +87,16 @@ type UserService struct {
 
 func (s *UserService) CreateUser(ctx context.Context, email, name string) (*domain.User, error) {
     user := &domain.User{
-        ID:        generateID(), // some UUID function
+        ID:        generateID(),
         Email:     email,
         Name:      name,
         CreatedAt: time.Now(),
     }
 
     if err := user.Validate(); err != nil {
-        return nil, err // nope, try again
+        return nil, err
     }
 
-    // Check if user already exists (nobody likes duplicates)
     if existing, _ := s.repo.GetByEmail(ctx, email); existing != nil {
         return nil, domain.ErrUserExists
     }
@@ -109,56 +105,24 @@ func (s *UserService) CreateUser(ctx context.Context, email, name string) (*doma
 }
 ```
 
-This is where your business logic lives. It orchestrates everything but doesn't get bogged down in architectural ceremony. Simple! 🎯
+Services are easy to test and reason about, and they match Go's straightforward style.
 
-## Repositories: Abstractions That Actually Make Sense 💾
+## Repositories: interfaces where they make sense
 
-Here's where I define my data interfaces. I put them right in the service package because that's where they're actually used:
+Define repository interfaces close to their consumers—usually in the same package as the service that uses them:
 
 ```go
-// Define interfaces where you use them, not in some abstract layer
 type UserRepository interface {
     Create(ctx context.Context, user *domain.User) error
     GetByEmail(ctx context.Context, email string) (*domain.User, error)
-    // Only the methods you actually need!
 }
 ```
 
-Then implement them wherever makes sense:
+Implementations (Postgres, in-memory for tests, etc.) live where they belong.
 
-```go
-// PostgreSQL implementation
-type UserRepository struct {
-    db *sql.DB
-}
+## Thin transport layer
 
-func (r *UserRepository) Create(ctx context.Context, user *domain.User) error {
-    query := `INSERT INTO users (id, email, name, created_at) VALUES ($1, $2, $3, $4)`
-    _, err := r.db.ExecContext(ctx, query, user.ID, user.Email, user.Name, user.CreatedAt)
-    return err
-}
-```
-
-For testing, I skip mocks entirely and use an in-memory version. Way easier to reason about! 🧠
-
-```go
-// Memory implementation for testing
-type UserRepository struct {
-    users map[string]*domain.User
-    mu    sync.RWMutex
-}
-
-func (r *UserRepository) Create(ctx context.Context, user *domain.User) error {
-    r.mu.Lock()
-    defer r.mu.Unlock()
-    r.users[user.ID] = user
-    return nil
-}
-```
-
-## Transport Layer: Keep Handlers Skinny 🚚
-
-Your HTTP handlers (or gRPC, or CLI) should be super thin. They just translate between the outside world and your services:
+Keep HTTP or gRPC handlers minimal—just translate requests to service calls and format responses:
 
 ```go
 type UserHandler struct {
@@ -174,26 +138,25 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
     user, err := h.service.CreateUser(r.Context(), req.Email, req.Name)
     if err != nil {
-        handleServiceError(w, err) // convert service errors to HTTP errors
+        handleServiceError(w, err)
         return
     }
 
-    writeJSON(w, user, http.StatusCreated) // success! 🎉
+    writeJSON(w, user, http.StatusCreated)
 }
 ```
 
-See how thin that is? The handler just handles HTTP stuff, the service handles business stuff. Clean separation! ✨
+Thin handlers make refactoring easier and keep transport concerns separate from business logic.
 
-## Wiring It Up: No Magic, Just Functions 🔌
+## Wiring: explicit and simple
 
-Forget complex dependency injection frameworks. Just use functions and wire everything up in `main.go`:
+I wire dependencies in main with plain functions—no DI container surprises:
 
 ```go
 func main() {
-    db := setupDatabase()      // connect to postgres
-    logger := setupLogger()    // setup structured logging
+    db := setupDatabase()
+    logger := setupLogger()
 
-    // Wire up the dependencies (no magic!)
     userRepo := postgres.NewUserRepository(db)
     userService := service.NewUserService(userRepo, logger)
     userHandler := http.NewUserHandler(userService)
@@ -203,15 +166,14 @@ func main() {
 }
 ```
 
-Explicit, easy to follow, and no framework to learn. This is the Go way! 🚀
+Explicit wiring is easy to follow and debug.
 
-## Testing: Where This Really Shines ✅
+## Testing is the payoff
 
-Honestly? This is why I structure my code this way. Testing becomes ridiculously easy:
+One big win from this structure: tests are straightforward. Swap in an in-memory repository and run service tests without mocks:
 
 ```go
 func TestUserService_CreateUser(t *testing.T) {
-    // No mocking frameworks needed!
     repo := memory.NewUserRepository()
     logger := slog.New(slog.NewTextHandler(io.Discard, nil))
     service := service.NewUserService(repo, logger)
@@ -220,79 +182,28 @@ func TestUserService_CreateUser(t *testing.T) {
 
     assert.NoError(t, err)
     assert.Equal(t, "test@example.com", user.Email)
-    // Test passes! 🎉
 }
 ```
 
-No complex mocking, no brittle test setup. Just swap in the memory implementation and you're good to go. Your future self will thank you! 😊
+No heavy mocking frameworks, simple setups, reliable tests.
 
-## When This Approach Works Best
+## When this approach fits best
 
-This structure excels in several scenarios:
+- Medium-sized APIs (5–50 endpoints)
+- Team projects where clarity matters
+- Projects that may need multiple transports (REST, gRPC, CLI)
+- Codebases that evolve frequently
 
-**Medium-Sized Applications**: More than a simple CRUD API but not a massive enterprise system. Think 5-50 endpoints with meaningful business logic.
+## What I avoid
 
-**Team Projects**: Multiple developers can work without stepping on each other. Clear boundaries between transport, service, and repository layers.
+- Over-abstraction and generic repositories
+- Moving interfaces into separate "interface" packages
+- Deep layering that hides intent
 
-**Evolving Requirements**: Business logic changes frequently, but core entities remain stable. The service layer adapbs without touching transport or repository code.
+## Final note
 
-**Multiple Interfaces**: Need both REST API and CLI? Or REST and gRPC? Different transport implementations share the same service layer.
-
-## What I Avoid
-
-**Over-Abstraction**: If a piece of code only has one implementation and is unlikely to change, I don't abstract it. Interfaces in Go should represent behavior, not just enable testing.
-
-**Deep Inheritance Hierarchies**: Go doesn't have inheritance, and that's a feature. I compose behaviors instead of trying to recreate OOP patterns.
-
-**Generic Repositories**: Repository interfaces are specific to their domain. No `Repository<T>` generic types—they hide important domain concepts.
-
-**Layered Packages**: I don't create separate packages for "interfaces" or "abstractions." Interfaces live with their consumers.
-
-## Why This Beats "Pure" Clean Architecture in Go 🥊
-
-My approach differs from textbook Clean Architecture in some key ways:
-
-**Flexible boundaries** 🚪 - Instead of rigid layers that can never talk to each other, I have logical groups that can communicate when it makes sense.
-
-**Interfaces where they belong** 🏠 - Interfaces live with the code that uses them, not in some abstract "interface layer."
-
-**Go-style error handling** ⚠️ - Explicit error returns flow naturally through the layers. No weird exception abstractions!
-
-**Simple beats pure** ✨ - When Go idioms conflict with architectural theory, I pick the Go way every time.
-
-## Performance? Don't Worry About It 🚀
-
-This structure has basically zero performance overhead:
-
-- **No runtime reflection** - Simple constructor functions = zero runtime cost
-- **Interface costs are tiny** - Go's interface dispatch is super fast, and usually negligible compared to database calls
-- **Fewer allocations** - Struct-based services beat closure-heavy functional approaches
-
-## Refactoring Existing Code? Take It Slow 🐌
-
-When fixing existing spaghetti code:
-
-1. **Start with repositories** - Extract database stuff first
-2. **Group business logic** - Move related functions into service structs
-3. **Thin your handlers** - Keep only HTTP concerns in HTTP handlers
-4. **Add interfaces last** - Only when you actually need to swap implementations
-
-Don't try to fix everything at once. Go compiles fast, so incremental changes are painless! 😌
-
-## Wrapping Up 🎁
-
-Look, Clean Architecture has great ideas, but trying to implement it exactly as written in Go is like wearing a suit to go swimming. It's technically possible, but why would you want to? 😅
-
-By using services instead of use cases, keeping interfaces simple, and letting Go's package system do what it does best, you get apps that are:
-
-- Easy to understand 🧠
-- Simple to test ✅
-- Actually fun to work with 🎉
-
-The goal isn't architectural perfection—it's building software that you and your team can ship confidently. This approach has worked great for me across tons of Go projects, from tiny APIs to complex microservices.
-
-Start simple, refactor when things hurt, and always pick clarity over cleverness. Your code should tell a story, not solve a puzzle! 📖
+Clean Architecture brings good ideas, but in Go the goal is pragmatic clarity. Prefer simple packages, interfaces where they’re useful, and services that do the orchestration. Your code should be readable and testable—prefer that over purist architectures.
 
 ---
 
-_Have you tried different patterns in Go? What worked for your team? Drop a comment below—I'd love to hear your war stories and wins! 💭_
+Have you tried different Go structures in your projects? What patterns worked or failed for your team? I'd love to hear about your experiences.

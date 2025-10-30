@@ -1,6 +1,6 @@
 ---
 title: 'Mendesain Ulang Portofolio: Memberi Ruang untuk Hal yang Penting ✨'
-publishedAt: 2024-09-02
+publishedAt: 2025-01-02
 description: Kisah di balik bagaimana aku menyederhanakan website portofolio. Dari desain lama yang penuh warna dan berantakan menjadi tampilan baru yang minimalis, modern, dan bersih. Lihat perbedaan sebelum & sesudah, cek demo langsung, dan eksplor kode open-source di GitHub.
 tags: ['portofolio', 'desain web', 'frontend', 'nextjs', 'tailwind']
 keywords: 'redesign portofolio, desain web minimalis, portofolio developer, nextjs portofolio, tailwind portofolio, shadcn ui, perbedaan portofolio, tips portofolio software engineer'
@@ -8,64 +8,72 @@ readTime: 6
 lang: id
 ---
 
-Akhirnya kesampaian juga — aku mendesain ulang website portofolio-ku 🎉.
+Akhirnya saya mendesain ulang portofolio. Gampangnya: lebih tenang, lebih fokus.
 
-Portofolio lamaku sebenarnya nggak _jelek_... tapi jujur aja: **cukup berantakan**. Terlalu banyak warna, terlalu banyak konten, dan nggak ada ruang bernapas. Rasanya aku berusaha menampilkan _semua hal_ sekaligus, dan hasilnya malah jadi bikin pusing (buat aku, dan mungkin juga buat yang mampir 😅).
+Portofolio lama bekerja, tapi terlalu ramai. Warna terang di mana-mana, banyak bagian, kurang ruang kosong. Lama-lama saya sadar pengunjung sering melewatkan proyek karena desainnya yang berisik.
 
-Jadi aku memutuskan untuk mundur sejenak, memikirkan ulang desainnya, dan memberi ruang hanya untuk hal-hal yang benar-benar penting.
-
----
-
-## Sebelum: Warna-warni yang Berantakan 🌈
-
-Portofolio pertamaku bisa dibilang _rame banget_. Bayangin: warna cerah di mana-mana, banyak bagian bertumpuk, dan desain yang teriak _“lihat aku dong!”_.
-
-Waktu itu sih seru, tapi makin lama aku merasa desainnya nggak benar-benar mewakili cara aku ingin karyaku dilihat. Bukannya menonjolkan proyek dan skill-ku, desainnya malah jadi bintang utama.
-
-Kalau kamu penasaran (atau mau ngerosting desain lamaku 😂), kamu masih bisa lihat **demo portofolio lama di sini**: [Demo Portofolio Lama](#)
+Jadi saya mundur, pikir ulang struktur, dan atur ulang supaya yang penting muncul lebih dulu: proyek, konteks, dan hasil.
 
 ---
 
-## Sesudah: Bersih, Modern, Minimalis ✨
+## Sebelum — penuh eksperimen
 
-Untuk portofolio baru, aku fokus pada **kesederhanaan dan kejelasan**:
+Versi pertama itu penuh karakter: palet berani, banyak layout unik, dan elemen yang bersaing untuk perhatian. Itu menyenangkan untuk dibangun, tapi tidak efektif untuk menunjukkan pekerjaan saya.
 
-- 🧹 Lebih sedikit gangguan → hanya konten terpenting yang ditampilkan
-- 🎨 Palet warna minimal → lebih nyaman dilihat
-- 🖋️ Tipografi modern → kesan lebih profesional
-- 📱 Layout responsif & rapi → enak dilihat di semua perangkat
-
-Sekarang desainnya nggak lagi mendominasi, tapi justru memberi ruang agar karyaku bisa terlihat jelas. Nggak perlu lagi scroll panjang penuh warna hanya untuk melihat apa yang sudah aku buat.
-
-Kamu bisa lihat **portofolio baruku di sini**: [Portofolio Baru](/)
+Dari versi itu saya belajar apa yang orang lihat dan apa yang mereka lewatkan. Itu jadi bahan untuk penyederhanaan.
 
 ---
 
-## Di Balik Layar (buat yang kepo 👩‍💻👨‍💻)
+## Sesudah — fokus pada konten
 
-Walaupun fokus utama postingan ini soal desain, mungkin ada yang penasaran soal teknologinya. Stack-nya sebenarnya masih mirip: **Next.js, TypeScript, Tailwind CSS** — tapi kali ini aku juga pakai **shadcn/ui** supaya lebih cepat dan hasil akhirnya lebih rapi.
+Tujuan redesign: buat pengunjung cepat paham apa yang saya kerjakan. Perubahan utama:
 
-Kedua versi (lama dan baru) open-source, jadi kalau mau ngintip kodenya bisa langsung cek:
+- Kurangi kebisingan — simpan hanya konten bernilai.
+- Palet warna lebih terbatas — kontras dipakai untuk menyorot.
+- Tipografi yang lebih jelas — memudahkan scan cepat.
+- Layout responsif yang konsisten — tampil rapi di ponsel dan desktop.
 
-- 🕹️ [GitHub Portofolio Lama](https://github.com/jeheskielSunloy77/personal-portfolio-with-react)
-- 🚀 [GitHub Portofolio Baru](https://github.com/jeheskielSunloy77/_portfolio)
-
----
-
-## Apa yang Aku Pelajari
-
-- **Sederhana > Ramai** → Portofolio bukan soal menampilkan _semua hal_, tapi soal menampilkan _hal yang tepat_.
-- **Desain itu komunikasi** → Layout yang bersih bikin orang (termasuk recruiter) lebih cepat _nangkap_ isi portofolio.
-- **Iterasi itu penting** → Aku perlu melewati versi pertama yang berantakan dulu sebelum tahu apa yang benar-benar aku mau.
+Intinya: biarkan proyek yang berbicara, bukan dekorasinya.
 
 ---
 
-## Penutup 🎁
+## Teknologi singkat
 
-Redesain ini bukan cuma soal ganti warna atau layout. Tapi lebih ke mundur sejenak dan bertanya: _apa tujuan portofolio-ku sebenarnya?_
+Stack tetap familier: Next.js, TypeScript, Tailwind CSS. Saya juga menggunakan shadcn/ui untuk konsistensi komponen dan percepat pengerjaan.
 
-Dan jawabannya simpel: supaya orang mudah melihat siapa aku, apa yang sudah aku buat, dan kenapa mereka mungkin mau bekerja sama dengan aku.
+Keduanya open-source, jadi kalau mau intip kodenya:
 
-Jadi… inilah dia! Chapter baru dari portofolio-ku — lebih simpel, lebih bersih, dan semoga lebih gampang disukai ❤️.
+- Old: https://github.com/jeheskielSunloy77/personal-portfolio-with-react
+- New: https://github.com/jeheskielSunloy77/_portfolio
 
-👉 [Lihat langsung portofolionya](/)
+---
+
+## Langkah praktis yang saya lakukan
+
+Jika mau menyederhanakan portofoliomu, coba langkah ini:
+
+- Audit konten: hapus atau gabungkan bagian yang sedikit nilai.
+- Prioritaskan proyek terbaik — tampilkan yang paling berdampak di awal.
+- Standarisasi komponen: spacing, kartu proyek, dan heading konsisten.
+- Optimalkan media: gunakan gambar terukur dan lazy-load.
+- Minimalkan JS klien: hanya hydrate komponen yang perlu interaksi.
+
+Saya memang menemukan beberapa regresi (spacing, aksesibilitas) saat migrasi, tetapi perbaikannya cepat dilakukan.
+
+---
+
+## Dampak untuk pengunjung
+
+- Informasi lebih cepat ditemukan.
+- Perhatian tertuju pada proyek, bukan UI.
+- Preview di sosial dan link share jadi lebih konsisten.
+
+---
+
+## Penutup
+
+Redesign bukan hanya soal estetika — ini soal komunikasi. Untuk portofolio, pilih kejelasan daripada pamer semua fitur UI.
+
+Mulai dengan mengurangi: copot bagian yang tidak perlu, ukur, lalu ulangi. Kamu akan tahu apa yang benar-benar membantu pengunjung memahami karyamu.
+
+👉 Lihat versi baru: [Portofolio Baru](/)

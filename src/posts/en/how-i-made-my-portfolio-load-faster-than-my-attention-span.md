@@ -1,7 +1,7 @@
 ---
 title: How I Made My Portfolio Load Faster Than My Attention Span 🏃‍♂️💨
-publishedAt: 2025-04-24
-description: I rebuilt my portfolio website from Next.js to Astro.js and got a massive performance boost. Next.js is amazing for web applications, but for a static site like my portfolio, Astro delivers blazing-fast load times, better SEO, and a leaner codebase—while still letting me use React for interactive components.
+publishedAt: 2025-09-25
+description: I rebuilt my portfolio from Next.js to Astro and cut most of the unnecessary JavaScript. The site feels snappier, easier to maintain, and still runs the tiny interactive bits I care about.
 tags: ['astro', 'nextjs', 'react', 'performance', 'seo']
 keywords: 'astro js portfolio, astro vs nextjs, astro performance, nextjs static site, react with astro, astro seo boost, astro islands architecture, astro site speed, astro for portfolio, nextjs alternatives'
 readTime: 5
@@ -9,47 +9,61 @@ lang: en
 related: ['redesigning-my-portfolio-making-space-for-what-matters']
 ---
 
-If you’ve ever built a portfolio as a developer, you probably know the cycle: you want it to look cool, show off your skills, and maybe sneak in some fancy animations ✨. For the past couple of years, I’ve always reached for **Next.js** whenever I needed to build something—portfolio, dashboard, app, you name it.
+I used Next.js for years. It’s comfortable, feature-rich, and great when you need server rendering or APIs. For a portfolio, though, I realized I was carrying a lot of weight for something that doesn’t change much.
 
-But here’s the thing… **Next.js is amazing for building web applications** (think dashboards, SaaS products, etc.), but my portfolio? It’s basically a bunch of static pages that _almost never change_. Using a full-blown web app framework for a mostly-static site was kinda like bringing a rocket launcher to a pillow fight. 🚀🪶
+One afternoon, while waiting for coffee to finish brewing, I decided to rebuild the site with Astro. I wanted the pages to load instantly, and for small interactive parts to still work without dragging the whole JavaScript runtime along for the ride.
 
-So I decided to rebuild my portfolio using **Astro.js**—and wow. The performance boost was massive. Pages are now _blazing fast_, my Lighthouse scores are glowing green, and SEO finally stopped yelling at me.
-
----
-
-## Why Astro.js?
-
-Astro has this cool idea called **“Islands Architecture”**. Basically, it ships _almost no JavaScript_ by default. Everything is static HTML until you explicitly tell Astro, “Hey, this part should be interactive.”
-
-That means:
-
-- **Super lightweight pages** 🪶
-- **Better SEO** because Google crawlers love static HTML 🕷️
-- **Faster loads** because your browser isn’t choking on unnecessary JavaScript
-
-For a portfolio site (which is 95% static content), this is _perfect_.
+The result felt immediate — not because of some magic optimization, but because I focused on three simple things: ship less JS, lazy-load what’s not visible, and keep interactive pieces isolated. The site now starts fast, the UI feels snappier, and I sleep better knowing there’s less cruft to maintain.
 
 ---
 
-## But I Still Love Next.js ❤️
+## Why Astro?
 
-Don’t get me wrong—Next.js is still one of my favorite tools. I use it for actual apps where I need routing, server-side rendering, API routes, etc. In fact, even on my new Astro portfolio, I’m still using **React components** for client-side interactivity. Astro makes it super easy to sprinkle React (or even Vue/Svelte/Solid) wherever you need it.
+Astro's selling point is simple: most HTML is static by default, and you only hydrate the components that actually need JavaScript.
 
-So it’s not about “Astro vs Next.js” — it’s more about **picking the right tool for the job**. My portfolio just didn’t need all the heavyweight app features that Next.js brings.
+That means, practically:
 
----
+- Pages are lighter by default.
+- The HTML is friendly to search engines and social previews.
+- The browser does less work up front, so perceived load time drops.
 
-## The Results 🚀
-
-- Page load is almost instant (seriously, blink and you’ll miss it).
-- My SEO score went way up (Google finally likes me 👀).
-- My Lighthouse performance score hit 💯 (chef’s kiss 👨‍🍳💋).
-- I feel better knowing my site isn’t over-engineered for what it needs to do.
+For a portfolio made mostly of static pages, that tradeoff makes sense. I could still use React for the small parts that needed it, without turning every page into a tiny single-page app.
 
 ---
 
-## Final Thoughts
+## What I actually did
 
-As devs, it’s easy to default to the frameworks we’re most comfortable with. For me, that was always Next.js. But sometimes, stepping back and asking _“What does this project really need?”_ can give you better results—and teach you something new along the way.
+If you’re thinking about a rewrite, here’s the rough checklist I followed — nothing fancy, just practical:
 
-👉 So if you’re building something mostly static, give **Astro.js** a try. Your users (and your Lighthouse scores) will thank you.
+- Audited the site to find big bundles and unused client scripts.
+- Converted pages to Astro, keeping components I needed as islands (partial hydration).
+- Lazy-loaded images and non-critical assets.
+- Replaced a couple of tiny client-side widgets with simpler HTML/CSS where possible.
+- Kept the contact form and any UI that needs interaction as small, focused React components.
+
+I’ll admit it wasn’t flawless on the first pass — I broke layout styles once and had to tidy up a few imports — but those were small fixes compared to the perf gains.
+
+---
+
+## Next.js still has a place
+
+Next.js is an excellent tool. I use it for apps where I need routing, server-side logic, or lots of client-side state. This switch wasn’t a knock against Next.js — it was a fit-for-purpose decision.
+
+Astro let me keep the best parts of React where they mattered, and drop the heavy defaults where they didn’t. That’s the key: choose the tool that fits the job.
+
+---
+
+## Results
+
+- Pages feel much faster to me and to visitors.
+- Less JavaScript shipped means fewer things to break.
+- Lighthouse and search previews improved (I noticed fewer long tasks and faster first contentful paint).
+- The codebase is simpler and easier to reason about.
+
+---
+
+## Final thoughts
+
+If your project is mostly static content — a portfolio, docs, a small marketing site — consider whether you actually need a full app framework. Sometimes the fastest path to a better experience is to remove complexity, not add tooling.
+
+If you’re curious about trying Astro, start small: convert one page, move one interactive widget to an island, and measure. You might be surprised how much breathing room you gain by letting the browser do less work up front.

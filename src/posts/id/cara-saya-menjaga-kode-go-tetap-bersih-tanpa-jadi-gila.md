@@ -1,61 +1,54 @@
 ---
 title: Cara Saya Menjaga Kode Go Tetap Bersih (Tanpa Jadi Gila) 🧹
-publishedAt: 2024-12-15
-description: Pelajari cara menyusun aplikasi Go dengan prinsip clean architecture yang benar-benar berfungsi. Temukan mengapa Clean Architecture murni tidak cocok untuk Go, dan dapatkan pendekatan praktis menggunakan services dan repositories yang menjaga kode tetap mudah dipelihara tanpa over-engineering. Termasuk contoh kode nyata dan strategi testing.
+publishedAt: 2025-03-02
+description: Pendekatan praktis untuk menyusun aplikasi Go—pakai services, repository, dan interface di tempat yang masuk akal supaya kode tetap mudah dipahami dan diuji.
 tags: ['go', 'design patterns', 'clean architecture']
 keywords: 'golang architecture, go clean code, golang project structure, go services pattern, golang repositories, go best practices, golang testing, go code organization, clean architecture go, golang design patterns'
 readTime: 9
 lang: id
 ---
 
-Oke, mari jujur sebentar. Dulu saya adalah developer _itu_ yang mencoba memaksakan pola Clean Architecture ke setiap project Go. Spoiler alert: berantakan banget. 😅
+Dulu saya sering mencoba memaksakan "Clean Architecture" ke setiap proyek Go. Hasilnya: over-engineered, susah dipelihara, dan banyak headache.
 
-Setelah membangun terlalu banyak API yang over-engineered dan mendapat pandangan aneh dari rekan kerja, akhirnya saya menemukan cara menulis kode Go yang benar-benar bersih DAN terasa natural. Inilah yang saya pelajari tentang menyusun aplikasi Go tanpa kehilangan kewarasan.
+Seiring waktu saya menyusun gaya yang lebih cocok dengan idiom Go: sederhana, eksplisit, dan praktis. Intinya: pakai clarity over ceremony — letakkan interface di tempat yang dipakai, gunakan service untuk logika bisnis, dan biarkan package Go menyusun batas-batasnya.
 
-## Mengapa Clean Architecture Terasa Aneh di Go 🤔
+## Kenapa Clean Architecture kadang terasa berlebihan di Go
 
-Intinya begini: Clean Architecture dari Uncle Bob itu keren, tapi dirancang untuk developer Java/C# yang suka abstract factory dan dependency injection container mereka. Go? Tidak terlalu.
+- Bahasa seperti Java/C# punya DI container dan pola yang cocok untuk lapisan kaku. Go tidak.
+- Interface untuk segalanya sering jadi berlebihan.
+- Error handling eksplisit di Go tidak cocok dengan pola exception-heavy.
+- Menumpuk paket "abstrak" bisa membuat struktur lebih rumit daripada membantu.
 
-**Go suka yang datar** 🏔 - Semua lapisan kaku dan circular dependencies itu membuat developer Go menangis. Kami lebih suka komponen yang sederhana dan dapat disusun.
+Namun prinsip dasarnya tetap berharga: pisahkan concern, buat kode dapat diuji, dan hindari coupling berlebih.
 
-**Interface di mana-mana = berlebihan** 🎭 - Interface implisit Go itu ajaib, tapi Clean Architecture ingin kita membuat interface untuk segalanya. Kadang-kadang fungsi sederhana lebih baik daripada interface dengan satu method!
-
-**Error handling bentrok** ⚠️ - Return error eksplisit Go tidak cocok dengan pola heavy exception yang sering terlihat di contoh Clean Architecture.
-
-**Konflik package** 📦 - Sistem package Go sudah memberikan organisasi yang bagus. Menambah lapisan lagi di atasnya bisa membuat hal-hal jadi membingungkan daripada lebih jelas.
-
-Tapi hey! _Ide-ide_ di balik Clean Architecture—menjaga pemisahan, membuat kode dapat ditest, tidak menggabungkan semuanya—itu emas di Go juga. ✨
-
-## Struktur Go "Cukup Bagus" Saya 🗗️
-
-Setelah mencoba setiap pola di bawah matahari, inilah yang benar-benar berfungsi untuk saya:
+## Struktur proyek yang saya pakai
 
 ```
 project/
 ├── cmd/
 │   └── server/
-│       └── main.go          # 🎯 Entry point
+│       └── main.go          # Entry point
 ├── internal/
-│   ├── domain/              # 📋 Business stuff kamu
+│   ├── domain/              # Business stuff kamu
 │   │   ├── user.go
 │   │   └── errors.go
-│   ├── service/             # 🔧 Business logic tinggal di sini
+│   ├── service/             # Business logic tinggal di sini
 │   │   └── user.go
-│   ├── repository/          # 💾 Data access
+│   ├── repository/          # Data access
 │   │   ├── postgres/
 │   │   └── memory/
-│   └── transport/           # 🌐 HTTP/gRPC/CLI stuff
+│   └── transport/           # HTTP/gRPC/CLI stuff
 │       ├── http/
 │       └── grpc/
-├── pkg/                     # 📦 Bagian yang dapat digunakan ulang
+├── pkg/                     # Bagian yang dapat digunakan ulang
 └── go.mod
 ```
 
-Rahasia sausnya? **Services daripada "use cases"** dan membiarkan package Go melakukan pekerjaan berat. Jauh lebih sedikit upacara, jauh lebih jelas! 🎉
+Fokusnya: services alih-alih "use cases", dan interface didefinisikan dekat tempat yang menggunakannya.
 
-## Domain Layer: Tetap Sederhana Banget 🧠
+## Domain: keep it simple
 
-Domain kamu adalah tempat bisnis penting tinggal, tapi saya membuatnya ringan. Tidak ada konstruktor fancy atau validasi kompleks—hanya yang esensial:
+Domain tipe cukup ringan — struct dan beberapa method validasi:
 
 ```go
 type User struct {
@@ -76,11 +69,11 @@ func (u *User) Validate() error {
 }
 ```
 
-Lihat? Tidak ada sihir, tidak ada pola konstruktor aneh. Hanya struct dan method validasi sederhana. Zero values Go sudah mendukung kita! 💪
+Tidak perlu constructor kompleks kalau tidak ada manfaatnya.
 
-## Services: Di Mana Keajaiban Terjadi ✨
+## Services: tempat logika bisnis hidup
 
-Daripada "use cases" yang membingungkan, saya hanya menyebutnya services. Mereka pada dasarnya struct dengan method yang melakukan hal-hal—sangat Go-like!
+Services mengorkestrasi domain dan repository:
 
 ```go
 type UserService struct {
@@ -90,17 +83,16 @@ type UserService struct {
 
 func (s *UserService) CreateUser(ctx context.Context, email, name string) (*domain.User, error) {
     user := &domain.User{
-        ID:        generateID(), // fungsi UUID tertentu
+        ID:        generateID(),
         Email:     email,
         Name:      name,
         CreatedAt: time.Now(),
     }
 
     if err := user.Validate(); err != nil {
-        return nil, err // tidak, coba lagi
+        return nil, err
     }
 
-    // Periksa apakah user sudah ada (tidak ada yang suka duplikat)
     if existing, _ := s.repo.GetByEmail(ctx, email); existing != nil {
         return nil, domain.ErrUserExists
     }
@@ -109,62 +101,26 @@ func (s *UserService) CreateUser(ctx context.Context, email, name string) (*doma
 }
 ```
 
-Di sinilah business logic kamu tinggal. Ini mengatur semuanya tapi tidak terjebak dalam upacara arsitektur. Sederhana! 🎯
+Services mudah diuji karena dependensi bisa diganti dengan implementasi in-memory.
 
-## Repositories: Abstraksi Yang Benar-Benar Masuk Akal 💾
+## Repository: interface di tempat yang masuk akal
 
-Di sini saya mendefinisikan interface data saya. Saya menempatkannya langsung di package service karena di situlah mereka benar-benar digunakan:
+Definisikan interface dekat consumer-nya:
 
 ```go
-// Definisikan interface di mana kamu menggunakannya, bukan di lapisan abstrak
 type UserRepository interface {
     Create(ctx context.Context, user *domain.User) error
     GetByEmail(ctx context.Context, email string) (*domain.User, error)
-    // Hanya method yang benar-benar kamu butuhkan!
 }
 ```
 
-Lalu implementasikan di mana pun masuk akal:
+Implementasi Postgres atau memory tinggal dibuat terpisah.
+
+## Handler: keep it thin
+
+Handler HTTP hanya menerjemahkan request/response ke service:
 
 ```go
-// Implementasi PostgreSQL
-type UserRepository struct {
-    db *sql.DB
-}
-
-func (r *UserRepository) Create(ctx context.Context, user *domain.User) error {
-    query := `INSERT INTO users (id, email, name, created_at) VALUES ($1, $2, $3, $4)`
-    _, err := r.db.ExecContext(ctx, query, user.ID, user.Email, user.Name, user.CreatedAt)
-    return err
-}
-```
-
-Untuk testing, saya melewati mock sepenuhnya dan menggunakan versi in-memory. Jauh lebih mudah untuk dipahami! 🧠
-
-```go
-// Implementasi Memory untuk testing
-type UserRepository struct {
-    users map[string]*domain.User
-    mu    sync.RWMutex
-}
-
-func (r *UserRepository) Create(ctx context.Context, user *domain.User) error {
-    r.mu.Lock()
-    defer r.mu.Unlock()
-    r.users[user.ID] = user
-    return nil
-}
-```
-
-## Transport Layer: Jaga Handler Tetap Kurus 🚚
-
-Handler HTTP kamu (atau gRPC, atau CLI) harus super tipis. Mereka hanya menerjemahkan antara dunia luar dan services kamu:
-
-```go
-type UserHandler struct {
-    service *service.UserService
-}
-
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
     var req CreateUserRequest
     if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -174,26 +130,25 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
     user, err := h.service.CreateUser(r.Context(), req.Email, req.Name)
     if err != nil {
-        handleServiceError(w, err) // konversi service error ke HTTP error
+        handleServiceError(w, err)
         return
     }
 
-    writeJSON(w, user, http.StatusCreated) // sukses! 🎉
+    writeJSON(w, user, http.StatusCreated)
 }
 ```
 
-Lihat seberapa tipis itu? Handler hanya menangani hal-hal HTTP, service menangani hal-hal bisnis. Pemisahan yang bersih! ✨
+Memisahkan concern membuat kode lebih mudah dirawat.
 
-## Menghubungkan Semuanya: Tidak Ada Sihir, Hanya Fungsi 🔌
+## Wiring: eksplisit, tanpa magic
 
-Lupakan framework dependency injection yang kompleks. Gunakan saja fungsi dan hubungkan semuanya di `main.go`:
+Wiring dependency di main.go dengan fungsi sederhana:
 
 ```go
 func main() {
-    db := setupDatabase()      // koneksi ke postgres
-    logger := setupLogger()    // setup structured logging
+    db := setupDatabase()
+    logger := setupLogger()
 
-    // Hubungkan dependency (tidak ada sihir!)
     userRepo := postgres.NewUserRepository(db)
     userService := service.NewUserService(userRepo, logger)
     userHandler := http.NewUserHandler(userService)
@@ -203,15 +158,14 @@ func main() {
 }
 ```
 
-Eksplisit, mudah diikuti, dan tidak ada framework untuk dipelajari. Ini adalah cara Go! 🚀
+Langsung dan mudah ditelusuri saat debugging.
 
-## Testing: Di Mana Ini Benar-Benar Bersinar ✅
+## Testing: keuntungan nyata
 
-Jujur? Inilah mengapa saya menyusun kode saya dengan cara ini. Testing menjadi sangat mudah:
+Dengan implementasi in-memory, test jadi simpel:
 
 ```go
 func TestUserService_CreateUser(t *testing.T) {
-    // Tidak perlu framework mocking!
     repo := memory.NewUserRepository()
     logger := slog.New(slog.NewTextHandler(io.Discard, nil))
     service := service.NewUserService(repo, logger)
@@ -220,81 +174,25 @@ func TestUserService_CreateUser(t *testing.T) {
 
     assert.NoError(t, err)
     assert.Equal(t, "test@example.com", user.Email)
-    // Test lulus! 🎉
 }
 ```
 
-Tidak ada mocking kompleks, tidak ada test setup yang rapuh. Hanya tukar dengan implementasi memory dan kamu siap. Diri masa depan kamu akan berterima kasih! 😊
+Tidak perlu framework mocking rumit.
 
-## Kapan Pendekatan Ini Paling Berhasil
+## Kapan cara ini cocok
 
-Struktur ini unggul dalam beberapa skenario:
+- Aplikasi medium (5–50 endpoint)
+- Tim yang butuh jelas boundary antara transport/service/repository
+- Project yang berkembang tapi entitas intinya stabil
 
-**Aplikasi Berukuran Sedang**: Lebih dari API CRUD sederhana tetapi bukan sistem enterprise yang masif. Pikirkan 5-50 endpoint dengan business logic yang bermakna.
+## Hal yang saya hindari
 
-**Project Tim**: Beberapa developer dapat bekerja tanpa saling menginjak kaki. Batas yang jelas antara lapisan transport, service, dan repository.
+- Abstraksi berlebihan tanpa kebutuhan nyata
+- Menyimpan interface di paket terpisah yang sulit diikuti
+- Membuat lapisan hanya demi mengikuti diagram arsitektur
 
-**Requirement yang Berkembang**: Business logic sering berubah, tetapi entitas inti tetap stabil. Lapisan service beradaptasi tanpa menyentuh kode transport atau repository.
+## Intinya
 
-**Multiple Interface**: Perlu REST API dan CLI? Atau REST dan gRPC? Implementasi transport yang berbeda berbagi lapisan service yang sama.
+Clean Architecture punya ide bagus, tapi di Go pragmatisme menang. Buat batas yang jelas, tempatkan interface di dekat konsumen, dan pilih kesederhanaan daripada kepintaran. Kode yang jelas lebih mudah dimodifikasi, diuji, dan dipahami oleh tim.
 
-## Apa Yang Saya Hindari
-
-**Over-Abstraction**: Jika sepotong kode hanya memiliki satu implementasi dan tidak mungkin berubah, saya tidak mengabstraksinya. Interface di Go harus mewakili perilaku, bukan hanya untuk memungkinkan testing.
-
-**Hierarki Inheritance Dalam**: Go tidak memiliki inheritance, dan itu adalah fitur. Saya menyusun perilaku daripada mencoba menciptakan kembali pola OOP.
-
-**Repository Generik**: Interface repository spesifik untuk domain mereka. Tidak ada tipe generik `Repository<T>`—mereka menyembunyikan konsep domain yang penting.
-
-**Layered Packages**: Saya tidak membuat package terpisah untuk "interface" atau "abstraksi". Interface tinggal dengan konsumen mereka.
-
-## Mengapa Ini Mengalahkan Clean Architecture "Murni" di Go 🥊
-
-Pendekatan saya berbeda dari Clean Architecture textbook dalam beberapa cara utama:
-
-**Batas fleksibel** 🚪 - Daripada lapisan kaku yang tidak pernah bisa berbicara satu sama lain, saya memiliki kelompok logis yang dapat berkomunikasi ketika masuk akal.
-
-**Interface di tempat yang tepat** 🏠 - Interface tinggal dengan kode yang menggunakannya, bukan di "lapisan interface" abstrak.
-
-**Error handling gaya Go** ⚠️ - Return error eksplisit mengalir secara alami melalui lapisan. Tidak ada abstraksi exception aneh!
-
-**Sederhana mengalahkan murni** ✨ - Ketika idiom Go bertentangan dengan teori arsitektur, saya memilih cara Go setiap saat.
-
-## Performa? Jangan Khawatir 🚀
-
-Struktur ini pada dasarnya memiliki overhead performa nol:
-
-- **Tidak ada runtime reflection** - Fungsi konstruktor sederhana = zero runtime cost
-- **Biaya interface kecil** - Interface dispatch Go super cepat, dan biasanya dapat diabaikan dibandingkan dengan panggilan database
-- **Fewer allocations** - Service berbasis struct mengalahkan pendekatan fungsional yang heavy closure
-
-## Refactoring Kode Yang Ada? Pelan-Pelan Saja 🐌
-
-Ketika memperbaiki kode spaghetti yang ada:
-
-1. **Mulai dengan repository** - Ekstrak hal-hal database terlebih dahulu
-2. **Kelompokkan business logic** - Pindahkan fungsi terkait ke dalam struct service
-3. **Tipiskan handler kamu** - Hanya simpan concern HTTP di handler HTTP
-4. **Tambahkan interface terakhir** - Hanya ketika kamu benar-benar perlu menukar implementasi
-
-Jangan coba memperbaiki semuanya sekaligus. Go compile cepat, jadi perubahan incremental tidak menyakitkan! 😌
-
-## Kesimpulan 🎬
-
-Lihat, tidak ada framework yang sempurna. React Native membawa kamu ke sana dengan cepat tetapi dengan beberapa trade-off performa. Native memberikan segalanya tetapi biayanya lebih banyak waktu dan uang. KMP adalah anak baru yang mencoba memecahkan trade-off, dan semakin baik dalam melakukannya.
-
-Saran saya? Mulai dengan apa yang tim kamu ketahui, tetapi terus belajar. Landscape pengembangan mobile berkembang pesat, dan developer terbaik adalah mereka yang dapat beradaptasi.
-
-Dengan menggunakan services daripada use cases, menjaga interface tetap sederhana, dan membiarkan sistem package Go melakukan apa yang terbaik dilakukannya, kamu mendapatkan aplikasi yang:
-
-- Mudah dipahami 🧠
-- Sederhana untuk ditest ✅
-- Benar-benar menyenangkan untuk dikerjakan 🎉
-
-Tujuannya bukan kesempurnaan arsitektur—ini tentang membangun perangkat lunak yang kamu dan tim kamu dapat kirim dengan percaya diri. Pendekatan ini telah bekerja dengan baik untuk saya di banyak project Go, dari API kecil hingga microservice yang kompleks.
-
-Mulai sederhana, refactor ketika hal-hal sakit, dan selalu pilih kejelasan daripada kepintaran. Kode kamu harus menceritakan sebuah cerita, bukan memecahkan teka-teki! 📖
-
----
-
-_Punya pengalaman mencoba pola berbeda di Go? Apa yang berhasil untuk tim kamu? Tinggalkan komentar di bawah—saya ingin mendengar cerita perang dan kemenangan kamu! 💭_
+Mulai sederhana, refactor ketika perlu, dan selalu utamakan kejelasan. Kode kamu harus menceritakan apa yang dilakukan aplikasi, bukan memaksa pembaca memecahkan teka-teki.

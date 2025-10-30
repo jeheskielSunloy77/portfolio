@@ -1,6 +1,6 @@
 ---
-title: Kotlin Multiplatform vs React Native: Framework Cross-Platform Mana yang Sebaiknya Kamu Pilih?
-description: Perbandingan praktis antara Kotlin Multiplatform dan React Native berdasarkan pengalaman nyata — performa, pengalaman developer, dan kapan masing-masing masuk akal.
+title: 'Kotlin Multiplatform vs React Native: Framework Cross-Platform Mana yang Sebaiknya Kamu Pilih?'
+description: 'Perbandingan praktis antara Kotlin Multiplatform dan React Native berdasarkan pengalaman nyata — performa, pengalaman developer, dan kapan masing-masing masuk akal.'
 publishedAt: '2025-05-22'
 tags:
  [

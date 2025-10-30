@@ -112,8 +112,8 @@ export const dictionary = {
 		'hi {NICK_NAME} here 👋': 'hi {NICK_NAME} here 👋',
 		'{AGE} yo software engineer hailing from Indonesia 🇮🇩':
 			'{AGE} yo software engineer hailing from Indonesia 🇮🇩',
-		'Backend by trade, full-stack by passion. I build and self-host the lot.':
-			'Backend by trade, full-stack by passion. I build and self-host the lot.',
+		'I turn bugs into features and coffee into code. AI wrote this tagline. I just hit enter.':
+			'I turn bugs into features and coffee into code. AI wrote this tagline. I just hit enter.',
 		'For Q&A, raise a ticket with': 'For Q&A, raise a ticket with',
 		'For escalations, please find my': 'For escalations, please find my',
 		'instead.': 'instead.',
@@ -354,9 +354,9 @@ export const dictionary = {
 			'Selamat datang di {APP_NAME}, portofolio pribadi {FULL_NAME}. Jelajahi proyek-proyek, postingan blog, dan lainnya.',
 		'hi {NICK_NAME} here 👋': 'hai {NICK_NAME} di sini 👋',
 		'{AGE} yo software engineer hailing from Indonesia 🇮🇩':
-			'sofware engineer {AGE} tahun dari Indonesia 🇮🇩',
-		'Backend by trade, full-stack by passion. I build and self-host the lot.':
-			'Backend secara profesi, full-stack karena passion. Saya membangun dan mengelola sendiri semuanya.',
+			'software engineer {AGE} tahun dari Indonesia 🇮🇩',
+		'I turn bugs into features and coffee into code. AI wrote this tagline. I just hit enter.':
+			'Aku ubah bug jadi fitur dan kopi jadi kode. AI yang nulis tagline ini, aku cuma pencet enter.',
 		'For Q&A, raise a ticket with': 'Untuk tanya jawab, ajukan tiket ke',
 		'For escalations, please find my': 'Untuk eskalasi, silakan temukan',
 		'instead.': 'sebagai gantinya.',

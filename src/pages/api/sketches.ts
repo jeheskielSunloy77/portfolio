@@ -60,7 +60,6 @@ export async function GET(request: Request) {
 			data: mapped,
 			page,
 			pageSize,
-			total,
 			nextPage: hasMore ? page + 1 : undefined,
 		})
 	} catch (e: any) {

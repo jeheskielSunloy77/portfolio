@@ -26,7 +26,7 @@ const projects = limit ? filteredProjects.slice(0, limit) : filteredProjects
 			<Card className='flex flex-col'>
 				<CardHeader>
 					{project.image && (
-						<a href={project.href || project.image?.src}>
+						<a href={project.href || project.image?.src} target='_blank'>
 							<Image
 								src={project.image}
 								alt={t[project.name]}

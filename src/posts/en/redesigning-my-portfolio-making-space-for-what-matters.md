@@ -23,7 +23,7 @@ My first version leaned on personality — bright palettes, lots of sections, an
 
 Lessons from that phase were useful. I learned what visitors ignored, which bits added value, and which were just decoration.
 
-If you want to grimace at my old experiments, there’s an old demo available: [Old Portfolio Demo](/oldportfolio)
+If you want to grimace at my old experiments, there’s an old demo available: [Old Portfolio Demo](https://jeheskielsunloy.netlify.app)
 
 ---
 
@@ -48,8 +48,8 @@ Stack stayed familiar: Next.js, TypeScript, Tailwind CSS. I added shadcn/ui comp
 
 Both versions are open-source if you want to explore the code:
 
-- Old: [Old Portfolio GitHub](#)
-- New: [New Portfolio GitHub](#)
+- Old: [Old Portfolio GitHub](https://github.com/jeheskielSunloy77/personal-portfolio-with-react)
+- New: [New Portfolio GitHub](https://github.com/jeheskielSunloy77/_portfolio)
 
 ---
 
@@ -81,4 +81,4 @@ Redesigns are a trade-off between expression and clarity. The new portfolio favo
 
 If you’re thinking of redesigning, start by removing things. You’ll learn fast which parts actually matter.
 
-👉 [See the new site](/)
+👉 [See the new site](https://jeheskielsunloy.com)

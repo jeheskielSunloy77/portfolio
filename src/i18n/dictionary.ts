@@ -120,13 +120,13 @@ export const dictionary = {
 		Work: 'Work',
 		Education: 'Education',
 		Present: 'Present',
-		'Current technologies': 'Current technologies',
+		'current technologies': 'current technologies',
 		"I'm proficient in a range of modern technologies that empower me to build highly functional solutions. These are some of my main technologies.":
 			"I'm proficient in a range of modern technologies that empower me to build highly functional solutions. These are some of my main technologies.",
-		'Featured Projects': 'Featured Projects',
+		'featured projects': 'featured projects',
 		'Explore some of my highlighted projects that showcase my skills and creativity in web development.':
 			'Explore some of my highlighted projects that showcase my skills and creativity in web development.',
-		'Recent Posts': 'Recent Posts',
+		'recent posts': 'recent posts',
 		'Read my latest articles on web development, programming, and technology.':
 			'Read my latest articles on web development, programming, and technology.',
 		'Chat with': 'Chat with',
@@ -204,7 +204,8 @@ export const dictionary = {
 		visitors: 'visitors',
 		'visitors marks': 'visitors marks',
 		'load more': 'load more',
-		'sketches so far — vibe check': 'sketches so far — vibe check',
+		'canvas of chaos, gallery of giggles. 🎨😂':
+			'canvas of chaos, gallery of giggles. 🎨😂',
 		'leave your mark': 'leave your mark',
 		'enter your name': 'Enter your name',
 		'leave a message or description...': 'Leave a message or description...',
@@ -236,7 +237,8 @@ export const dictionary = {
 		visitors: 'pengunjung',
 		'visitors marks': 'jejak pengunjung',
 		'load more': 'muat lebih',
-		'sketches so far — vibe check': 'sketsa sejauh ini — vibe check',
+		'canvas of chaos, gallery of giggles. 🎨😂':
+			'kanvas kekacauan, galeri tawa. 🎨😂',
 		'leave your mark': 'tinggalkan jejakmu',
 		'enter your name': 'masukkan nama Anda',
 		'leave a message or description...': 'tinggalkan pesan atau deskripsi...',
@@ -363,13 +365,13 @@ export const dictionary = {
 		Work: 'Pekerjaan',
 		Education: 'Pendidikan',
 		Present: 'Saat Ini',
-		'Current technologies': 'Teknologi saat ini',
+		'current technologies': 'teknologi saat ini',
 		"I'm proficient in a range of modern technologies that empower me to build highly functional solutions. These are some of my main technologies.":
 			'Saya mahir dalam berbagai teknologi modern yang memberdayakan saya untuk membangun solusi yang sangat fungsional. Ini adalah beberapa teknologi utama saya.',
-		'Featured Projects': 'Proyek Unggulan',
+		'featured projects': 'proyek unggulan',
 		'Explore some of my highlighted projects that showcase my skills and creativity in web development.':
 			'Jelajahi beberapa proyek unggulan saya yang menampilkan keterampilan dan kreativitas saya dalam pengembangan web.',
-		'Recent Posts': 'Postingan Terbaru',
+		'recent posts': 'postingan terbaru',
 		'Read my latest articles on web development, programming, and technology.':
 			'Baca artikel terbaru saya tentang pengembangan web, pemrograman, dan teknologi.',
 		'Chat with': 'Chat dengan',

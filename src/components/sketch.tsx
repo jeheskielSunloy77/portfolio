@@ -7,7 +7,6 @@ import {
 	useMutation,
 	useQueryClient,
 } from '@tanstack/react-query'
-import { format } from 'date-fns'
 import { Plus } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { RainbowButton } from './magicui/rainbow-button'
@@ -187,7 +186,6 @@ function SketchContent({ t }: { t: Dictionary }) {
 			<div className='space-y-2'>
 				<Header
 					t={t}
-					count={q.data?.pages[0].total}
 					onAdd={() => setIsDialogOpen(true)}
 					isSaving={createSketchMutation.status === 'pending'}
 				/>
@@ -227,22 +225,15 @@ function SketchContent({ t }: { t: Dictionary }) {
 
 function SketchCard({ sketch }: { sketch: Sketch }) {
 	return (
-		<article className='rounded-lg border border-border p-2 flex flex-col gap-2'>
+		<article className='rounded-lg border border-border p-2'>
 			<div
 				dangerouslySetInnerHTML={{ __html: sketch.svg }}
-				className='aspect-square bg-muted-foreground/25 dark:bg-secondary-foreground/75 rounded-lg overflow-hidden'
+				className='aspect-square bg-muted-foreground/25 mb-2 dark:bg-secondary-foreground/75 rounded-lg overflow-hidden'
 			></div>
-			<div className='flex-1 flex-col flex justify-between gap-2'>
-				<div>
-					<p className='text-xs text-muted-foreground line-clamp-2'>{sketch.name}</p>
-					<h3 className='font-medium text-foreground text-sm line-clamp-2'>
-						{sketch.message}
-					</h3>
-				</div>
-				<span className='text-xs text-muted-foreground'>
-					{format(sketch.createdAt, 'dd MMM yyyy')}
-				</span>
-			</div>
+			<p className='text-xs text-muted-foreground line-clamp-2'>{sketch.name}</p>
+			<h3 className='font-medium text-foreground text-sm line-clamp-2'>
+				{sketch.message}
+			</h3>
 		</article>
 	)
 }
@@ -261,21 +252,19 @@ function SketchSkeleton() {
 }
 
 function Header({
-	count,
 	onAdd,
 	t,
 	isSaving,
 }: {
-	count: number | undefined
 	onAdd: () => void
 	t: Dictionary
 	isSaving?: boolean
 }) {
 	return (
 		<div className='flex items-center justify-between bg-muted/30 px-4 py-2 rounded-lg'>
-			<div className='text-sm text-muted-foreground'>{`${count ?? '...'} ${
-				t['sketches so far — vibe check']
-			}  ✅🎨`}</div>
+			<div className='text-sm text-muted-foreground'>
+				{t['canvas of chaos, gallery of giggles. 🎨😂']}
+			</div>
 			<RainbowButton onClick={onAdd} disabled={isSaving}>
 				<Plus />
 				{isSaving ? t['saving...'] : t['leave your mark']}

@@ -76,4 +76,4 @@ Redesign bukan hanya soal estetika — ini soal komunikasi. Untuk portofolio, pi
 
 Mulai dengan mengurangi: copot bagian yang tidak perlu, ukur, lalu ulangi. Kamu akan tahu apa yang benar-benar membantu pengunjung memahami karyamu.
 
-👉 Lihat versi baru: [Portofolio Baru](/)
+👉 Lihat versi baru: [Portofolio Baru](https://jeheskielsunloy.com)

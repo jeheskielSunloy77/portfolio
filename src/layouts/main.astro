@@ -2,13 +2,11 @@
 import '../styles/global.css'
 import Footer from '@/components/footer.astro'
 import { ChatBot } from '@/components/chat-bot'
-import { ClientRouter } from 'astro:transitions'
 import Seo from '@/components/seo.astro'
 import type { ComponentProps } from 'astro/types'
 import ArticleSchema from '@/components/article-schema.astro'
 import { type Language } from '@/i18n/i18n'
 import { Navbar } from '@/components/navbar'
-import type { Dictionary } from '@/lib/types'
 import { dictionary } from '@/i18n/dictionary'
 
 export interface Props {
@@ -40,7 +38,6 @@ const t = dictionary[lang]
 		<meta name='viewport' content='width=device-width' />
 		<Seo {...seo} />
 		{articleSchema && <ArticleSchema {...articleSchema} />}
-		<ClientRouter />
 	</head>
 	<body class='font-sans text-foreground bg-background'>
 		<Navbar lang={lang} pathname={Astro.url.pathname} t={t} client:load />

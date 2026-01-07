@@ -1,28 +1,9 @@
 ---
-import { Sketch } from '@/components/sketch'
-import { dictionary } from '@/i18n/dictionary'
+import VisitorsPage from '@/components/pages/visitors.astro'
 import { getLangPaths } from '@/i18n/i18n'
-import MainLayout from '@/layouts/main.astro'
 
 export const prerender = true
 export const getStaticPaths = getLangPaths
-
-const t = dictionary[Astro.params.lang]
 ---
 
-<MainLayout
-	lang={Astro.params.lang}
-	seo={{
-		title: 'Visitor Page',
-		description: 'This is the visitor page.',
-	}}
->
-	<article class='mt-8 flex flex-col gap-8 pb-16'>
-		<h1
-			class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2'
-		>
-			{t['visitors marks']}
-		</h1>
-		<Sketch client:idle t={t} />
-	</article>
-</MainLayout>
+<VisitorsPage lang={Astro.params.lang} />

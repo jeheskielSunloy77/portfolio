@@ -1,0 +1,33 @@
+---
+import ProjectList from '@/components/project-list.astro'
+import { dictionary } from '@/i18n/dictionary'
+import { type Language } from '@/i18n/i18n'
+import MainLayout from '@/layouts/main.astro'
+
+export interface Props {
+	lang: Language
+}
+
+const lang = Astro.props.lang
+const t = dictionary[lang]
+---
+
+<MainLayout
+	lang={lang}
+	seo={{
+		title: t['Projects'],
+		description:
+			t[
+				'Explore my projects, showcasing my skills and creativity in web development.'
+			],
+	}}
+>
+	<article class='mt-8 flex flex-col gap-8 pb-16'>
+		<h1
+			class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2'
+		>
+			{t['my projects.']}
+		</h1>
+		<ProjectList t={t} />
+	</article>
+</MainLayout>

@@ -1,0 +1,34 @@
+---
+import ContactForm from '@/components/contact-form'
+import { dictionary } from '@/i18n/dictionary'
+import { type Language } from '@/i18n/i18n'
+import MainLayout from '@/layouts/main.astro'
+
+export interface Props {
+	lang: Language
+}
+
+const lang = Astro.props.lang
+const t = dictionary[lang]
+---
+
+<MainLayout
+	lang={lang}
+	seo={{
+		title: t['Contact Me'],
+		description:
+			t[
+				'For inquiries, collaborations, or just to say hello, use the form below to reach out to me directly. I look forward to connecting with you!'
+			],
+	}}
+>
+	<article class='mt-8 flex flex-col gap-8 pb-16'>
+		<h1
+			class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2'
+		>
+			{t['contact me']}
+		</h1>
+
+		<ContactForm client:load lang={lang} t={t} />
+	</article>
+</MainLayout>

@@ -1,4 +1,5 @@
 ---
+import { LANGUAGE_MAP, type Language } from '@/i18n/i18n'
 import { FULL_NAME } from '@/lib/constants'
 
 export interface Props {
@@ -14,6 +15,7 @@ export interface Props {
 	author?: string
 	articleSection?: string
 	articleTags?: string[]
+	lang: Language
 }
 
 const {
@@ -29,6 +31,7 @@ const {
 	author = FULL_NAME,
 	articleSection,
 	articleTags = [],
+	lang,
 } = Astro.props
 
 const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site)
@@ -44,7 +47,7 @@ const fullOgImage = new URL(ogImage, Astro.site)
 {keywords && <meta name='keywords' content={keywords} />}
 <meta name='author' content={author} />
 <meta name='robots' content='index, follow' />
-<meta name='language' content='English' />
+<meta name='language' content={LANGUAGE_MAP[lang].name} />
 <meta name='revisit-after' content='7 days' />
 
 <!-- Canonical URL -->

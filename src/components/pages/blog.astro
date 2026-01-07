@@ -1,0 +1,41 @@
+---
+import { SearchablePostList } from '@/components/searchable-post-list'
+import { dictionary } from '@/i18n/dictionary'
+import { type Language } from '@/i18n/i18n'
+import MainLayout from '@/layouts/main.astro'
+import { getPosts } from '@/posts/posts'
+
+export interface Props {
+	lang: Language
+	posts: Awaited<ReturnType<typeof getPosts>>
+}
+
+const lang = Astro.props.lang
+const t = dictionary[lang]
+const posts = Astro.props.posts
+---
+
+<MainLayout
+	lang={lang}
+	seo={{
+		title: t['Blog'],
+		description: t['My blog posts and articles.'],
+		keywords:
+			t[
+				'blog, articles, web development, programming, technology, software engineering, tutorials, tips, guides'
+			],
+	}}
+>
+	<article class='mt-8 flex flex-col gap-8 pb-16'>
+		<h1
+			class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2'
+		>
+			{t['my blog.']}
+		</h1>
+		<SearchablePostList
+			posts={posts}
+			placeholder={t['Search for something...']}
+			client:idle
+		/>
+	</article>
+</MainLayout>

@@ -1,39 +1,41 @@
 import { SketchDialog } from '@/components/sketch-dialog'
-import type { APIResponsePaginated, Dictionary } from '@/lib/types'
+import type { APIResponsePaginated, Dictionary, Sketch } from '@/lib/types'
 import {
 	QueryClient,
 	QueryClientProvider,
 	useInfiniteQuery,
 	useMutation,
 	useQueryClient,
+	type InfiniteData,
 } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { RainbowButton } from './magicui/rainbow-button'
 
-interface Sketch {
-	_id: string
-	name: string
-	message: string
-	createdAt: Date
-	svg: string
-	ip: string
-}
-
 const queryClient = new QueryClient()
 
-export function Sketch(props: { t: Dictionary }) {
+export function Sketch(props: {
+	t: Dictionary
+	initialData?: InfiniteData<APIResponsePaginated<Sketch>>
+}) {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<SketchContent t={props.t} />
+			<SketchContent t={props.t} initialData={props.initialData} />
 		</QueryClientProvider>
 	)
 }
 
-function SketchContent({ t }: { t: Dictionary }) {
+function SketchContent({
+	t,
+	initialData,
+}: {
+	t: Dictionary
+	initialData?: InfiniteData<APIResponsePaginated<Sketch>>
+}) {
 	const q = useInfiniteQuery({
 		queryKey: ['sketches'],
 		initialPageParam: 0,
+		initialData,
 		queryFn: async ({ pageParam = 0 }) => {
 			const pageNum = Number(pageParam ?? 0)
 			const res = await fetch(`/api/sketches?page=${pageNum}&pageSize=9`)
@@ -189,28 +191,36 @@ function SketchContent({ t }: { t: Dictionary }) {
 					onAdd={() => setIsDialogOpen(true)}
 					isSaving={createSketchMutation.status === 'pending'}
 				/>
-				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-					{q.isLoading ? (
-						Array.from({ length: 9 }).map((_, i) => <SketchSkeleton key={i} />)
-					) : (
-						<>
-							{sketches.map((sketch) => (
-								<SketchCard key={sketch._id} sketch={sketch} />
-							))}
-							{q.isFetchingNextPage &&
-								Array.from({ length: 3 }).map((_, i) => <SketchSkeleton key={i} />)}
-						</>
-					)}
-				</div>
-
-				<div className='flex flex-col items-center mt-4'>
-					<div ref={loadMoreRef} className='h-2' />
-					{!q.hasNextPage && !q.isPending && (
-						<div className='text-sm text-muted-foreground mt-2'>
-							such end. very empty. much art. wow. 🐶
+				{!q.isError ? (
+					<>
+						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+							{q.isLoading ? (
+								Array.from({ length: 9 }).map((_, i) => <SketchSkeleton key={i} />)
+							) : (
+								<>
+									{sketches.map((sketch) => (
+										<SketchCard key={sketch._id} sketch={sketch} />
+									))}
+									{q.isFetchingNextPage &&
+										Array.from({ length: 3 }).map((_, i) => <SketchSkeleton key={i} />)}
+								</>
+							)}
 						</div>
-					)}
-				</div>
+
+						<div className='flex flex-col items-center mt-4'>
+							<div ref={loadMoreRef} className='h-2' />
+							{!q.hasNextPage && !q.isPending && (
+								<div className='text-sm text-muted-foreground mt-2'>
+									such end. very empty. much art. wow. 🐶
+								</div>
+							)}
+						</div>
+					</>
+				) : (
+					<div className='text-sm text-destructive'>
+						{t['failed to load sketches. please try again later.']}
+					</div>
+				)}
 			</div>
 
 			<SketchDialog

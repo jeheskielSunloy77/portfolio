@@ -63,3 +63,12 @@ export interface APIResponsePaginated<T> {
 	total: number
 	nextPage?: number
 }
+
+export interface Sketch {
+	_id: string
+	name: string
+	message: string
+	createdAt: Date
+	svg: string
+	ip: string
+}

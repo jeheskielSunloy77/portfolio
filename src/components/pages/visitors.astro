@@ -1,8 +1,9 @@
 ---
 import { Sketch } from '@/components/sketch'
 import { dictionary } from '@/i18n/dictionary'
-import { type Language } from '@/i18n/i18n'
+import type { Language } from '@/i18n/i18n'
 import MainLayout from '@/layouts/main.astro'
+import type { APIResponsePaginated, Sketch as SketchType } from '@/lib/types'
 
 export interface Props {
 	lang: Language
@@ -10,6 +11,9 @@ export interface Props {
 
 const lang = Astro.props.lang
 const t = dictionary[lang]
+
+const res = await fetch(`${Astro.site?.origin}/api/sketches?page=0&pageSize=9`)
+const sketches = (await res.json()) as APIResponsePaginated<SketchType>
 ---
 
 <MainLayout
@@ -25,6 +29,10 @@ const t = dictionary[lang]
 		>
 			{t['visitors marks']}
 		</h1>
-		<Sketch client:idle t={t} />
+		<Sketch
+			client:idle
+			t={t}
+			initialData={{ pages: [sketches], pageParams: [0] }}
+		/>
 	</article>
 </MainLayout>

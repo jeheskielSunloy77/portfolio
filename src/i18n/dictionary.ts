@@ -27,6 +27,8 @@ export const dictionary = {
 			'Hey! Remember to use a real email so I can reply you personally.',
 		"I'll be sending my reply to:": "I'll be sending my reply to:",
 		'Let me fix that': 'Let me fix that',
+		'failed to load sketches. please try again later.':
+			'failed to load sketches. please try again later.',
 		Send: 'Send',
 		'Sending...': 'Sending...',
 		'By submitting this form, I agree to the':
@@ -229,6 +231,8 @@ export const dictionary = {
 		languages: 'bahasa',
 		'toggle theme': 'ganti tema',
 		'toggle language': 'ganti bahasa',
+		'failed to load sketches. please try again later.':
+			'gagal memuat sketsa. silakan coba lagi nanti.',
 		'toggle chat': 'ganti chat',
 		'Beep boop! Systems online — fire away, human!':
 			'Beep boop! Sistem online — silakan tanya, manusia!',

@@ -11,9 +11,9 @@ const validEnv = {
 	SMTP_RECEIVER_EMAIL: 'receiver@example.com',
 	APP_URL: 'https://myapp.com',
 	GEMINI_API_KEY: 'sk-gemini-key-example',
-	ASTRA_DB_API_ENDPOINT: 'https://astra-endpoint.example.com',
-	ASTRA_DB_APPLICATION_TOKEN: 'astra-token-example',
-	ASTRA_DB_COLLECTION: 'prod_collection',
+	PINECONE_API_KEY: 'pinecone-key-example',
+	PINECONE_INDEX: 'portfolio-index',
+	PINECONE_NAMESPACE: 'portfolio',
 	MONGODB_URI: 'mongodb+srv://user:pass@cluster0.mongodb.net/mydb',
 	MONGODB_DB: 'my_app_database',
 }

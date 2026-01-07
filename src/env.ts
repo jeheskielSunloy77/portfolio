@@ -8,9 +8,9 @@ export const envSchema = z.object({
 	SMTP_RECEIVER_EMAIL: z.email(),
 	APP_URL: z.url(),
 	GEMINI_API_KEY: z.string().min(1),
-	ASTRA_DB_API_ENDPOINT: z.string().url(),
-	ASTRA_DB_APPLICATION_TOKEN: z.string().min(1),
-	ASTRA_DB_COLLECTION: z.string().min(1),
+	PINECONE_API_KEY: z.string().min(1),
+	PINECONE_INDEX: z.string().min(1),
+	PINECONE_NAMESPACE: z.string().min(1).optional(),
 	MONGODB_URI: z.string().min(1),
 	MONGODB_DB: z.string().min(1),
 })

@@ -1,11 +1,10 @@
-import { DataAPIClient } from '@datastax/astra-db-ts'
-import { AstraDBVectorStore } from '@langchain/community/vectorstores/astradb'
-
-const endpoint = import.meta.env.ASTRA_DB_API_ENDPOINT
-const token = import.meta.env.ASTRA_DB_APPLICATION_TOKEN
-const collection = import.meta.env.ASTRA_DB_COLLECTION
-
 import { type GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai'
+import { PineconeStore } from '@langchain/pinecone'
+import { Pinecone } from '@pinecone-database/pinecone'
+
+const apiKey = import.meta.env.PINECONE_API_KEY
+const indexName = import.meta.env.PINECONE_INDEX
+const namespace = import.meta.env.PINECONE_NAMESPACE
 
 /**
  * Wrapper to use Gemini for embeddings in LangChain-style.
@@ -55,32 +54,11 @@ export class GeminiEmbeddings {
 }
 
 export async function getVectorStore() {
-	return AstraDBVectorStore.fromExistingIndex(
+	return PineconeStore.fromExistingIndex(
 		new GeminiEmbeddings(import.meta.env.GEMINI_API_KEY),
 		{
-			token,
-			endpoint,
-			collection,
-			skipCollectionProvisioning: true,
+			pineconeIndex: new Pinecone({ apiKey }).index(indexName),
+			namespace,
 		}
 	)
-}
-
-/**
- * Use the raw Astra Data API client to work with the collection.
- */
-export async function createCollection() {
-	const client = new DataAPIClient(token)
-	const db = client.db(endpoint)
-
-	await db
-		.createCollection(collection, {
-			vector: { dimension: 3072, metric: 'cosine' },
-		})
-		.catch((err: any) => {
-			if (err.message.includes('already exists')) {
-				return db.collection(collection)
-			}
-			throw err
-		})
 }

@@ -19,7 +19,6 @@
 		"@astrojs/rss": "^4.0.12",
 		"@astrojs/sitemap": "^3.5.0",
 		"@astrojs/vercel": "^8.2.7",
-		"@datastax/astra-db-ts": "^2.0.2",
 		"@fontsource/calistoga": "^5.2.6",
 		"@fontsource/inter": "^5.2.6",
 		"@google/generative-ai": "^0.24.1",

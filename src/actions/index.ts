@@ -1,15 +1,22 @@
 import { log } from '@/lib/utils'
 import { defineAction } from 'astro:actions'
+import {
+	SMTP_HOST,
+	SMTP_PASS,
+	SMTP_PORT,
+	SMTP_RECEIVER_EMAIL,
+	SMTP_USER,
+} from 'astro:env/server'
 import { z } from 'astro:schema'
 import nodemailer from 'nodemailer'
 
 const transporter = nodemailer.createTransport({
-	host: import.meta.env.SMTP_HOST,
-	port: +import.meta.env.SMTP_PORT,
+	host: SMTP_HOST,
+	port: +SMTP_PORT,
 	secure: true,
 	auth: {
-		user: import.meta.env.SMTP_USER,
-		pass: import.meta.env.SMTP_PASS,
+		user: SMTP_USER,
+		pass: SMTP_PASS,
 	},
 })
 
@@ -26,7 +33,7 @@ export const server = {
 			try {
 				const payload = {
 					from: `"${name}" <${email}>`,
-					to: import.meta.env.SMTP_RECEIVER_EMAIL,
+					to: SMTP_RECEIVER_EMAIL,
 					subject: `New Contact Form Submission from ${name}`,
 					text: message,
 					html: `<p><b>From:</b> ${name} (${email})</p>

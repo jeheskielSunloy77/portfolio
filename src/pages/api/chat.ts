@@ -15,8 +15,12 @@ import {
 } from '@langchain/core/prompts'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { Redis } from '@upstash/redis'
-
 import { createUIMessageStreamResponse } from 'ai'
+import {
+	GEMINI_API_KEY,
+	UPSTASH_REDIS_REST_TOKEN,
+	UPSTASH_REDIS_REST_URL,
+} from 'astro:env/server'
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents'
 import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever'
 import { createRetrievalChain } from 'langchain/chains/retrieval'
@@ -64,8 +68,8 @@ export async function POST({ request }: { request: Request }) {
 
 		const cache = new UpstashRedisCache({
 			client: new Redis({
-				url: import.meta.env.UPSTASH_REDIS_REST_URL,
-				token: import.meta.env.UPSTASH_REDIS_REST_TOKEN,
+				url: UPSTASH_REDIS_REST_URL,
+				token: UPSTASH_REDIS_REST_TOKEN,
 			}),
 		})
 
@@ -73,14 +77,14 @@ export async function POST({ request }: { request: Request }) {
 			model: 'gemini-2.5-flash',
 			streaming: true,
 			temperature: 0,
-			apiKey: import.meta.env.GEMINI_API_KEY!,
+			apiKey: GEMINI_API_KEY!,
 			cache,
 		})
 
 		const rephraseModel = new ChatGoogleGenerativeAI({
 			model: 'gemini-2.5-flash',
 			temperature: 0,
-			apiKey: import.meta.env.GEMINI_API_KEY!,
+			apiKey: GEMINI_API_KEY!,
 			cache,
 		})
 

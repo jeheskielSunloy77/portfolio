@@ -1,3 +1,4 @@
+import { MONGODB_DB, MONGODB_URI } from 'astro:env/server'
 import { MongoClient } from 'mongodb'
 
 // Cache the client to avoid creating multiple connections in dev/hot-reload
@@ -10,7 +11,7 @@ declare global {
 let client: MongoClient
 let clientPromise: Promise<MongoClient>
 
-client = new MongoClient(import.meta.env.MONGODB_URI)
+client = new MongoClient(MONGODB_URI)
 clientPromise = client.connect()
 
 if (!(globalThis as any)._mongoClientPromise) {
@@ -19,5 +20,5 @@ if (!(globalThis as any)._mongoClientPromise) {
 
 export async function getDb() {
 	const client: MongoClient = await (globalThis as any)._mongoClientPromise!
-	return client.db(import.meta.env.MONGODB_DB)
+	return client.db(MONGODB_DB)
 }

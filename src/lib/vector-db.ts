@@ -1,10 +1,12 @@
 import { type GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai'
 import { PineconeStore } from '@langchain/pinecone'
 import { Pinecone } from '@pinecone-database/pinecone'
-
-const apiKey = import.meta.env.PINECONE_API_KEY
-const indexName = import.meta.env.PINECONE_INDEX
-const namespace = import.meta.env.PINECONE_NAMESPACE
+import {
+	GEMINI_API_KEY,
+	PINECONE_API_KEY,
+	PINECONE_INDEX,
+	PINECONE_NAMESPACE,
+} from 'astro:env/server'
 
 /**
  * Wrapper to use Gemini for embeddings in LangChain-style.
@@ -54,11 +56,10 @@ export class GeminiEmbeddings {
 }
 
 export async function getVectorStore() {
-	return PineconeStore.fromExistingIndex(
-		new GeminiEmbeddings(import.meta.env.GEMINI_API_KEY),
-		{
-			pineconeIndex: new Pinecone({ apiKey }).index(indexName),
-			namespace,
-		}
-	)
+	return PineconeStore.fromExistingIndex(new GeminiEmbeddings(GEMINI_API_KEY), {
+		pineconeIndex: new Pinecone({ apiKey: PINECONE_API_KEY }).index(
+			PINECONE_INDEX
+		),
+		namespace: PINECONE_NAMESPACE,
+	})
 }

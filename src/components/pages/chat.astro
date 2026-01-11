@@ -1,0 +1,26 @@
+---
+import { ChatPage } from '@/components/chat-page'
+import { dictionary } from '@/i18n/dictionary'
+import type { Language } from '@/i18n/i18n'
+import MainLayout from '@/layouts/main.astro'
+import { BOT_NAME } from '@/lib/constants'
+
+export interface Props {
+	lang: Language
+}
+
+const lang = Astro.props.lang
+const t = dictionary[lang]
+---
+
+<MainLayout
+	lang={lang}
+	seo={{
+		title: `${t['Chat with']} ${BOT_NAME}`,
+		description: t['Ask about projects, experience, or availability.'],
+	}}
+	chatBot={false}
+	dockNavbar={false}
+>
+	<ChatPage client:load t={t} lang={lang} />
+</MainLayout>

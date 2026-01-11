@@ -224,9 +224,10 @@ function DockNavbar(props: {
 export function Navbar(props: {
 	lang: Language
 	pathname: string
+	dockNavbar?: boolean
 	t: Dictionary
 }) {
-	const { t, lang, pathname } = props
+	const { t, lang, pathname, dockNavbar = true } = props
 
 	const navItems = [
 		{ label: t['projects'], href: `/${lang}/projects` },
@@ -332,19 +333,21 @@ export function Navbar(props: {
 					</div>
 				</header>
 			)}
-			<AnimatePresence>
-				{(isMobile || !isHeaderNavbarVisible) && (
-					<motion.nav
-						initial={{ opacity: 0, y: 24 }}
-						animate={{ opacity: 1, y: 0 }}
-						exit={{ opacity: 0, y: 24 }}
-						transition={{ duration: 0.25 }}
-						className='fixed bottom-4 left-1/2 -translate-x-1/2 z-50'
-					>
-						<DockNavbar lang={lang} pathname={pathname} t={t} />
-					</motion.nav>
-				)}
-			</AnimatePresence>
+			{dockNavbar && (
+				<AnimatePresence>
+					{(isMobile || !isHeaderNavbarVisible) && (
+						<motion.nav
+							initial={{ opacity: 0, y: 24 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: 24 }}
+							transition={{ duration: 0.25 }}
+							className='fixed bottom-4 left-1/2 -translate-x-1/2 z-50'
+						>
+							<DockNavbar lang={lang} pathname={pathname} t={t} />
+						</motion.nav>
+					)}
+				</AnimatePresence>
+			)}
 		</>
 	)
 }

@@ -1,5 +1,6 @@
 import { BOT_NAME } from '@/lib/constants'
 import type { Dictionary } from '@/lib/types'
+import type { Language } from '@/i18n/i18n'
 import { cn } from '@/lib/utils'
 import { $isChatBotVisible } from '@/stores/chat-bot'
 import { useChat, type UIMessage } from '@ai-sdk/react'
@@ -17,12 +18,12 @@ import {
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 
-export function ChatBot({ t }: { t: Dictionary }) {
+export function ChatBot({ t, lang }: { t: Dictionary; lang: Language }) {
 	const isVisible = useStore($isChatBotVisible)
-	if (isVisible) return <Chat t={t} />
+	if (isVisible) return <Chat t={t} lang={lang} />
 }
 
-function Chat({ t }: { t: Dictionary }) {
+function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 	const { messages, setMessages, error, status, sendMessage } = useChat()
 	const [isOpen, setIsOpen] = useState(false)
 
@@ -41,7 +42,18 @@ function Chat({ t }: { t: Dictionary }) {
 				<AccordionTrigger className='border-b px-6'>
 					<ChatHeader isOpen={isOpen} t={t} />
 				</AccordionTrigger>
-				<AccordionContent className='flex max-h-96 min-h-80 flex-col justify-between p-0'>
+				<AccordionContent className='flex max-h-96 min-h-80 flex-col p-0'>
+					<div className='flex items-center justify-between border-b px-3 py-2 text-[11px] text-muted-foreground'>
+						<span>
+							{t['Chat with']} {BOT_NAME}
+						</span>
+						<a
+							href={`/${lang}/chat`}
+							className='text-foreground/80 underline underline-offset-4 transition hover:text-foreground'
+						>
+							{t['Open full chat']}
+						</a>
+					</div>
 					<ChatMessages messages={messages} error={error} status={status} t={t} />
 					<ChatInput
 						sendMessage={sendMessage}
@@ -164,7 +176,7 @@ function ChatMessages({ messages, error, status, t }: ChatMessagesProps) {
 	}, [messages])
 
 	return (
-		<div className='h-full overflow-y-auto p-3' ref={scrollRef}>
+		<div className='flex-1 overflow-y-auto p-3' ref={scrollRef}>
 			<ul>
 				{messages.map((msg) => (
 					<li key={msg.id}>

@@ -13,9 +13,19 @@ export interface Props {
 	seo: Omit<ComponentProps<typeof Seo>, 'lang'>
 	articleSchema?: ComponentProps<typeof ArticleSchema>
 	lang: Language
+	chatBot?: boolean
+	gutter?: boolean
+	dockNavbar?: boolean
 }
 
-const { seo, articleSchema, lang } = Astro.props
+const {
+	seo,
+	articleSchema,
+	lang,
+	chatBot = true,
+	gutter = true,
+	dockNavbar = true,
+} = Astro.props
 const t = dictionary[lang]
 ---
 
@@ -40,13 +50,30 @@ const t = dictionary[lang]
 		{articleSchema && <ArticleSchema {...articleSchema} />}
 	</head>
 	<body class='font-sans text-foreground bg-background'>
-		<Navbar lang={lang} pathname={Astro.url.pathname} t={t} client:load />
-		<div class='mx-auto flex max-w-3xl flex-col px-4 sm:px-8 py-24'>
-			<main class='grow'>
-				<slot />
-			</main>
-			<ChatBot client:idle t={t} />
-		</div>
+		<Navbar
+			lang={lang}
+			pathname={Astro.url.pathname}
+			t={t}
+			dockNavbar={dockNavbar}
+			client:load
+		/>
+		{
+			gutter ? (
+				<div class='mx-auto flex max-w-3xl flex-col px-4 sm:px-8 py-24'>
+					<main class='grow'>
+						<slot />
+					</main>
+					{chatBot && <ChatBot client:idle t={t} lang={lang} />}
+				</div>
+			) : (
+				<>
+					<main>
+						<slot />
+					</main>
+					{chatBot && <ChatBot client:idle t={t} lang={lang} />}
+				</>
+			)
+		}
 		<Footer lang={lang} />
 	</body>
 </html>

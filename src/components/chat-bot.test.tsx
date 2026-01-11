@@ -35,7 +35,7 @@ describe('ChatBot', () => {
 	})
 
 	test('renders placeholder content when there are no messages', async () => {
-		render(<ChatBot t={t} />)
+		render(<ChatBot t={t} lang='en' />)
 
 		// open the chat
 		await userEvent.click(screen.getByRole('button', { name: /J-assist/i }))
@@ -55,7 +55,7 @@ describe('ChatBot', () => {
 		// Mock hook to expose a sendMessage that resolves
 		vi.mocked(sendMessageMock).mockResolvedValue(undefined)
 
-		render(<ChatBot t={t} />)
+		render(<ChatBot t={t} lang='en' />)
 
 		// open the chat
 		await userEvent.click(screen.getByRole('button', { name: /J-assist/i }))

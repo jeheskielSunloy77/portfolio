@@ -135,6 +135,27 @@ export const dictionary = {
 		'Clear chat': 'Clear chat',
 		'Ask something...': 'Ask something...',
 		'Send message': 'Send message',
+		'Open full chat': 'Open full chat',
+		'Your AI guide to Jay.': 'Your AI guide to Jay.',
+		'Ask about projects, experience, or availability.':
+			'Ask about projects, experience, or availability.',
+		'Suggested prompts': 'Suggested prompts',
+		"What are Jay's strongest skills?": "What are Jay's strongest skills?",
+		'Show me a couple of standout projects.':
+			'Show me a couple of standout projects.',
+		"Summarize Jay's tech stack.": "Summarize Jay's tech stack.",
+		'Is Jay open to freelance or remote roles?':
+			'Is Jay open to freelance or remote roles?',
+		'Voice input': 'Voice input',
+		'Listening...': 'Listening...',
+		'Tap the mic to speak.': 'Tap the mic to speak.',
+		'Microphone not supported in this browser.':
+			'Microphone not supported in this browser.',
+		'Say hello to {BOT_NAME}.': 'Say hello to {BOT_NAME}.',
+		'Ask anything about Jay, I can pull projects, experience, and links.':
+			'Ask anything about Jay, I can pull projects, experience, and links.',
+		'Stop recording': 'Stop recording',
+		'AI make mistakes, double-check it': 'AI make mistakes, double-check it',
 		'Send a message to start the chat!': 'Send a message to start the chat!',
 		'You can ask the bot anything about me and it will help to find the relevant information!':
 			'You can ask the bot anything about me and it will help to find the relevant information!',
@@ -145,6 +166,7 @@ export const dictionary = {
 		projects: 'projects',
 		blog: 'blog',
 		contact: 'contact',
+		chat: 'chat',
 		'privacy?': 'privacy?',
 		'Working as a software engineer, building and maintaining mobile and web applications.':
 			'Working as a software engineer, building and maintaining mobile and web applications.',
@@ -382,6 +404,27 @@ export const dictionary = {
 		'Clear chat': 'Bersihkan chat',
 		'Ask something...': 'Tanyakan sesuatu...',
 		'Send message': 'Kirim pesan',
+		'Open full chat': 'Buka chat penuh',
+		'Your AI guide to Jay.': 'Panduan AI Anda untuk Jay.',
+		'Ask about projects, experience, or availability.':
+			'Tanya tentang proyek, pengalaman, atau ketersediaan.',
+		'Suggested prompts': 'Saran pertanyaan',
+		"What are Jay's strongest skills?": 'Apa keahlian terkuat Jay?',
+		'Show me a couple of standout projects.':
+			'Tunjukkan beberapa proyek unggulan.',
+		"Summarize Jay's tech stack.": 'Ringkas stack teknologi Jay.',
+		'Is Jay open to freelance or remote roles?':
+			'Apakah Jay terbuka untuk freelance atau peran remote?',
+		'Voice input': 'Input suara',
+		'Listening...': 'Mendengarkan...',
+		'Tap the mic to speak.': 'Ketuk mikrofon untuk berbicara.',
+		'Microphone not supported in this browser.':
+			'Mikrofon tidak didukung di browser ini.',
+		'Say hello to {BOT_NAME}.': 'Sapa {BOT_NAME}.',
+		'Ask anything about Jay, I can pull projects, experience, and links.':
+			'Tanya apa saja tentang Jay - saya bisa menarik proyek, pengalaman, dan tautan.',
+		'Stop recording': 'Berhenti merekam',
+		'AI make mistakes, double-check it': 'AI bisa membuat kesalahan, periksa kembali',
 		'Send a message to start the chat!': 'Kirim pesan untuk memulai chat!',
 		'You can ask the bot anything about me and it will help to find the relevant information!':
 			'Anda bisa bertanya apa saja tentang saya kepada bot dan bot akan membantu menemukan informasi yang relevan!',
@@ -392,6 +435,7 @@ export const dictionary = {
 		projects: 'proyek',
 		blog: 'blog',
 		contact: 'kontak',
+		chat: 'chat',
 		'privacy?': 'privasi?',
 		'Working as a software engineer, building and maintaining mobile and web applications.':
 			'Bekerja sebagai insinyur perangkat lunak, membangun dan memelihara aplikasi seluler dan web.',

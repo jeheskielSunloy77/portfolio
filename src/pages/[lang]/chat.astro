@@ -1,0 +1,9 @@
+---
+import ChatPage from '@/components/pages/chat.astro'
+import { getLangPaths } from '@/i18n/i18n'
+
+export const prerender = true
+export const getStaticPaths = getLangPaths
+---
+
+<ChatPage lang={Astro.params.lang} />

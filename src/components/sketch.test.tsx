@@ -38,7 +38,7 @@ describe('Sketch component', () => {
 		vi.restoreAllMocks()
 	})
 
-	test('fetches sketches and renders SketchCard items and header count', async () => {
+	test('fetches sketches and renders SketchCard items and header text', async () => {
 		const mockSketch = {
 			_id: 'sk1',
 			name: 'Artwork A',
@@ -63,12 +63,9 @@ describe('Sketch component', () => {
 		expect(await screen.findByText('Artwork A')).toBeInTheDocument()
 		expect(screen.getByText('A lovely SVG')).toBeInTheDocument()
 
-		// header shows count (uses the translator key literally in tests)
+		// header shows the translator key literally in tests
 		expect(
-			screen.getByText(
-				(content, node) =>
-					/1/.test(content) && content.includes('sketches so far — vibe check'),
-			),
+			screen.getByText('canvas of chaos, gallery of giggles. 🎨😂'),
 		).toBeInTheDocument()
 
 		// ensure fetch called with expected initial page params

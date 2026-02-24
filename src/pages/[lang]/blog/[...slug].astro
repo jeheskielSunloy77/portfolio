@@ -35,6 +35,7 @@ export type Props = CollectionEntry<'post'>
 const post = Astro.props
 
 const { Content } = await render(post)
+const { lang, slug } = Astro.params
 
 const sharedData = {
 	title: post.data.title,
@@ -50,7 +51,7 @@ const seo = {
 	ogImage: post.data.image?.src,
 	author: post.data.author,
 	articleTags: post.data.tags,
-	canonical: new URL(`/blog/${post.id}`, Astro.site).toString(),
+	canonical: new URL(`/${lang}/blog/${slug}/`, Astro.site).toString(),
 	ogType: 'article',
 	twitterCard: 'summary_large_image',
 } as const

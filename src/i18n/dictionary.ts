@@ -61,6 +61,8 @@ export const dictionary = {
 		'my projects.': 'my projects.',
 		Blog: 'Blog',
 		'My blog posts and articles.': 'My blog posts and articles.',
+		'Latest articles on web and mobile development, software architecture, and practical lessons from real projects.':
+			'Latest articles on web and mobile development, software architecture, and practical lessons from real projects.',
 		'blog, articles, web development, programming, technology, software engineering, tutorials, tips, guides':
 			'blog, articles, web development, programming, technology, software engineering, tutorials, tips, guides',
 		'view more': 'view more',
@@ -139,6 +141,8 @@ export const dictionary = {
 		'Your AI guide to Jay.': 'Your AI guide to Jay.',
 		'Ask about projects, experience, or availability.':
 			'Ask about projects, experience, or availability.',
+		'Chat with my AI assistant to explore projects, experience, tech stack, and current availability.':
+			'Chat with my AI assistant to explore projects, experience, tech stack, and current availability.',
 		'Suggested prompts': 'Suggested prompts',
 		"What are Jay's strongest skills?": "What are Jay's strongest skills?",
 		'Show me a couple of standout projects.':
@@ -226,7 +230,10 @@ export const dictionary = {
 		'IAKN Kupang Profile Website': 'IAKN Kupang Profile Website',
 		'related posts': 'related posts',
 		visitors: 'visitors',
+		'Visitors Wall': 'Visitors Wall',
 		'visitors marks': 'visitors marks',
+		'Browse visitor doodles and leave your own mark on this interactive portfolio wall.':
+			'Browse visitor doodles and leave your own mark on this interactive portfolio wall.',
 		'load more': 'load more',
 		'canvas of chaos, gallery of giggles. 🎨😂':
 			'canvas of chaos, gallery of giggles. 🎨😂',
@@ -261,7 +268,10 @@ export const dictionary = {
 		"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).":
 			'Saya adalah robot kecil yang membantu dan mengetahui tentang Jay — tanyakan apa saja dan saya akan mengambil bagian terbaik (dengan tambahan beep).',
 		visitors: 'pengunjung',
+		'Visitors Wall': 'Jejak Pengunjung',
 		'visitors marks': 'jejak pengunjung',
+		'Browse visitor doodles and leave your own mark on this interactive portfolio wall.':
+			'Lihat jejak doodle dari pengunjung lain dan tinggalkan coretanmu di wall interaktif portofolio ini.',
 		'load more': 'muat lebih',
 		'canvas of chaos, gallery of giggles. 🎨😂':
 			'kanvas kekacauan, galeri tawa. 🎨😂',
@@ -332,6 +342,8 @@ export const dictionary = {
 		'view more': 'lihat lebih',
 		Blog: 'Blog',
 		'My blog posts and articles.': 'Postingan blog dan artikel saya.',
+		'Latest articles on web and mobile development, software architecture, and practical lessons from real projects.':
+			'Artikel terbaru tentang pengembangan web dan mobile, arsitektur software, serta insight praktis dari proyek nyata.',
 		'blog, articles, web development, programming, technology, software engineering, tutorials, tips, guides':
 			'blog, artikel, pengembangan web, pemrograman, teknologi, rekayasa perangkat lunak, tutorial, tips, panduan',
 		'my blog.': 'blog saya.',
@@ -408,6 +420,8 @@ export const dictionary = {
 		'Your AI guide to Jay.': 'Panduan AI Anda untuk Jay.',
 		'Ask about projects, experience, or availability.':
 			'Tanya tentang proyek, pengalaman, atau ketersediaan.',
+		'Chat with my AI assistant to explore projects, experience, tech stack, and current availability.':
+			'Chat langsung dengan asisten AI untuk menjelajahi proyek, pengalaman, teknologi, dan ketersediaan kerja saya.',
 		'Suggested prompts': 'Saran pertanyaan',
 		"What are Jay's strongest skills?": 'Apa keahlian terkuat Jay?',
 		'Show me a couple of standout projects.':

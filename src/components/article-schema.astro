@@ -1,4 +1,5 @@
 ---
+import publisherImage from '@/assets/me/me.webp'
 import { FULL_NAME, SOCIALS } from '@/lib/constants'
 
 export interface Props {
@@ -46,9 +47,10 @@ const schema = {
 	publisher: {
 		'@type': 'Person',
 		name: author,
+		image: new URL(publisherImage.src, Astro.site),
 		logo: {
 			'@type': 'ImageObject',
-			url: new URL('/images/logo.jpg', Astro.site),
+			url: new URL(publisherImage.src, Astro.site),
 		},
 	},
 	mainEntityOfPage: {

@@ -19,8 +19,11 @@ const sketches = (await res.json()) as APIResponsePaginated<SketchType>
 <MainLayout
 	lang={lang}
 	seo={{
-		title: 'Visitor Page',
-		description: 'This is the visitor page.',
+		title: t['Visitors Wall'],
+		description:
+			t[
+				'Browse visitor doodles and leave your own mark on this interactive portfolio wall.'
+			],
 	}}
 >
 	<article class='mt-8 flex flex-col gap-8 pb-16'>

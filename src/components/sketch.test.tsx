@@ -7,7 +7,7 @@ const t: any = new Proxy(
 	{},
 	{
 		get: (_t, p) => String(p),
-	}
+	},
 )
 
 // provide ResizeObserver and IntersectionObserver shims
@@ -67,8 +67,8 @@ describe('Sketch component', () => {
 		expect(
 			screen.getByText(
 				(content, node) =>
-					/1/.test(content) && content.includes('sketches so far — vibe check')
-			)
+					/1/.test(content) && content.includes('sketches so far — vibe check'),
+			),
 		).toBeInTheDocument()
 
 		// ensure fetch called with expected initial page params

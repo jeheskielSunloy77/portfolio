@@ -6,7 +6,7 @@ import {
 	LANGUAGES,
 	type Language,
 } from '@/i18n/i18n'
-import { FULL_NAME } from '@/lib/constants'
+import { APP_NAME, FULL_NAME } from '@/lib/constants'
 
 export interface Props {
 	title: string
@@ -21,6 +21,7 @@ export interface Props {
 	author?: string
 	articleSection?: string
 	articleTags?: string[]
+	twitterCreator?: string
 	robots?: string
 	lang: Language
 }
@@ -29,8 +30,8 @@ const {
 	title,
 	description,
 	canonical,
-	ogImage = '/images/default-og.jpg',
-	ogType = 'article',
+	ogImage = '/favicon.svg',
+	ogType = 'website',
 	twitterCard = 'summary_large_image',
 	keywords = 'blog, portfolio, projects, tech, programming, development, web development, mobile development, software engineering',
 	publishedTime,
@@ -38,6 +39,7 @@ const {
 	author = FULL_NAME,
 	articleSection,
 	articleTags = [],
+	twitterCreator,
 	robots,
 	lang,
 } = Astro.props
@@ -97,7 +99,7 @@ const getLocalizedPath = (targetLang: Language) =>
 <meta property='og:title' content={title} />
 <meta property='og:description' content={description} />
 <meta property='og:image' content={fullOgImage} />
-<meta property='og:site_name' content='Your Blog Name' />
+<meta property='og:site_name' content={APP_NAME} />
 {author && <meta property='og:article:author' content={author} />}
 {
 	publishedTime && (
@@ -128,13 +130,11 @@ const getLocalizedPath = (targetLang: Language) =>
 <meta property='twitter:title' content={title} />
 <meta property='twitter:description' content={description} />
 <meta property='twitter:image' content={fullOgImage} />
-<meta name='twitter:creator' content='@yourtwitterhandle' />
+{twitterCreator && <meta name='twitter:creator' content={twitterCreator} />}
 
 <!-- Favicon -->
 <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
-<link rel='apple-touch-icon' sizes='180x180' href='/apple-touch-icon.png' />
-<link rel='icon' type='image/png' sizes='32x32' href='/favicon-32x32.png' />
-<link rel='icon' type='image/png' sizes='16x16' href='/favicon-16x16.png' />
+<link rel='apple-touch-icon' href='/favicon.svg' />
 
 <!-- Additional SEO optimizations -->
 <meta name='theme-color' content='#000000' />

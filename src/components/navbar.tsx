@@ -343,7 +343,11 @@ export function Navbar(props: {
 							transition={{ duration: 0.25 }}
 							className='fixed bottom-4 left-1/2 -translate-x-1/2 z-50'
 						>
-							<DockNavbar lang={lang} pathname={pathname} t={t} />
+							<DockNavbar
+								lang={lang}
+								pathname={pathname}
+								t={t}
+							/>
 						</motion.nav>
 					)}
 				</AnimatePresence>

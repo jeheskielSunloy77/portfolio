@@ -8,6 +8,22 @@ on:
 permissions:
   contents: read
 
+env:
+  APP_URL: ${{ secrets.APP_URL != '' && secrets.APP_URL || 'https://example.com' }}
+  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY != '' && secrets.GEMINI_API_KEY || 'placeholder-gemini-key' }}
+  PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY != '' && secrets.PINECONE_API_KEY || 'placeholder-pinecone-key' }}
+  PINECONE_INDEX: ${{ secrets.PINECONE_INDEX != '' && secrets.PINECONE_INDEX || 'placeholder-index' }}
+  PINECONE_NAMESPACE: ${{ secrets.PINECONE_NAMESPACE != '' && secrets.PINECONE_NAMESPACE || '' }}
+  MONGODB_URI: ${{ secrets.MONGODB_URI != '' && secrets.MONGODB_URI || 'mongodb://localhost:27017/test' }}
+  MONGODB_DB: ${{ secrets.MONGODB_DB != '' && secrets.MONGODB_DB || 'portfolio_ci' }}
+  SMTP_HOST: ${{ secrets.SMTP_HOST != '' && secrets.SMTP_HOST || 'smtp.example.com' }}
+  SMTP_PORT: ${{ secrets.SMTP_PORT != '' && secrets.SMTP_PORT || '587' }}
+  SMTP_USER: ${{ secrets.SMTP_USER != '' && secrets.SMTP_USER || 'ci@example.com' }}
+  SMTP_PASS: ${{ secrets.SMTP_PASS != '' && secrets.SMTP_PASS || 'placeholder-smtp-pass' }}
+  SMTP_RECEIVER_EMAIL: ${{ secrets.SMTP_RECEIVER_EMAIL != '' && secrets.SMTP_RECEIVER_EMAIL || 'ci@example.com' }}
+  UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL != '' && secrets.UPSTASH_REDIS_REST_URL || 'https://example.upstash.io' }}
+  UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN != '' && secrets.UPSTASH_REDIS_REST_TOKEN || 'placeholder-upstash-token' }}
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -31,21 +47,6 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
-    env:
-      APP_URL: ${{ secrets.APP_URL != '' && secrets.APP_URL || 'https://example.com' }}
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY != '' && secrets.GEMINI_API_KEY || 'placeholder-gemini-key' }}
-      PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY != '' && secrets.PINECONE_API_KEY || 'placeholder-pinecone-key' }}
-      PINECONE_INDEX: ${{ secrets.PINECONE_INDEX != '' && secrets.PINECONE_INDEX || 'placeholder-index' }}
-      PINECONE_NAMESPACE: ${{ secrets.PINECONE_NAMESPACE != '' && secrets.PINECONE_NAMESPACE || '' }}
-      MONGODB_URI: ${{ secrets.MONGODB_URI != '' && secrets.MONGODB_URI || 'mongodb://localhost:27017/test' }}
-      MONGODB_DB: ${{ secrets.MONGODB_DB != '' && secrets.MONGODB_DB || 'portfolio_ci' }}
-      SMTP_HOST: ${{ secrets.SMTP_HOST != '' && secrets.SMTP_HOST || 'smtp.example.com' }}
-      SMTP_PORT: ${{ secrets.SMTP_PORT != '' && secrets.SMTP_PORT || '587' }}
-      SMTP_USER: ${{ secrets.SMTP_USER != '' && secrets.SMTP_USER || 'ci@example.com' }}
-      SMTP_PASS: ${{ secrets.SMTP_PASS != '' && secrets.SMTP_PASS || 'placeholder-smtp-pass' }}
-      SMTP_RECEIVER_EMAIL: ${{ secrets.SMTP_RECEIVER_EMAIL != '' && secrets.SMTP_RECEIVER_EMAIL || 'ci@example.com' }}
-      UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL != '' && secrets.UPSTASH_REDIS_REST_URL || 'https://example.upstash.io' }}
-      UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN != '' && secrets.UPSTASH_REDIS_REST_TOKEN || 'placeholder-upstash-token' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

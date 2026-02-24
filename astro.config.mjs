@@ -94,7 +94,19 @@ export default defineConfig({
     validateSecrets: true,
   },
   site: env.APP_URL || 'http://localhost:4321',
-  integrations: [react(), mdx(), sitemap()],
+  integrations: [
+    react(),
+    mdx(),
+    sitemap({
+      filter: (page) => {
+        try {
+          return new URL(page).pathname !== '/';
+        } catch {
+          return true;
+        }
+      },
+    }),
+  ],
 
   adapter: vercel(),
 });

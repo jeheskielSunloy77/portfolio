@@ -1,5 +1,11 @@
 ---
-import { LANGUAGE_MAP, type Language } from '@/i18n/i18n'
+import {
+	DEFAULT_LANGUAGE,
+	getPathnameWithoutLang,
+	LANGUAGE_MAP,
+	LANGUAGES,
+	type Language,
+} from '@/i18n/i18n'
 import { FULL_NAME } from '@/lib/constants'
 
 export interface Props {
@@ -15,6 +21,7 @@ export interface Props {
 	author?: string
 	articleSection?: string
 	articleTags?: string[]
+	robots?: string
 	lang: Language
 }
 
@@ -31,11 +38,28 @@ const {
 	author = FULL_NAME,
 	articleSection,
 	articleTags = [],
+	robots,
 	lang,
 } = Astro.props
 
-const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site)
+const isRootEnglishAlias =
+	Astro.url.pathname === '/' && lang === DEFAULT_LANGUAGE
+const rootCanonicalURL = new URL(`/${DEFAULT_LANGUAGE}/`, Astro.site)
+const canonicalURL =
+	canonical ||
+	(isRootEnglishAlias
+		? rootCanonicalURL
+		: new URL(Astro.url.pathname, Astro.site))
 const fullOgImage = new URL(ogImage, Astro.site)
+const robotsContent =
+	robots || (isRootEnglishAlias ? 'noindex, follow' : 'index, follow')
+const pathnameWithoutLang = getPathnameWithoutLang(Astro.url.pathname, lang)
+const normalizedPath =
+	pathnameWithoutLang === '/'
+		? ''
+		: pathnameWithoutLang.replace(/^\/+/, '').replace(/\/+$/, '')
+const getLocalizedPath = (targetLang: Language) =>
+	normalizedPath ? `/${targetLang}/${normalizedPath}/` : `/${targetLang}/`
 ---
 
 <!-- Primary Meta Tags -->
@@ -46,12 +70,26 @@ const fullOgImage = new URL(ogImage, Astro.site)
 <meta name='description' content={description} />
 {keywords && <meta name='keywords' content={keywords} />}
 <meta name='author' content={author} />
-<meta name='robots' content='index, follow' />
+<meta name='robots' content={robotsContent} />
 <meta name='language' content={LANGUAGE_MAP[lang].name} />
 <meta name='revisit-after' content='7 days' />
 
 <!-- Canonical URL -->
 <link rel='canonical' href={canonicalURL} />
+{
+	LANGUAGES.map((targetLang) => (
+		<link
+			rel='alternate'
+			hreflang={targetLang}
+			href={new URL(getLocalizedPath(targetLang), Astro.site)}
+		/>
+	))
+}
+<link
+	rel='alternate'
+	hreflang='x-default'
+	href={new URL(getLocalizedPath(DEFAULT_LANGUAGE), Astro.site)}
+/>
 
 <!-- Open Graph / Facebook -->
 <meta property='og:type' content={ogType} />

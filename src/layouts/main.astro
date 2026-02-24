@@ -13,6 +13,7 @@ export interface Props {
 	seo: Omit<ComponentProps<typeof Seo>, 'lang'>
 	articleSchema?: ComponentProps<typeof ArticleSchema>
 	lang: Language
+	languageSwitchUrls?: Partial<Record<Language, string>>
 	chatBot?: boolean
 	gutter?: boolean
 	dockNavbar?: boolean
@@ -22,6 +23,7 @@ const {
 	seo,
 	articleSchema,
 	lang,
+	languageSwitchUrls,
 	chatBot = true,
 	gutter = true,
 	dockNavbar = true,
@@ -53,6 +55,7 @@ const t = dictionary[lang]
 		<Navbar
 			lang={lang}
 			pathname={Astro.url.pathname}
+			languageSwitchUrls={languageSwitchUrls}
 			t={t}
 			dockNavbar={dockNavbar}
 			client:load

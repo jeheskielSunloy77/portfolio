@@ -6,6 +6,7 @@ tags: ['go', 'design patterns', 'clean architecture']
 keywords: 'golang architecture, go clean code, golang project structure, go services pattern, golang repositories, go best practices, golang testing, go code organization, clean architecture go, golang design patterns'
 readTime: 9
 lang: en
+key: go-clean-code
 ---
 
 I used to be the person who tried to bend "Clean Architecture" into every Go project. It rarely helped. After a few over-engineered APIs and some raised eyebrows, I found a simpler, more Go-friendly way to keep things tidy and testable.

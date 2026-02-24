@@ -32,6 +32,7 @@ describe('src/content.config.ts', () => {
 		const valid = {
 			title: 'Hello',
 			description: 'Desc',
+			key: 'hello-world',
 			tags: ['a', 'b'],
 			keywords: 'kw',
 			publishedAt: new Date(),
@@ -43,7 +44,7 @@ describe('src/content.config.ts', () => {
 		expect(() => schema.parse(valid)).not.toThrow()
 
 		const invalid = {
-			// missing title, publishedAt wrong type, readTime too small
+			// missing title/key, publishedAt wrong type, readTime too small
 			description: 'Desc',
 			tags: [],
 			keywords: 'kw',

@@ -6,6 +6,7 @@ tags: ['portfolio', 'web design', 'frontend', 'nextjs', 'tailwind']
 keywords: 'portfolio redesign, clean web design, minimal portfolio website, frontend portfolio, nextjs portfolio, tailwind portfolio, shadcn ui, portfolio before and after, developer portfolio tips, software engineer portfolio'
 readTime: 6
 lang: en
+key: portfolio-redesign
 related: ['how-i-made-my-portfolio-load-faster-than-my-attention-span']
 ---
 

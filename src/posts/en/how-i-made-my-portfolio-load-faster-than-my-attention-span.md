@@ -6,6 +6,7 @@ tags: ['astro', 'nextjs', 'react', 'performance', 'seo']
 keywords: 'astro js portfolio, astro vs nextjs, astro performance, nextjs static site, react with astro, astro seo boost, astro islands architecture, astro site speed, astro for portfolio, nextjs alternatives'
 readTime: 5
 lang: en
+key: portfolio-speed
 related: ['redesigning-my-portfolio-making-space-for-what-matters']
 ---
 

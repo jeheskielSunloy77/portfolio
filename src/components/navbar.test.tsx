@@ -24,6 +24,15 @@ vi.mock('@nanostores/react', () => ({
 	useStore: () => false,
 }))
 
+vi.mock('@/components/ui/dropdown-menu', () => ({
+	DropdownMenu: ({ children }: any) => <>{children}</>,
+	DropdownMenuTrigger: ({ children }: any) => <>{children}</>,
+	DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
+	DropdownMenuItem: ({ children }: any) => <div>{children}</div>,
+	DropdownMenuLabel: ({ children }: any) => <div>{children}</div>,
+	DropdownMenuSeparator: () => <hr />,
+}))
+
 // Provide a simple IntersectionObserver and matchMedia polyfills for the test environment
 ;(global as any).IntersectionObserver =
 	(global as any).IntersectionObserver ||
@@ -73,5 +82,55 @@ describe('Navbar', () => {
 		// Expect at least the projects button (label 'projects') to be present
 		const projectsBtn = screen.getAllByLabelText('projects')[0]
 		expect(projectsBtn).toBeInTheDocument()
+	})
+
+	test('uses localized override URLs in language switcher when provided', () => {
+		;(window as any).matchMedia = mockMatchMedia(false)
+		const el = document.createElement('div')
+		el.id = 'headerNavbar'
+		document.body.appendChild(el)
+
+		render(
+			<Navbar
+				t={t}
+				lang={'en'}
+				pathname={'/en/blog/redesigning-my-portfolio-making-space-for-what-matters'}
+				languageSwitchUrls={{
+					en: '/en/blog/redesigning-my-portfolio-making-space-for-what-matters',
+					id: '/id/blog/mendesain-ulang-portofolio-memberi-ruang-untuk-hal-yang-penting',
+				}}
+			/>
+		)
+
+		const indonesianLink = screen.getByRole('link', { name: /Bahasa Indonesia/i })
+		expect(indonesianLink).toHaveAttribute(
+			'href',
+			'/id/blog/mendesain-ulang-portofolio-memberi-ruang-untuk-hal-yang-penting'
+		)
+
+		document.body.removeChild(el)
+	})
+
+	test('falls back to same pathname when localized override is not provided', () => {
+		;(window as any).matchMedia = mockMatchMedia(false)
+		const el = document.createElement('div')
+		el.id = 'headerNavbar'
+		document.body.appendChild(el)
+
+		render(
+			<Navbar
+				t={t}
+				lang={'en'}
+				pathname={'/en/blog/kotlin-multiplatform-vs-react-native'}
+			/>
+		)
+
+		const indonesianLink = screen.getByRole('link', { name: /Bahasa Indonesia/i })
+		expect(indonesianLink).toHaveAttribute(
+			'href',
+			'/id/blog/kotlin-multiplatform-vs-react-native'
+		)
+
+		document.body.removeChild(el)
 	})
 })

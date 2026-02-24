@@ -76,6 +76,7 @@ function ThemeToggle() {
 function LanguageDropdown(props: {
 	lang: Language
 	pathname: string
+	languageSwitchUrls?: Partial<Record<Language, string>>
 	children: React.ReactNode
 	label: LocalizedString
 }) {
@@ -87,7 +88,7 @@ function LanguageDropdown(props: {
 				<DropdownMenuSeparator />
 				{LANGUAGES.map((lang) => (
 					<DropdownMenuItem key={lang} asChild>
-						<a href={`/${lang}${props.pathname}`}>
+						<a href={props.languageSwitchUrls?.[lang] ?? `/${lang}${props.pathname}`}>
 							{LANGUAGE_MAP[lang].emoji} {LANGUAGE_MAP[lang].name}
 						</a>
 					</DropdownMenuItem>
@@ -100,9 +101,10 @@ function LanguageDropdown(props: {
 function DockNavbar(props: {
 	lang: Language
 	pathname: string
+	languageSwitchUrls?: Partial<Record<Language, string>>
 	t: Dictionary
 }) {
-	const { t, lang, pathname } = props
+	const { t, lang, pathname, languageSwitchUrls } = props
 
 	const { theme, toggle: toggleTheme, buttonRef: themeButtonRef } = useTheme()
 
@@ -182,6 +184,7 @@ function DockNavbar(props: {
 								label='languages'
 								lang={lang}
 								pathname={getPathnameWithoutLang(pathname, lang)}
+								languageSwitchUrls={languageSwitchUrls}
 							>
 								<Button
 									aria-label={t['toggle language']}
@@ -224,10 +227,11 @@ function DockNavbar(props: {
 export function Navbar(props: {
 	lang: Language
 	pathname: string
+	languageSwitchUrls?: Partial<Record<Language, string>>
 	dockNavbar?: boolean
 	t: Dictionary
 }) {
-	const { t, lang, pathname, dockNavbar = true } = props
+	const { t, lang, pathname, languageSwitchUrls, dockNavbar = true } = props
 
 	const navItems = [
 		{ label: t['projects'], href: `/${lang}/projects` },
@@ -319,6 +323,7 @@ export function Navbar(props: {
 										label='languages'
 										lang={lang}
 										pathname={getPathnameWithoutLang(pathname, lang)}
+										languageSwitchUrls={languageSwitchUrls}
 									>
 										<Button size='icon' variant='ghost'>
 											<Languages />
@@ -346,6 +351,7 @@ export function Navbar(props: {
 							<DockNavbar
 								lang={lang}
 								pathname={pathname}
+								languageSwitchUrls={languageSwitchUrls}
 								t={t}
 							/>
 						</motion.nav>

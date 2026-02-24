@@ -6,6 +6,7 @@ tags: ['portofolio', 'desain web', 'frontend', 'nextjs', 'tailwind']
 keywords: 'redesign portofolio, desain web minimalis, portofolio developer, nextjs portofolio, tailwind portofolio, shadcn ui, perbedaan portofolio, tips portofolio software engineer'
 readTime: 6
 lang: id
+key: portfolio-redesign
 ---
 
 Akhirnya saya mendesain ulang portofolio. Gampangnya: lebih tenang, lebih fokus.

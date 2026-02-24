@@ -6,6 +6,7 @@ tags: ['astro', 'nextjs', 'react', 'performa', 'seo']
 keywords: 'astro js portofolio, astro vs nextjs, performa astro, nextjs situs statis, react dengan astro, astro peningkatan seo, arsitektur islands astro, kecepatan situs astro, astro untuk portofolio, alternatif nextjs'
 readTime: 5
 lang: id
+key: portfolio-speed
 ---
 
 Saya pakai Next.js bertahun-tahun. Nyaman, lengkap fiturnya, dan cocok kalau butuh server rendering atau API. Untuk portofolio saya, ternyata saya membawa terlalu banyak beban untuk sesuatu yang hampir tidak berubah.

@@ -15,6 +15,7 @@ tags:
 keywords: 'Kotlin Multiplatform, React Native, cross-platform development, mobile development, KMP vs RN, mobile frameworks 2025, native performance, JavaScript bridge, mobile app development'
 readTime: 8
 lang: id
+key: kotlin-multiplatform-vs-react-native
 ---
 
 Jujur: memilih framework cross-platform terasa kecil sampai kamu benar-benar terlanjur menggunakannya. Saya sudah lewat jalur ini — React Native → native Android dengan Kotlin → lalu KMP — dan tiap pilihan punya komprominya sendiri. Berikut ringkasan pengalaman saya supaya kamu bisa memilih lebih cepat.

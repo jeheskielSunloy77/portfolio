@@ -7,6 +7,7 @@ export const post = defineCollection({
 		z.object({
 			title: z.string(),
 			description: z.string(),
+			key: z.string().min(1),
 			tags: z.array(z.string()),
 			author: z.string().optional(),
 			keywords: z.string(),

@@ -1,9 +1,8 @@
 ---
-import photoOfMe from '@/assets/me/me.webp'
 import { BIRTH_DATE, BOT_NAME, NICK_NAME } from '@/lib/constants'
 import type { Dictionary } from '@/lib/types'
-import { Image } from 'astro:assets'
 import { ArrowDown, ArrowDownRight, Bot } from 'lucide-react'
+import { HeroRobot } from './hero-robot'
 import { ResumeButton } from './hero-section.client'
 import Socials from './socials.astro'
 
@@ -30,13 +29,7 @@ const { t }: Props = Astro.props
 	id='hero'
 	class='flex flex-col items-start gap-8 md:flex-row-reverse md:items-center md:justify-between'
 >
-	<Image
-		class='rounded-lg'
-		src={photoOfMe}
-		alt={`Photo of ${NICK_NAME}`}
-		width={175}
-		height={175}
-	/>
+	<HeroRobot client:load />
 	<div class='flex max-w-[320px] flex-col sm:max-w-full'>
 		<h1
 			class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2 text-balance'
@@ -48,7 +41,7 @@ const { t }: Props = Astro.props
 			{
 				t['{AGE} yo software engineer hailing from Indonesia 🇮🇩'].replace(
 					'{AGE}',
-					String(getAge(BIRTH_DATE))
+					String(getAge(BIRTH_DATE)),
 				)
 			}
 		</p>

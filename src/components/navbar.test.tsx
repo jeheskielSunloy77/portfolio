@@ -26,9 +26,17 @@ vi.mock('@nanostores/react', () => ({
 
 vi.mock('@/components/ui/dropdown-menu', () => ({
 	DropdownMenu: ({ children }: any) => <>{children}</>,
-	DropdownMenuTrigger: ({ children }: any) => <>{children}</>,
+	DropdownMenuTrigger: ({ children, render }: any) => (
+		<>
+			{render
+				? React.cloneElement(render, undefined, children)
+				: children}
+		</>
+	),
 	DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
-	DropdownMenuItem: ({ children }: any) => <div>{children}</div>,
+	DropdownMenuGroup: ({ children }: any) => <div>{children}</div>,
+	DropdownMenuItem: ({ children, render }: any) =>
+		render ? React.cloneElement(render, undefined, children) : <div>{children}</div>,
 	DropdownMenuLabel: ({ children }: any) => <div>{children}</div>,
 	DropdownMenuSeparator: () => <hr />,
 }))

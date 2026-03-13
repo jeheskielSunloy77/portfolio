@@ -173,7 +173,7 @@ export function SketchDialog({
 						} catch {
 							return s
 						}
-					})
+					}),
 				)
 			})
 			.catch((e) => console.warn('failed to load perfect-freehand', e))
@@ -364,11 +364,11 @@ export function SketchDialog({
 	const buildSvgString = (
 		width: number,
 		height: number,
-		strokesToRender: Stroke[]
+		strokesToRender: Stroke[],
 	) => {
 		const lines: string[] = []
 		lines.push(
-			`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">`
+			`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">`,
 		)
 		// background rectangle (mimic original canvas fill)
 		lines.push(`<rect width="100%" height="100%"  fill-opacity="0"/>`)
@@ -512,7 +512,7 @@ export function SketchDialog({
 								<div className='flex items-center gap-0.5'>
 									{presetColors.map((presetColor, i) => (
 										<Button
-											size='iconSm'
+											size='icon-sm'
 											variant={presetColor === color ? 'secondary' : 'ghost'}
 											key={presetColor}
 											onClick={() => setColor(presetColor)}
@@ -536,7 +536,7 @@ export function SketchDialog({
 
 								<Button
 									variant='ghost'
-									size='iconSm'
+									size='icon-sm'
 									onClick={undo}
 									disabled={historyIndex <= 0}
 								>
@@ -544,23 +544,23 @@ export function SketchDialog({
 								</Button>
 								<Button
 									variant='ghost'
-									size='iconSm'
+									size='icon-sm'
 									onClick={redo}
 									disabled={historyIndex >= history.length - 1}
 								>
 									<Redo2 className='w-4 h-4' />
 								</Button>
-								<Button variant='ghost' size='iconSm' onClick={clearCanvas}>
+								<Button variant='ghost' size='icon-sm' onClick={clearCanvas}>
 									<RotateCcw className='w-4 h-4' />
 								</Button>
 							</div>
 
 							<div className='flex items-center gap-1'>
 								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<Button size='iconSm' variant='ghost'>
-											<Circle className='w-4 h-4' />
-										</Button>
+									<DropdownMenuTrigger
+										render={<Button size='icon-sm' variant='ghost' />}
+									>
+										<Circle className='w-4 h-4' />
 									</DropdownMenuTrigger>
 									<DropdownMenuContent sideOffset={8} className='w-44 p-3'>
 										<div className='flex items-center gap-2'>
@@ -568,7 +568,9 @@ export function SketchDialog({
 												min={1}
 												max={60}
 												value={[brushSize]}
-												onValueChange={(value) => setBrushSize(value[0])}
+												onValueChange={(value) =>
+													setBrushSize(typeof value === 'number' ? value : value[0])
+												}
 												className='w-full'
 											/>
 											<span className='text-sm w-8 text-center'>{brushSize}px</span>
@@ -577,16 +579,16 @@ export function SketchDialog({
 								</DropdownMenu>
 								<Button
 									variant={isEraser ? 'default' : 'ghost'}
-									size='iconSm'
+									size='icon-sm'
 									onClick={() => setIsEraser(!isEraser)}
 								>
 									<Eraser className='w-4 h-4' />
 								</Button>
 								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<Button size='iconSm' variant='ghost'>
-											<MoreHorizontal className='w-4 h-4' />
-										</Button>
+									<DropdownMenuTrigger
+										render={<Button size='icon-sm' variant='ghost' />}
+									>
+										<MoreHorizontal className='w-4 h-4' />
 									</DropdownMenuTrigger>
 									<DropdownMenuContent sideOffset={8} className='w-64 p-3'>
 										<div className='space-y-2 text-sm'>
@@ -600,7 +602,7 @@ export function SketchDialog({
 													onValueChange={(value) =>
 														setStrokeOptions((p) => ({
 															...p,
-															thinning: value[0],
+															thinning: typeof value === 'number' ? value : value[0],
 														}))
 													}
 													className='w-40'
@@ -618,7 +620,7 @@ export function SketchDialog({
 													onValueChange={(value) =>
 														setStrokeOptions((p) => ({
 															...p,
-															smoothing: value[0],
+															smoothing: typeof value === 'number' ? value : value[0],
 														}))
 													}
 													className='w-40'
@@ -636,7 +638,7 @@ export function SketchDialog({
 													onValueChange={(value) =>
 														setStrokeOptions((p) => ({
 															...p,
-															streamline: value[0],
+															streamline: typeof value === 'number' ? value : value[0],
 														}))
 													}
 													className='w-40'
@@ -668,7 +670,7 @@ export function SketchDialog({
 													onValueChange={(value) =>
 														setStrokeOptions((p) => ({
 															...p,
-															startTaper: value[0],
+															startTaper: typeof value === 'number' ? value : value[0],
 														}))
 													}
 													className='w-40'
@@ -686,7 +688,7 @@ export function SketchDialog({
 													onValueChange={(value) =>
 														setStrokeOptions((p) => ({
 															...p,
-															endTaper: value[0],
+															endTaper: typeof value === 'number' ? value : value[0],
 														}))
 													}
 													className='w-40'
@@ -749,7 +751,7 @@ export function SketchDialog({
 														return (
 															<path key='mask-preview' d={d} fill='black' stroke='none' />
 														)
-												  })()
+													})()
 												: null}
 										</mask>
 									</defs>

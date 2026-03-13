@@ -1,8 +1,8 @@
 import { CAREERS, EDUCATIONS } from '@/lib/constants'
 import type { Dictionary, Experience } from '@/lib/types'
-import { AvatarFallback } from '@radix-ui/react-avatar'
+import { BriefcaseBusiness, GraduationCap } from 'lucide-react'
 import Markdown from 'react-markdown'
-import { Avatar, AvatarImage } from './ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Badge } from './ui/badge'
 import { Card, CardContent } from './ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
@@ -10,10 +10,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 export function ExperienceSection({ t }: { t: Dictionary }) {
 	return (
 		<section id='experiences'>
-			<Tabs defaultValue='work'>
-				<TabsList className='mb-2 grid w-full grid-cols-2'>
-					<TabsTrigger value='work'>{t['Work']}</TabsTrigger>
-					<TabsTrigger value='education'>{t['Education']}</TabsTrigger>
+			<Tabs defaultValue='work' className='flex flex-col gap-2'>
+				<TabsList variant='default'>
+					<TabsTrigger value='work'>
+						<BriefcaseBusiness />
+						{t['Work']}
+					</TabsTrigger>
+					<TabsTrigger value='education'>
+						<GraduationCap />
+						{t['Education']}
+					</TabsTrigger>
 				</TabsList>
 				<TabsContent value='work'>
 					<Timeline experiences={CAREERS} t={t} />

@@ -11,22 +11,23 @@ import {
 export function ResumeButton() {
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<RainbowButton variant='outline'>
-					Resume
-					<FileDownIcon />
-				</RainbowButton>
+			<DropdownMenuTrigger render={<RainbowButton variant='outline' />}>
+				Resume
+				<FileDownIcon />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
 				{LANGUAGES.map((language) => (
-					<DropdownMenuItem asChild key={language}>
-						<a
-							href={`/resume-${language}.pdf`}
-							target='_blank'
-							rel='noopener noreferrer'
-						>
-							{LANGUAGE_MAP[language].emoji} {LANGUAGE_MAP[language].name}
-						</a>
+					<DropdownMenuItem
+						key={language}
+						render={
+							<a
+								href={`/resume-${language}.pdf`}
+								target='_blank'
+								rel='noopener noreferrer'
+							/>
+						}
+					>
+						{LANGUAGE_MAP[language].emoji} {LANGUAGE_MAP[language].name}
 					</DropdownMenuItem>
 				))}
 			</DropdownMenuContent>

@@ -188,16 +188,14 @@ export default function ContactForm({
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>{t['Just a quick check! 🤔']}</AlertDialogTitle>
-						<AlertDialogDescription asChild>
-							<div>
-								<p>
-									{t['Hey! Remember to use a real email so I can reply you personally.']}
-								</p>
-								<p className='mt-4 font-medium'>
-									{t["I'll be sending my reply to:"]}{' '}
-									<span className='text-foreground'>{email}</span>
-								</p>
-							</div>
+						<AlertDialogDescription render={<div />}>
+							<p>
+								{t['Hey! Remember to use a real email so I can reply you personally.']}
+							</p>
+							<p className='mt-4 font-medium'>
+								{t["I'll be sending my reply to:"]}{' '}
+								<span className='text-foreground'>{email}</span>
+							</p>
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>

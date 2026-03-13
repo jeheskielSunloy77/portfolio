@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
@@ -29,7 +30,7 @@ import {
 	UsersIcon,
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactElement, type ReactNode } from 'react'
 
 import { Dock, DockIcon } from '@/components/magicui/dock'
 import { buttonVariants } from '@/components/ui/button'
@@ -77,22 +78,29 @@ function LanguageDropdown(props: {
 	lang: Language
 	pathname: string
 	languageSwitchUrls?: Partial<Record<Language, string>>
-	children: React.ReactNode
+	children: ReactNode
 	label: LocalizedString
 }) {
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild>{props.children}</DropdownMenuTrigger>
+			<DropdownMenuTrigger render={props.children as ReactElement} />
 			<DropdownMenuContent>
-				<DropdownMenuLabel>{props.label}</DropdownMenuLabel>
-				<DropdownMenuSeparator />
-				{LANGUAGES.map((lang) => (
-					<DropdownMenuItem key={lang} asChild>
-						<a href={props.languageSwitchUrls?.[lang] ?? `/${lang}${props.pathname}`}>
+				<DropdownMenuGroup>
+					<DropdownMenuLabel>{props.label}</DropdownMenuLabel>
+					<DropdownMenuSeparator />
+					{LANGUAGES.map((lang) => (
+						<DropdownMenuItem
+							key={lang}
+							render={
+								<a
+									href={props.languageSwitchUrls?.[lang] ?? `/${lang}${props.pathname}`}
+								/>
+							}
+						>
 							{LANGUAGE_MAP[lang].emoji} {LANGUAGE_MAP[lang].name}
-						</a>
-					</DropdownMenuItem>
-				))}
+						</DropdownMenuItem>
+					))}
+				</DropdownMenuGroup>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)
@@ -131,20 +139,22 @@ function DockNavbar(props: {
 					return (
 						<DockIcon key={i}>
 							<Tooltip>
-								<TooltipTrigger asChild>
-									<a
-										href={item.href}
-										aria-label={item.label}
-										className={cn(
-											buttonVariants({
-												variant: isActive ? 'default' : 'ghost',
-												size: 'icon',
-											}),
-											'size-12 rounded-full'
-										)}
-									>
-										<item.icon className='size-4' />
-									</a>
+								<TooltipTrigger
+									render={
+										<a
+											href={item.href}
+											aria-label={item.label}
+											className={cn(
+												buttonVariants({
+													variant: isActive ? 'default' : 'ghost',
+													size: 'icon',
+												}),
+												'size-12 rounded-full',
+											)}
+										/>
+									}
+								>
+									<item.icon className='size-4' />
 								</TooltipTrigger>
 								<TooltipContent>
 									<p>{item.label}</p>
@@ -156,21 +166,23 @@ function DockNavbar(props: {
 				<Separator orientation='vertical' className='h-full' />
 				<DockIcon>
 					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								onClick={toggleTheme}
-								ref={themeButtonRef}
-								aria-label={t['toggle theme']}
-								variant='ghost'
-								size='icon'
-								className='size-12 rounded-full'
-							>
-								{theme === 'dark' ? (
-									<Sun className='size-4' />
-								) : (
-									<Moon className='size-4' />
-								)}
-							</Button>
+						<TooltipTrigger
+							render={
+								<Button
+									onClick={toggleTheme}
+									ref={themeButtonRef}
+									aria-label={t['toggle theme']}
+									variant='ghost'
+									size='icon'
+									className='size-12 rounded-full'
+								/>
+							}
+						>
+							{theme === 'dark' ? (
+								<Sun className='size-4' />
+							) : (
+								<Moon className='size-4' />
+							)}
 						</TooltipTrigger>
 						<TooltipContent>
 							<p>{t['toggle theme']}</p>
@@ -179,23 +191,25 @@ function DockNavbar(props: {
 				</DockIcon>
 				<DockIcon>
 					<Tooltip>
-						<TooltipTrigger asChild>
-							<LanguageDropdown
-								label='languages'
-								lang={lang}
-								pathname={getPathnameWithoutLang(pathname, lang)}
-								languageSwitchUrls={languageSwitchUrls}
-							>
-								<Button
-									aria-label={t['toggle language']}
-									variant='ghost'
-									size='icon'
-									className='size-12 rounded-full'
+						<TooltipTrigger
+							render={
+								<LanguageDropdown
+									label='languages'
+									lang={lang}
+									pathname={getPathnameWithoutLang(pathname, lang)}
+									languageSwitchUrls={languageSwitchUrls}
 								>
-									<Languages className='size-4' />
-								</Button>
-							</LanguageDropdown>
-						</TooltipTrigger>
+									<Button
+										aria-label={t['toggle language']}
+										variant='ghost'
+										size='icon'
+										className='size-12 rounded-full'
+									>
+										<Languages className='size-4' />
+									</Button>
+								</LanguageDropdown>
+							}
+						/>
 						<TooltipContent>
 							<p>{t['toggle language']}</p>
 						</TooltipContent>
@@ -203,16 +217,18 @@ function DockNavbar(props: {
 				</DockIcon>
 				<DockIcon>
 					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								aria-label={t['toggle chat']}
-								variant='ghost'
-								size='icon'
-								className='size-12 rounded-full'
-								onClick={() => ($isChatBotVisible.set(!isChatBotVisible), true)}
-							>
-								<Bot className='size-4' />
-							</Button>
+						<TooltipTrigger
+							render={
+								<Button
+									aria-label={t['toggle chat']}
+									variant='ghost'
+									size='icon'
+									className='size-12 rounded-full'
+									onClick={() => ($isChatBotVisible.set(!isChatBotVisible), true)}
+								/>
+							}
+						>
+							<Bot className='size-4' />
 						</TooltipTrigger>
 						<TooltipContent>
 							<p>{t['toggle chat']}</p>
@@ -279,7 +295,7 @@ export function Navbar(props: {
 				const entry = entries[0]
 				setIsHeaderNavbarVisible(!!entry && entry.isIntersecting)
 			},
-			{ root: null, threshold: 0 }
+			{ root: null, threshold: 0 },
 		)
 
 		observer.observe(el)

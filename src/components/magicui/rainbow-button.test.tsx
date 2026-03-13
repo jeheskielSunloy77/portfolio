@@ -9,14 +9,11 @@ describe('RainbowButton', () => {
 		expect(btn).toHaveAttribute('data-slot', 'button')
 	})
 
-	test('renders as child when asChild is true', () => {
-		render(
-			<RainbowButton asChild>
-				<a href='/test'>Link</a>
-			</RainbowButton>
-		)
-		const link = screen.getByRole('link', { name: /link/i })
+	test('renders with a custom element through render', () => {
+		render(<RainbowButton render={<a href='/test' />}>Link</RainbowButton>)
+		const link = screen.getByRole('button', { name: /link/i })
 		expect(link).toBeInTheDocument()
+		expect(link).toHaveAttribute('href', '/test')
 		expect(link).toHaveAttribute('data-slot', 'button')
 	})
 

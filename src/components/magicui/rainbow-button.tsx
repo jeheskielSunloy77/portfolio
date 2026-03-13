@@ -1,10 +1,6 @@
+import { Button as ButtonPrimitive } from '@base-ui/react/button'
 import { cn } from '@/lib/utils'
-import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
-import React from 'react'
-
-interface RainbowButtonProps
-	extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 const rainbowButtonVariants = cva(
 	cn(
@@ -38,25 +34,29 @@ const rainbowButtonVariants = cva(
 )
 
 interface RainbowButtonProps
-	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-		VariantProps<typeof rainbowButtonVariants> {
-	asChild?: boolean
+	extends ButtonPrimitive.Props,
+		VariantProps<typeof rainbowButtonVariants> {}
+
+function RainbowButton({
+	className,
+	variant = 'default',
+	size = 'default',
+	render,
+	nativeButton,
+	...props
+}: RainbowButtonProps) {
+	const shouldUseNativeButton =
+		nativeButton ?? !(render && typeof render !== 'function' && render.type !== 'button')
+
+	return (
+		<ButtonPrimitive
+			data-slot='button'
+			className={cn(rainbowButtonVariants({ variant, size, className }))}
+			nativeButton={shouldUseNativeButton}
+			render={render}
+			{...props}
+		/>
+	)
 }
-
-const RainbowButton = React.forwardRef<HTMLButtonElement, RainbowButtonProps>(
-	({ className, variant, size, asChild = false, ...props }, ref) => {
-		const Comp = asChild ? Slot : 'button'
-		return (
-			<Comp
-				data-slot='button'
-				className={cn(rainbowButtonVariants({ variant, size, className }))}
-				ref={ref}
-				{...props}
-			/>
-		)
-	}
-)
-
-RainbowButton.displayName = 'RainbowButton'
 
 export { RainbowButton, rainbowButtonVariants, type RainbowButtonProps }

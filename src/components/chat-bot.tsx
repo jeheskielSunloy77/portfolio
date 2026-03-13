@@ -1,6 +1,6 @@
+import type { Language } from '@/i18n/i18n'
 import { BOT_NAME } from '@/lib/constants'
 import type { Dictionary } from '@/lib/types'
-import type { Language } from '@/i18n/i18n'
 import { cn } from '@/lib/utils'
 import { $isChatBotVisible } from '@/stores/chat-bot'
 import { useChat, type UIMessage } from '@ai-sdk/react'
@@ -29,11 +29,9 @@ function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 
 	return (
 		<Accordion
-			type='single'
-			collapsible
 			className='flex relative z-40'
-			onValueChange={(v) => setIsOpen(v === 'chat')}
-			value={isOpen ? 'chat' : ''}
+			onValueChange={(v) => setIsOpen(v.includes('chat'))}
+			value={isOpen ? ['chat'] : []}
 		>
 			<AccordionItem
 				value='chat'
@@ -88,7 +86,7 @@ type Message = UIMessage<unknown, UIDataTypes, UITools>
 interface ChatInputProps extends HTMLAttributes<HTMLFormElement> {
 	sendMessage: ReturnType<typeof useChat>['sendMessage']
 	setMessages: (
-		messages: Message[] | ((messages: Message[]) => Message[])
+		messages: Message[] | ((messages: Message[]) => Message[]),
 	) => void
 	isClearable: boolean
 	status: ChatStatus
@@ -238,14 +236,14 @@ function ChatMessage({ message, t }: ChatMessageProps) {
 		<div
 			className={cn(
 				'mb-3 flex items-center',
-				isBot ? 'justify-start' : 'justify-end'
+				isBot ? 'justify-start' : 'justify-end',
 			)}
 		>
 			{isBot && <Bot className='mr-2' />}
 			<div
 				className={cn(
 					'max-w-64 rounded border px-3 py-2',
-					isBot ? 'bg-background' : 'bg-foreground text-background'
+					isBot ? 'bg-background' : 'bg-foreground text-background',
 				)}
 			>
 				<Markdown

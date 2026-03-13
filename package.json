@@ -24,7 +24,7 @@
 		"@fontsource/inter": "^5.2.6",
 		"@google/generative-ai": "^0.24.1",
 		"@hookform/resolvers": "^5.2.1",
-		"@langchain/community": "^0.3.53",
+		"@langchain/community": "^1.1.23",
 		"@langchain/core": "^0.3.72",
 		"@langchain/google-genai": "^0.2.16",
 		"@langchain/openai": "^0.6.9",

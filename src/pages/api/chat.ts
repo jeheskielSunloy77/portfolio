@@ -18,6 +18,7 @@ import { Redis } from '@upstash/redis'
 import { createUIMessageStreamResponse } from 'ai'
 import {
 	GEMINI_API_KEY,
+	GEMINI_MODEL,
 	UPSTASH_REDIS_REST_TOKEN,
 	UPSTASH_REDIS_REST_URL,
 } from 'astro:env/server'
@@ -74,17 +75,17 @@ export async function POST({ request }: { request: Request }) {
 		})
 
 		const chatModel = new ChatGoogleGenerativeAI({
-			model: 'gemini-2.5-flash',
+			model: GEMINI_MODEL,
 			streaming: true,
 			temperature: 0,
-			apiKey: GEMINI_API_KEY!,
+			apiKey: GEMINI_API_KEY,
 			cache,
 		})
 
 		const rephraseModel = new ChatGoogleGenerativeAI({
-			model: 'gemini-2.5-flash',
+			model: GEMINI_MODEL,
 			temperature: 0,
-			apiKey: GEMINI_API_KEY!,
+			apiKey: GEMINI_API_KEY,
 			cache,
 		})
 

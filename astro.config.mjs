@@ -30,6 +30,11 @@ export default defineConfig({
         context: 'server',
         optional: false,
       }),
+      GEMINI_MODEL: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: false,
+      }),
       PINECONE_API_KEY: envField.string({
         access: 'secret',
         context: 'server',

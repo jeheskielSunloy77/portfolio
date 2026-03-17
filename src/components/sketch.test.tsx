@@ -70,7 +70,7 @@ describe('Sketch component', () => {
 
 		// ensure fetch called with expected initial page params
 		await waitFor(() => {
-			expect(fetchMock).toHaveBeenCalledWith('/api/sketches?page=0&pageSize=9')
+			expect(fetchMock).toHaveBeenCalledWith('/api/sketches?page=0&pageSize=6')
 		})
 	})
 

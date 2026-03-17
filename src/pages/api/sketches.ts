@@ -29,10 +29,10 @@ const COLLECTION = 'sketches'
 export async function GET(request: Request) {
 	const TAG = 'SketchesApiGet'
 
-	try {
-		const url = new URL(request.url)
-		const page = Math.max(0, Number(url.searchParams.get('page') ?? '0'))
-		const pageSize = Math.max(1, Number(url.searchParams.get('pageSize') ?? '9'))
+		try {
+			const url = new URL(request.url)
+			const page = Math.max(0, Number(url.searchParams.get('page') ?? '0'))
+			const pageSize = Math.max(1, Number(url.searchParams.get('pageSize') ?? '6'))
 
 		const db = await getDb()
 		const col = db.collection(COLLECTION)

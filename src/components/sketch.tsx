@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from 'react'
 import { RainbowButton } from './magicui/rainbow-button'
 
 const queryClient = new QueryClient()
+const PAGE_SIZE = 6
 
 export function Sketch(props: {
 	t: Dictionary
@@ -38,7 +39,7 @@ function SketchContent({
 		initialData,
 		queryFn: async ({ pageParam = 0 }) => {
 			const pageNum = Number(pageParam ?? 0)
-			const res = await fetch(`/api/sketches?page=${pageNum}&pageSize=9`)
+			const res = await fetch(`/api/sketches?page=${pageNum}&pageSize=${PAGE_SIZE}`)
 			if (!res.ok) throw new Error('Failed to fetch sketches')
 			return (await res.json()) as APIResponsePaginated<Sketch>
 		},
@@ -193,10 +194,10 @@ function SketchContent({
 				/>
 				{!q.isError ? (
 					<>
-						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-							{q.isLoading ? (
-								Array.from({ length: 9 }).map((_, i) => <SketchSkeleton key={i} />)
-							) : (
+							<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+								{q.isLoading ? (
+									Array.from({ length: PAGE_SIZE }).map((_, i) => <SketchSkeleton key={i} />)
+								) : (
 								<>
 									{sketches.map((sketch) => (
 										<SketchCard key={sketch._id} sketch={sketch} />

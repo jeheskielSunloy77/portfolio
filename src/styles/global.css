@@ -299,3 +299,10 @@ html {
     @apply bg-background text-foreground;
 	}
 }
+
+@layer utilities {
+  .bg-pattern {
+    background-image: radial-gradient(color-mix(in oklch, var(--foreground) 15%, transparent) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}

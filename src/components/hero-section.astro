@@ -56,7 +56,7 @@ const { t }: Props = Astro.props
 			{
 				t['{AGE} yo software engineer hailing from Indonesia 🇮🇩'].replace(
 					'{AGE}',
-					String(getAge(BIRTH_DATE))
+					String(getAge(BIRTH_DATE)),
 				)
 			}
 		</p>
@@ -80,8 +80,12 @@ const { t }: Props = Astro.props
 				<Bot className='size-5' />
 				{BOT_NAME}
 			</p>
-			<ArrowDownRight className='hidden size-5 motion-safe:animate-[bounce_1.8s_ease-in-out_infinite] sm:block' />
-			<ArrowDown className='block size-5 motion-safe:animate-[bounce_1.8s_ease-in-out_infinite] sm:hidden' />
+			<ArrowDownRight
+				className='hidden size-5 motion-safe:animate-[bounce_1.8s_ease-in-out_infinite] sm:block'
+			/>
+			<ArrowDown
+				className='block size-5 motion-safe:animate-[bounce_1.8s_ease-in-out_infinite] sm:hidden'
+			/>
 		</div>
 
 		<p class='mt-1 text-xs font-light' data-reveal='fade-up'>

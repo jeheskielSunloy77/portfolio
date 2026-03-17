@@ -37,10 +37,10 @@ const t = dictionary[lang]
 			;(() => {
 				const theme = localStorage.getItem('theme')
 				const prefersDark = window.matchMedia(
-					'(prefers-color-scheme: dark)'
+					'(prefers-color-scheme: dark)',
 				).matches
 				const prefersReducedMotion = window.matchMedia(
-					'(prefers-reduced-motion: reduce)'
+					'(prefers-reduced-motion: reduce)',
 				).matches
 				if (theme === 'dark' || (!theme && prefersDark)) {
 					document.documentElement.classList.add('dark')
@@ -49,11 +49,11 @@ const t = dictionary[lang]
 				}
 				document.documentElement.classList.toggle(
 					'motion-safe',
-					!prefersReducedMotion
+					!prefersReducedMotion,
 				)
 				document.documentElement.classList.toggle(
 					'motion-reduce',
-					prefersReducedMotion
+					prefersReducedMotion,
 				)
 			})()
 		</script>
@@ -62,7 +62,7 @@ const t = dictionary[lang]
 		<Seo {...seo} lang={lang} />
 		{articleSchema && <ArticleSchema {...articleSchema} />}
 	</head>
-	<body class='font-sans text-foreground bg-background'>
+	<body class='font-sans text-foreground bg-background bg-pattern'>
 		<Navbar
 			lang={lang}
 			pathname={Astro.url.pathname}

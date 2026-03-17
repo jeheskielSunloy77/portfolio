@@ -4,7 +4,7 @@ import type { Dictionary } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { useChat, type UIMessage } from '@ai-sdk/react'
 import { type ChatStatus, type UIDataTypes, type UITools } from 'ai'
-import { Bot, ChevronDown, Loader2, SendHorizontal, Trash } from 'lucide-react'
+import { Bot, Loader2, SendHorizontal, Trash, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useRef, useState, type HTMLAttributes } from 'react'
 import Markdown from 'react-markdown'
@@ -27,11 +27,33 @@ export function ChatBot({ t, lang }: { t: Dictionary; lang: Language }) {
 function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 	const { messages, setMessages, error, status, sendMessage } = useChat()
 	const [isOpen, setIsOpen] = useState(false)
+	const containerRef = useRef<HTMLElement>(null)
 	const sectionId = 'chat-bot-panel'
 	const contentId = 'chat-bot-content'
 
+	useEffect(() => {
+		if (!isOpen) return
+
+		function handleOutsideInteraction(event: MouseEvent | TouchEvent) {
+			const target = event.target
+			if (!(target instanceof Node)) return
+			if (containerRef.current?.contains(target)) return
+
+			setIsOpen(false)
+		}
+
+		document.addEventListener('mousedown', handleOutsideInteraction)
+		document.addEventListener('touchstart', handleOutsideInteraction)
+
+		return () => {
+			document.removeEventListener('mousedown', handleOutsideInteraction)
+			document.removeEventListener('touchstart', handleOutsideInteraction)
+		}
+	}, [isOpen])
+
 	return (
 		<motion.section
+			ref={containerRef}
 			id={sectionId}
 			initial={false}
 			animate={{
@@ -63,7 +85,7 @@ function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 						transition={{ duration: 0.18 }}
 						className='text-muted-foreground'
 					>
-						<ChevronDown className='size-4' />
+						<X className='size-4' />
 					</motion.span>
 				)}
 			</button>

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi } from 'vitest'
 
@@ -64,5 +64,27 @@ describe('ChatBot', () => {
 		expect(calledWith).toHaveProperty('role', 'user')
 		// message contains typed text in parts
 		expect(calledWith.parts?.[0]?.text).toContain('hello')
+	})
+
+	test('clicking outside closes the open chat', async () => {
+		render(
+			<div>
+				<button type='button'>Outside</button>
+				<ChatBot t={t} lang='en' />
+			</div>
+		)
+
+		await userEvent.click(screen.getByRole('button', { name: /J-assist/i }))
+		expect(
+			screen.getByText('Beep boop! Systems online — fire away, human!')
+		).toBeInTheDocument()
+
+		await userEvent.click(screen.getByRole('button', { name: 'Outside' }))
+
+		await waitFor(() => {
+			expect(
+				screen.queryByText('Beep boop! Systems online — fire away, human!')
+			).not.toBeInTheDocument()
+		})
 	})
 })

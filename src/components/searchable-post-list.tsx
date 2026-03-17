@@ -1,6 +1,7 @@
 import type { InferEntrySchema } from 'astro:content'
+import { initRevealObserver } from '@/lib/motion'
 import { Delete } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PostCard } from './post-card'
 import { Button } from './ui/button'
 import { Card } from './ui/card'
@@ -16,6 +17,7 @@ interface Props {
 
 export function SearchablePostList({ posts, placeholder }: Props) {
 	const [query, setQuery] = useState('')
+	const containerRef = useRef<HTMLDivElement>(null)
 
 	const filtered = posts.filter((post) =>
 		post.data.title?.toLowerCase().includes(query.toLowerCase())
@@ -23,9 +25,14 @@ export function SearchablePostList({ posts, placeholder }: Props) {
 
 	const resetFilter = () => setQuery('')
 
+	useEffect(() => {
+		if (!containerRef.current) return
+		initRevealObserver(containerRef.current)
+	}, [filtered])
+
 	return (
-		<div className='flex flex-col gap-12'>
-			<div className='flex items-center gap-3'>
+		<div className='flex flex-col gap-12' data-reveal-group ref={containerRef}>
+			<div className='flex items-center gap-3' data-reveal='fade-up'>
 				<Input
 					type='text'
 					placeholder={placeholder}
@@ -43,8 +50,11 @@ export function SearchablePostList({ posts, placeholder }: Props) {
 				</Button>
 			</div>
 
-			<Card className='py-4'>
-				<ul className='flex flex-col'>
+			<Card
+				className='motion-card border border-border/80 bg-card/90 py-4'
+				data-reveal='fade-up'
+			>
+				<ul className='flex flex-col' data-reveal-group>
 					{filtered.map((post, i) => (
 						<PostCard
 							key={i}

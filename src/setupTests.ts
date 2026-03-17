@@ -30,3 +30,14 @@ if (typeof Element !== 'undefined') {
 	;(Element.prototype as any).scrollIntoView =
 		(Element.prototype as any).scrollIntoView || (() => {})
 }
+
+if (typeof window !== 'undefined') {
+	;(window as any).matchMedia =
+		(window as any).matchMedia ||
+		((query: string) => ({
+			matches: false,
+			media: query,
+			addEventListener: () => {},
+			removeEventListener: () => {},
+		}))
+}

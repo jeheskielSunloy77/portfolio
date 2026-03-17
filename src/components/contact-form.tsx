@@ -77,9 +77,9 @@ export default function ContactForm({
 
 	return (
 		<>
-			<form onSubmit={onSubmit}>
+			<form onSubmit={onSubmit} data-reveal-group>
 				<div className='grid grid-cols-1 gap-2 sm:grid-cols-2'>
-					<div className='h-16'>
+					<div className='h-16' data-reveal='fade-up'>
 						<Input
 							id='name'
 							type='text'
@@ -99,7 +99,7 @@ export default function ContactForm({
 						)}
 					</div>
 
-					<div className='h-16'>
+					<div className='h-16' data-reveal='fade-up'>
 						<Input
 							id='email'
 							type='email'
@@ -119,7 +119,7 @@ export default function ContactForm({
 						)}
 					</div>
 
-					<div className='h-32 sm:col-span-2'>
+					<div className='h-32 sm:col-span-2' data-reveal='fade-up'>
 						<Textarea
 							rows={4}
 							placeholder={
@@ -144,7 +144,7 @@ export default function ContactForm({
 					</div>
 				</div>
 
-				<div className='mt-2'>
+				<div className='mt-2' data-reveal='fade-up'>
 					<Button
 						type='submit'
 						formNoValidate
@@ -160,7 +160,7 @@ export default function ContactForm({
 						{t['By submitting this form, I agree to the']}{' '}
 						<a
 							href={`/${lang}/privacy`}
-							className='hover:text-foreground hover:underline font-semibold'
+							className='motion-link hover:text-foreground hover:underline font-semibold'
 						>
 							{t['privacy policy.']}
 						</a>

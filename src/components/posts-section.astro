@@ -29,8 +29,8 @@ const { t, lang }: Props = Astro.props
 	]}
 	viewMoreHref={`/${lang}/blog`}
 >
-	<Card className='py-4'>
-		<ul class='flex flex-col'>
+	<Card className='motion-card border border-border/80 bg-card/90 py-4'>
+		<ul class='flex flex-col' data-reveal-group>
 			{
 				posts.map((post, i) => (
 					<PostCard post={{ ...post.data, id: post.id }} useSeparator={i !== 0} />

@@ -306,13 +306,19 @@ export function Navbar(props: {
 	return (
 		<>
 			{!isMobile && (
-				<header
+				<motion.header
 					id='headerNavbar'
-					className='z-50 w-full bg-background/60 backdrop-blur-2xl'
+					initial={{ opacity: 0, y: -18 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+					className='z-50 w-full border-b border-border/50 bg-background/60 backdrop-blur-2xl'
 				>
 					<div className='mx-auto max-w-3xl px-8 py-6'>
 						<nav className='flex items-center justify-between'>
-							<a href={`/${lang}`} className='hover:text-foreground hover:underline'>
+							<a
+								href={`/${lang}`}
+								className='motion-link hover:text-foreground hover:underline'
+							>
 								{t['home']}
 							</a>
 							<div className='flex items-center gap-4'>
@@ -325,11 +331,16 @@ export function Navbar(props: {
 												key={nav.label}
 												className={
 													isActive
-														? 'underline font-semibold'
-														: 'hover:text-foreground hover:underline'
+														? 'font-semibold underline'
+														: ''
 												}
 											>
-												<a href={nav.href}>{nav.label}</a>
+												<a
+													href={nav.href}
+													className='motion-link hover:text-foreground hover:underline'
+												>
+													{nav.label}
+												</a>
 											</li>
 										)
 									})}
@@ -341,7 +352,7 @@ export function Navbar(props: {
 										pathname={getPathnameWithoutLang(pathname, lang)}
 										languageSwitchUrls={languageSwitchUrls}
 									>
-										<Button size='icon' variant='ghost'>
+										<Button size='icon' variant='ghost' className='rounded-full'>
 											<Languages />
 											<span className='sr-only'>{t['toggle language']}</span>
 										</Button>
@@ -352,16 +363,16 @@ export function Navbar(props: {
 							</div>
 						</nav>
 					</div>
-				</header>
+				</motion.header>
 			)}
 			{dockNavbar && (
 				<AnimatePresence>
 					{(isMobile || !isHeaderNavbarVisible) && (
 						<motion.nav
-							initial={{ opacity: 0, y: 24 }}
-							animate={{ opacity: 1, y: 0 }}
-							exit={{ opacity: 0, y: 24 }}
-							transition={{ duration: 0.25 }}
+							initial={{ opacity: 0, y: 28, scale: 0.94 }}
+							animate={{ opacity: 1, y: 0, scale: 1 }}
+							exit={{ opacity: 0, y: 28, scale: 0.94 }}
+							transition={{ type: 'spring', stiffness: 320, damping: 26 }}
 							className='fixed bottom-4 left-1/2 -translate-x-1/2 z-50'
 						>
 							<DockNavbar

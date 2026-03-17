@@ -11,11 +11,11 @@ const { href, position = 'left', text, class: className = '' } = Astro.props
 
 <a
 	href={href}
-	class={`link flex group items-center gap-2 font-light ${className} hover:underline`}
+	class={`motion-link link flex group items-center gap-2 font-light ${className} hover:underline`}
 >
 	{
 		position === 'left' && (
-			<span class='group-hover:-translate-x-0.5 transition-transform'>
+			<span class='motion-link-icon' data-direction='left'>
 				<slot />
 			</span>
 		)
@@ -23,7 +23,7 @@ const { href, position = 'left', text, class: className = '' } = Astro.props
 	{text && <span>{text}</span>}
 	{
 		position === 'right' && (
-			<span class='group-hover:translate-x-0.5 transition-transform'>
+			<span class='motion-link-icon' data-direction='right'>
 				<slot />
 			</span>
 		)

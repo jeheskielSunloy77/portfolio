@@ -15,7 +15,10 @@ export function PostCard({ post, useSeparator }: Props) {
 	return (
 		<>
 			{useSeparator && <Separator className='my-2' />}
-			<li className='group hover:bg-muted mx-4 rounded-lg'>
+			<li
+				className='group mx-4 rounded-lg hover:bg-muted'
+				data-reveal='fade-up'
+			>
 				<a href={`/${lang}/blog/${slug}`}>
 					<div className='flex flex-col justify-between gap-4 p-6 sm:flex-row sm:items-center'>
 						<div className='min-w-0 flex-1'>

@@ -39,11 +39,22 @@ const t = dictionary[lang]
 				const prefersDark = window.matchMedia(
 					'(prefers-color-scheme: dark)'
 				).matches
+				const prefersReducedMotion = window.matchMedia(
+					'(prefers-reduced-motion: reduce)'
+				).matches
 				if (theme === 'dark' || (!theme && prefersDark)) {
 					document.documentElement.classList.add('dark')
 				} else {
 					document.documentElement.classList.remove('dark')
 				}
+				document.documentElement.classList.toggle(
+					'motion-safe',
+					!prefersReducedMotion
+				)
+				document.documentElement.classList.toggle(
+					'motion-reduce',
+					prefersReducedMotion
+				)
 			})()
 		</script>
 		<meta charset='utf-8' />
@@ -78,5 +89,10 @@ const t = dictionary[lang]
 			)
 		}
 		<Footer lang={lang} />
+		<script>
+			import { initRevealObserver } from '@/lib/motion'
+
+			initRevealObserver()
+		</script>
 	</body>
 </html>

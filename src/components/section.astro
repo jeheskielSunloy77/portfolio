@@ -14,8 +14,8 @@ export interface Props {
 const { t, id, title, description, viewMoreHref } = Astro.props
 ---
 
-<section id={id} class='space-y-8'>
-	<div class='space-y-4'>
+<section id={id} class='space-y-8' data-reveal-group>
+	<div class='space-y-4' data-reveal='fade-up'>
 		<div class='flex justify-between w-full'>
 			<h2
 				class='font-serif text-4xl tracking-wide decoration-border/75 decoration-2 flex-1 max-w-lg'
@@ -34,5 +34,7 @@ const { t, id, title, description, viewMoreHref } = Astro.props
 			{description}
 		</p>
 	</div>
-	<slot />
+	<div data-reveal='fade-up'>
+		<slot />
+	</div>
 </section>

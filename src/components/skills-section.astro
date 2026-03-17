@@ -22,10 +22,14 @@ const { t }: Props = Astro.props
 >
 	<div
 		class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-between gap-4'
+		data-reveal-group
 	>
 		{
 			featuredSkills.map((skill) => (
-				<div class='flex gap-5 p-2.5 rounded-xl border border-border/80 bg-muted/50 items-center transition-colors duration-200 hover:bg-muted'>
+				<div
+					class='flex gap-5 p-2.5 rounded-xl border border-border/80 bg-muted/50 items-center transition-colors duration-200 hover:bg-muted'
+					data-reveal='scale-in'
+				>
 					<div class={`p-3 ${skill.bgColor} rounded-lg max-w-14 w-full h-14`}>
 						<img
 							src={skill.imageUrl}

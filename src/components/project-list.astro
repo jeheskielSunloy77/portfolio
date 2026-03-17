@@ -20,10 +20,13 @@ const filteredProjects = isFeatured
 const projects = limit ? filteredProjects.slice(0, limit) : filteredProjects
 ---
 
-<section class='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+<section class='grid grid-cols-1 gap-4 sm:grid-cols-2' data-reveal-group>
 	{
 		projects.map((project) => (
-			<Card className='flex flex-col'>
+			<Card
+				className='motion-card flex flex-col border border-border/80 bg-card/90'
+				data-reveal='scale-in'
+			>
 				<CardHeader>
 					{project.image && (
 						<a href={project.href || project.image?.src} target='_blank'>
@@ -32,7 +35,7 @@ const projects = limit ? filteredProjects.slice(0, limit) : filteredProjects
 								alt={t[project.name]}
 								width={500}
 								height={300}
-								class='h-40 w-full object-cover object-top rounded-lg'
+								class='h-40 w-full rounded-lg object-cover object-top'
 							/>
 						</a>
 					)}
@@ -47,7 +50,11 @@ const projects = limit ? filteredProjects.slice(0, limit) : filteredProjects
 					{project.tags && project.tags.length > 0 && (
 						<div class='mt-2 flex flex-wrap gap-1'>
 							{project.tags.toSorted().map((tag) => (
-								<Badge key={tag} className='px-1 py-0 text-[10px]' variant='secondary'>
+								<Badge
+									key={tag}
+									className='motion-pill px-1 py-0 text-[10px]'
+									variant='secondary'
+								>
 									{tag}
 								</Badge>
 							))}
@@ -59,7 +66,7 @@ const projects = limit ? filteredProjects.slice(0, limit) : filteredProjects
 								<a href={link?.href} target='_blank'>
 									<Badge
 										key={idx}
-										className='flex gap-2 px-2 py-1 text-[10px]'
+										className='motion-pill flex gap-2 px-2 py-1 text-[10px]'
 										variant={idx === 0 ? 'default' : 'secondary'}
 									>
 										<link.icon className='size-3' />

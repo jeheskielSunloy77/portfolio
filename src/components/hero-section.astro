@@ -29,22 +29,30 @@ const { t }: Props = Astro.props
 <section
 	id='hero'
 	class='flex flex-col items-start gap-8 md:flex-row-reverse md:items-center md:justify-between'
+	data-reveal-group
+	data-reveal-stagger='100'
 >
-	<Image
-		class='rounded-lg'
-		src={photoOfMe}
-		alt={`Photo of ${NICK_NAME}`}
-		width={175}
-		height={175}
-	/>
+	<div data-reveal='scale-in'>
+		<Image
+			class='rounded-lg shadow-sm'
+			src={photoOfMe}
+			alt={`Photo of ${NICK_NAME}`}
+			width={175}
+			height={175}
+		/>
+	</div>
 	<div class='flex max-w-[320px] flex-col sm:max-w-full'>
 		<h1
 			class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2 text-balance'
+			data-reveal='fade-up'
 		>
 			{t['hi {NICK_NAME} here 👋'].replace('{NICK_NAME}', NICK_NAME)}
 		</h1>
 
-		<p class='mt-2 whitespace-nowrap text-sm font-medium sm:text-base'>
+		<p
+			class='mt-2 whitespace-nowrap text-sm font-medium sm:text-base'
+			data-reveal='fade-up'
+		>
 			{
 				t['{AGE} yo software engineer hailing from Indonesia 🇮🇩'].replace(
 					'{AGE}',
@@ -53,7 +61,10 @@ const { t }: Props = Astro.props
 			}
 		</p>
 
-		<p class='mt-4 max-w-sm text-balance text-sm sm:text-base'>
+		<p
+			class='mt-4 max-w-sm text-balance text-sm sm:text-base'
+			data-reveal='fade-up'
+		>
 			{
 				t[
 					'I turn bugs into features and coffee into code. AI wrote this tagline. I just hit enter.'
@@ -61,7 +72,7 @@ const { t }: Props = Astro.props
 			}
 		</p>
 
-		<div class='mt-6 flex items-center gap-1'>
+		<div class='mt-6 flex items-center gap-1' data-reveal='fade-up'>
 			<p
 				class='text-balance text-sm font-semibold sm:text-base flex items-center gap-1'
 			>
@@ -69,16 +80,16 @@ const { t }: Props = Astro.props
 				<Bot className='size-5' />
 				{BOT_NAME}
 			</p>
-			<ArrowDownRight className='hidden size-5 animate-bounce sm:block' />
-			<ArrowDown className='block size-5 animate-bounce sm:hidden' />
+			<ArrowDownRight className='hidden size-5 motion-safe:animate-[bounce_1.8s_ease-in-out_infinite] sm:block' />
+			<ArrowDown className='block size-5 motion-safe:animate-[bounce_1.8s_ease-in-out_infinite] sm:hidden' />
 		</div>
 
-		<p class='mt-1 text-xs font-light'>
+		<p class='mt-1 text-xs font-light' data-reveal='fade-up'>
 			{t['For escalations, please find my']}
 			<a
 				href='https://www.instagram.com/jeheskielsunloy'
 				target='_blank'
-				class='hover:text-foreground hover:underline font-semibold'
+				class='motion-link hover:text-foreground hover:underline font-semibold'
 				title='instagram'
 			>
 				&nbsp;@{NICK_NAME}&nbsp;
@@ -86,7 +97,7 @@ const { t }: Props = Astro.props
 			{t['instead.']}
 		</p>
 
-		<section class='mt-6 flex flex-wrap items-center gap-6'>
+		<section class='mt-6 flex flex-wrap items-center gap-6' data-reveal='fade-up'>
 			<ResumeButton client:idle />
 			<Socials />
 		</section>

@@ -68,6 +68,14 @@
 		'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji',
 		'Segoe UI Symbol';
 	--font-serif: 'Calistoga', ui-serif, Georgia, 'Times New Roman', Times;
+	--motion-duration-fast: 180ms;
+	--motion-duration-base: 320ms;
+	--motion-duration-slow: 560ms;
+	--motion-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+	--motion-ease-snappy: cubic-bezier(0.34, 1.56, 0.64, 1);
+	--motion-lift-distance: 6px;
+	--motion-shadow-soft: 0 16px 36px color-mix(in oklch, var(--foreground) 10%, transparent);
+	--motion-shadow-strong: 0 26px 64px color-mix(in oklch, var(--foreground) 12%, transparent);
 	--radius: 0.625rem;
 	--background: oklch(1 0 0);
 	--foreground: oklch(0.145 0 0);
@@ -164,6 +172,123 @@ html {
 ::view-transition-old(root), ::view-transition-new(root) {
     animation: none;
     mix-blend-mode: normal;
+}
+
+[data-slot='button'] {
+	transition:
+		transform var(--motion-duration-fast) var(--motion-ease-standard),
+		box-shadow var(--motion-duration-base) var(--motion-ease-standard),
+		background-color var(--motion-duration-fast) ease,
+		border-color var(--motion-duration-fast) ease,
+		color var(--motion-duration-fast) ease;
+}
+
+[data-reveal] {
+	--reveal-delay: 0ms;
+	--reveal-translate-y: 22px;
+	--reveal-scale: 1;
+	transition:
+		opacity var(--motion-duration-slow) var(--motion-ease-standard) var(--reveal-delay),
+		transform var(--motion-duration-slow) var(--motion-ease-standard) var(--reveal-delay);
+}
+
+[data-reveal='fade-in'] {
+	--reveal-translate-y: 0px;
+}
+
+[data-reveal='scale-in'] {
+	--reveal-translate-y: 14px;
+	--reveal-scale: 0.975;
+}
+
+.motion-link {
+	transition:
+		color var(--motion-duration-fast) ease,
+		opacity var(--motion-duration-fast) ease;
+}
+
+.motion-link-icon {
+	transition: transform var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+.motion-card {
+	transition:
+		border-color var(--motion-duration-base) var(--motion-ease-standard),
+		background-color var(--motion-duration-base) ease;
+}
+
+.motion-pill {
+	transition:
+		transform var(--motion-duration-fast) var(--motion-ease-standard),
+		background-color var(--motion-duration-fast) ease,
+		border-color var(--motion-duration-fast) ease;
+}
+
+.motion-social {
+	transition:
+		transform var(--motion-duration-fast) var(--motion-ease-snappy),
+		color var(--motion-duration-fast) ease,
+		opacity var(--motion-duration-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	[data-slot='button']:not(:disabled):hover {
+		transform: translate3d(0, -1px, 0);
+	}
+
+	.motion-link:hover .motion-link-icon[data-direction='left'] {
+		transform: translate3d(-3px, 0, 0);
+	}
+
+	.motion-link:hover .motion-link-icon[data-direction='right'] {
+		transform: translate3d(3px, 0, 0);
+	}
+
+	.motion-pill:hover,
+	.motion-pill:focus-visible {
+		transform: translate3d(0, -1px, 0);
+	}
+
+	.motion-social:hover,
+	.motion-social:focus-visible {
+		transform: translate3d(0, -2px, 0) scale(1.04);
+	}
+}
+
+.motion-pill:focus-visible,
+.motion-social:focus-visible {
+	outline: none;
+}
+
+.motion-safe [data-reveal]:not([data-reveal-visible='true']) {
+	opacity: 0;
+	transform: translate3d(0, var(--reveal-translate-y), 0) scale(var(--reveal-scale));
+	pointer-events: none;
+}
+
+.motion-safe [data-reveal-visible='true'] {
+	opacity: 1;
+	transform: translate3d(0, 0, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+
+	[data-reveal] {
+		opacity: 1 !important;
+		transform: none !important;
+	}
 }
 
 @layer base {

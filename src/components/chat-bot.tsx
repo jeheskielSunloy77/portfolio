@@ -312,7 +312,7 @@ function ChatMessage({ message, t }: ChatMessageProps) {
 			{isBot && <Bot className='mr-2' />}
 			<div
 				className={cn(
-					'max-w-64 rounded border px-3 py-2',
+					'max-w-64 rounded border px-3 py-2 text-xs',
 					isBot ? 'bg-background' : 'bg-foreground text-background',
 				)}
 			>

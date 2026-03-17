@@ -1,14 +1,17 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { POST } from './chat'
+import type { HumanMessage, SystemMessage } from '@langchain/core/messages'
 
-// Prevent external SDKs and networked clients from being constructed / run during tests
-vi.mock('@/lib/vector-db', () => ({
-	getVectorStore: vi.fn(),
+const streamMock = vi.fn()
+
+vi.mock('@/lib/ai-assistant-context.md?raw', () => ({
+	default: '# Test Context\n\n- Portfolio link: https://example.com',
 }))
 
 vi.mock('@langchain/google-genai', () => ({
-	ChatGoogleGenerativeAI: vi.fn().mockImplementation(() => ({})),
+	ChatGoogleGenerativeAI: vi.fn().mockImplementation(() => ({
+		stream: streamMock,
+	})),
 }))
 
 vi.mock('@langchain/community/caches/upstash_redis', () => ({
@@ -25,26 +28,20 @@ vi.mock('ai', () => ({
 		.mockImplementation(() => new Response(null, { status: 200 })),
 }))
 
-vi.mock('langchain/chains/history_aware_retriever', () => ({
-	createHistoryAwareRetriever: vi.fn().mockResolvedValue({}),
+vi.mock('@ai-sdk/langchain', () => ({
+	toUIMessageStream: vi.fn().mockImplementation((stream) => stream),
 }))
 
-vi.mock('langchain/chains/combine_documents', () => ({
-	createStuffDocumentsChain: vi.fn().mockResolvedValue({}),
-}))
-
-vi.mock('langchain/chains/retrieval', () => ({
-	createRetrievalChain: vi.fn().mockResolvedValue({
-		stream: async () =>
-			(async function* () {
-				yield { answer: 'mocked answer' }
-			})(),
-	}),
-}))
+import { POST } from './chat'
 
 describe('POST /api/chat', () => {
 	beforeEach(() => {
-		vi.resetAllMocks()
+		vi.clearAllMocks()
+		streamMock.mockResolvedValue(
+			(async function* () {
+				yield { content: 'mocked answer' }
+			})()
+		)
 	})
 
 	it('returns 400 when request.json() rejects (invalid request body)', async () => {
@@ -61,11 +58,44 @@ describe('POST /api/chat', () => {
 		expect(body).toHaveProperty('error', 'Invalid request body')
 	})
 
-	it('returns 500 with specific message when vector store initialization fails', async () => {
-		const { getVectorStore } = await import('@/lib/vector-db')
-		;(getVectorStore as ReturnType<typeof vi.fn>).mockImplementation(() =>
-			Promise.reject(new Error('db failure'))
-		)
+	it('passes the markdown context and chat history directly to the model', async () => {
+		const goodRequest = {
+			json: async () => ({
+				messages: [
+					{
+						id: '0',
+						role: 'assistant',
+						parts: [{ type: 'text', text: 'hello there' }],
+					},
+					{
+						id: '1',
+						role: 'user',
+						parts: [{ type: 'text', text: 'hello' }],
+					},
+				],
+			}),
+		} as unknown as Request
+
+		const res = await POST({ request: goodRequest })
+		expect(res).toBeInstanceOf(Response)
+		expect(res.status).toBe(200)
+		expect(streamMock).toHaveBeenCalledTimes(1)
+
+		const [inputMessages] = streamMock.mock.calls[0]
+		expect(inputMessages).toHaveLength(3)
+
+		const systemMessage = inputMessages[0] as SystemMessage
+		const historyMessage = inputMessages[1]
+		const latestMessage = inputMessages[2] as HumanMessage
+
+		expect(systemMessage.content).toContain('# Test Context')
+		expect(systemMessage.content).toContain('Portfolio link: https://example.com')
+		expect(historyMessage.content).toBe('hello there')
+		expect(latestMessage.content).toBe('hello')
+	})
+
+	it('returns 500 when model streaming fails', async () => {
+		streamMock.mockRejectedValueOnce(new Error('model failure'))
 
 		const goodRequest = {
 			json: async () => ({
@@ -83,7 +113,6 @@ describe('POST /api/chat', () => {
 		expect(res).toBeInstanceOf(Response)
 		expect(res.status).toBe(500)
 		const body = JSON.parse(await res.text())
-		// The handler should return the 'Failed to initialize vector store' message for this case
-		expect(body).toHaveProperty('error', 'Failed to initialize vector store')
+		expect(body).toHaveProperty('error', 'Failed to process the message')
 	})
 })

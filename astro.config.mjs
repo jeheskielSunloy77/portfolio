@@ -35,21 +35,6 @@ export default defineConfig({
         context: 'server',
         optional: false,
       }),
-      PINECONE_API_KEY: envField.string({
-        access: 'secret',
-        context: 'server',
-        optional: false,
-      }),
-      PINECONE_INDEX: envField.string({
-        access: 'secret',
-        context: 'server',
-        optional: false,
-      }),
-      PINECONE_NAMESPACE: envField.string({
-        access: 'secret',
-        context: 'server',
-        optional: true,
-      }),
       MONGODB_URI: envField.string({
         access: 'secret',
         context: 'server',

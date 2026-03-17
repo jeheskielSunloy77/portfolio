@@ -1,18 +1,13 @@
+import assistantContext from '@/lib/ai-assistant-context.md?raw'
 import { BOT_NAME, NICK_NAME } from '@/lib/constants'
 import { log, tryPromise } from '@/lib/utils'
-import { getVectorStore } from '@/lib/vector-db'
 import { toUIMessageStream } from '@ai-sdk/langchain'
 import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis'
 import {
 	AIMessage,
-	AIMessageChunk,
 	HumanMessage,
+	SystemMessage,
 } from '@langchain/core/messages'
-import {
-	ChatPromptTemplate,
-	MessagesPlaceholder,
-	PromptTemplate,
-} from '@langchain/core/prompts'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { Redis } from '@upstash/redis'
 import { createUIMessageStreamResponse } from 'ai'
@@ -22,9 +17,6 @@ import {
 	UPSTASH_REDIS_REST_TOKEN,
 	UPSTASH_REDIS_REST_URL,
 } from 'astro:env/server'
-import { createStuffDocumentsChain } from 'langchain/chains/combine_documents'
-import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever'
-import { createRetrievalChain } from 'langchain/chains/retrieval'
 
 const TAG = 'ChatBotApi'
 
@@ -82,19 +74,6 @@ export async function POST({ request }: { request: Request }) {
 			cache,
 		})
 
-		const rephraseModel = new ChatGoogleGenerativeAI({
-			model: GEMINI_MODEL,
-			temperature: 0,
-			apiKey: GEMINI_API_KEY,
-			cache,
-		})
-
-		const vectorStore = await tryPromise(getVectorStore())
-		if (vectorStore.error)
-			return errResponse(vectorStore.error, 'Failed to initialize vector store')
-
-		const retriever = vectorStore.data.asRetriever()
-
 		const chatHistory = messages
 			.slice(0, -1)
 			.map((msg: any) =>
@@ -103,86 +82,24 @@ export async function POST({ request }: { request: Request }) {
 					: new AIMessage(getMessageText(msg))
 			)
 
-		const rephrasePrompt = ChatPromptTemplate.fromMessages([
-			new MessagesPlaceholder('chat_history'),
-			['user', '{input}'],
-			[
-				'user',
-				'Given the above conversation history, generate a search query to look up information relevant to the current question. ' +
-					'Do not leave out any relevant keywords. ' +
-					'Only return the query and no other text.',
-			],
-		])
-
-		const historyAwareRetrievalChain = await tryPromise(
-			createHistoryAwareRetriever({
-				llm: rephraseModel,
-				retriever,
-				rephrasePrompt,
-			})
+		const prompt = new SystemMessage(
+			`You are ${BOT_NAME}, a friendly chatbot for ${NICK_NAME}'s personal developer portfolio website. ` +
+				`You are trying to convince potential employers to hire ${NICK_NAME} as a software engineer. ` +
+				"Answer only with facts from the provided portfolio context. " +
+				"If the answer is not in the context, say that you do not know. " +
+				"Reply in the same language as the user's latest message. " +
+				'Be concise, format responses in markdown, and include relevant links only when they explicitly exist in the context. format the internal links like "/<path>" no extensions needed.\n\n' +
+				`Portfolio context:\n\n${assistantContext}`
 		)
-
-		if (historyAwareRetrievalChain.error)
-			return errResponse(
-				historyAwareRetrievalChain.error,
-				'Failed to create retrieval chain'
-			)
-
-		const prompt = ChatPromptTemplate.fromMessages([
-			[
-				'system',
-				`You are ${BOT_NAME}, a friendly chatbot for ${NICK_NAME}'s personal developer portfolio website. ` +
-					`You are trying to convince potential employers to hire ${NICK_NAME} as a software engineer. ` +
-					"Be concise and only answer the user's questions based on the provided context below. " +
-					'Provide links to pages that contain relevant information about the topic from the given context. ' +
-					'Format your messages in markdown.\n\n' +
-					'Context:\n{context}',
-			],
-			new MessagesPlaceholder('chat_history'),
-			['user', '{input}'],
-		])
-
-		const combineDocsChain = await tryPromise(
-			createStuffDocumentsChain({
-				llm: chatModel,
-				prompt,
-				documentPrompt: PromptTemplate.fromTemplate(
-					'Page content:\n{page_content}'
-				),
-				documentSeparator: '\n------\n',
-			})
-		)
-
-		if (combineDocsChain.error)
-			return errResponse(combineDocsChain.error, 'Failed to create document chain')
-
-		const retrievalChain = await createRetrievalChain({
-			combineDocsChain: combineDocsChain.data,
-			retriever: historyAwareRetrievalChain.data,
-		})
 
 		const resultStream = await tryPromise(
-			retrievalChain.stream({
-				input: latestMessage,
-				chat_history: chatHistory,
-			})
+			chatModel.stream([prompt, ...chatHistory, new HumanMessage(latestMessage)])
 		)
 
 		if (resultStream.error)
 			return errResponse(resultStream.error, 'Failed to process the message')
 
-		const answerStream = new ReadableStream<AIMessageChunk>({
-			async start(controller) {
-				for await (const chunk of resultStream.data) {
-					if (chunk.answer) {
-						controller.enqueue(new AIMessageChunk({ content: chunk.answer }))
-					}
-				}
-				controller.close()
-			},
-		})
-
-		const uiStream = toUIMessageStream(answerStream)
+		const uiStream = toUIMessageStream(resultStream.data)
 
 		return createUIMessageStreamResponse({ stream: uiStream })
 	} catch (error) {

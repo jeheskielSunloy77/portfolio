@@ -6,63 +6,109 @@ import { $isChatBotVisible } from '@/stores/chat-bot'
 import { useChat, type UIMessage } from '@ai-sdk/react'
 import { useStore } from '@nanostores/react'
 import { type ChatStatus, type UIDataTypes, type UITools } from 'ai'
-import { Bot, Loader2, SendHorizontal, Trash } from 'lucide-react'
+import { Bot, ChevronDown, Loader2, SendHorizontal, Trash } from 'lucide-react'
+import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useRef, useState, type HTMLAttributes } from 'react'
 import Markdown from 'react-markdown'
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from './ui/accordion'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 
 export function ChatBot({ t, lang }: { t: Dictionary; lang: Language }) {
 	const isVisible = useStore($isChatBotVisible)
-	if (isVisible) return <Chat t={t} lang={lang} />
+
+	return (
+		<AnimatePresence>
+			{isVisible && (
+				<motion.div
+					initial={{ opacity: 0, y: 18, scale: 0.96 }}
+					animate={{ opacity: 1, y: 0, scale: 1 }}
+					exit={{ opacity: 0, y: 18, scale: 0.96 }}
+					transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+					className='fixed bottom-8 right-8 z-40'
+				>
+					<Chat t={t} lang={lang} />
+				</motion.div>
+			)}
+		</AnimatePresence>
+	)
 }
 
 function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 	const { messages, setMessages, error, status, sendMessage } = useChat()
 	const [isOpen, setIsOpen] = useState(false)
+	const panelId = 'chat-bot-panel'
 
 	return (
-		<Accordion
-			className='flex relative z-40'
-			onValueChange={(v) => setIsOpen(v.includes('chat'))}
-			value={isOpen ? ['chat'] : []}
+		<motion.section
+			layout
+			initial={false}
+			transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+			className='flex w-80 flex-col overflow-hidden rounded-md border bg-background shadow-lg'
 		>
-			<AccordionItem
-				value='chat'
-				className='fixed bottom-8 right-8 w-80 rounded-md border bg-background'
+			<button
+				type='button'
+				aria-controls={panelId}
+				aria-expanded={isOpen}
+				onClick={() => setIsOpen((value) => !value)}
+				className={cn(
+					'flex w-full items-center justify-between px-6 py-4 text-left',
+					isOpen && 'border-b',
+				)}
 			>
-				<AccordionTrigger className='border-b px-6'>
-					<ChatHeader isOpen={isOpen} t={t} />
-				</AccordionTrigger>
-				<AccordionContent className='flex max-h-96 min-h-80 flex-col p-0'>
-					<div className='flex items-center justify-between border-b px-3 py-2 text-[11px] text-muted-foreground'>
-						<span>
-							{t['Chat with']} {BOT_NAME}
-						</span>
-						<a
-							href={`/${lang}/chat`}
-							className='text-foreground/80 underline underline-offset-4 transition hover:text-foreground'
+				<ChatHeader isOpen={isOpen} t={t} />
+				<motion.span
+					animate={{ rotate: isOpen ? 180 : 0, opacity: isOpen ? 1 : 0.7 }}
+					transition={{ duration: 0.18 }}
+					className='text-muted-foreground'
+				>
+					<ChevronDown className='size-4' />
+				</motion.span>
+			</button>
+			<AnimatePresence initial={false}>
+				{isOpen && (
+					<motion.div
+						id={panelId}
+						key='chat-panel'
+						initial={{ height: 0, opacity: 0 }}
+						animate={{ height: 'auto', opacity: 1 }}
+						exit={{ height: 0, opacity: 0 }}
+						transition={{
+							height: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
+							opacity: { duration: 0.16 },
+						}}
+						className='overflow-hidden'
+					>
+						<motion.div
+							initial={{ y: 8, opacity: 0.7 }}
+							animate={{ y: 0, opacity: 1 }}
+							exit={{ y: 8, opacity: 0.7 }}
+							transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+							className='flex max-h-96 min-h-80 flex-col'
 						>
-							{t['Open full chat']}
-						</a>
-					</div>
-					<ChatMessages messages={messages} error={error} status={status} t={t} />
-					<ChatInput
-						sendMessage={sendMessage}
-						setMessages={setMessages}
-						status={status}
-						isClearable={messages.length > 0}
-						t={t}
-					/>
-				</AccordionContent>
-			</AccordionItem>
-		</Accordion>
+							<div className='flex items-center justify-between border-b px-3 py-2 text-[11px] text-muted-foreground'>
+								<span>
+									{t['Chat with']} {BOT_NAME}
+								</span>
+								<a
+									href={`/${lang}/chat`}
+									className='text-foreground/80 underline underline-offset-4 transition hover:text-foreground'
+								>
+									{t['Open full chat']}
+								</a>
+							</div>
+							<ChatMessages messages={messages} error={error} status={status} t={t} />
+							<ChatInput
+								sendMessage={sendMessage}
+								setMessages={setMessages}
+								status={status}
+								isClearable={messages.length > 0}
+								t={t}
+							/>
+						</motion.div>
+					</motion.div>
+				)}
+			</AnimatePresence>
+		</motion.section>
 	)
 }
 

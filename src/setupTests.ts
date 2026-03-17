@@ -40,4 +40,8 @@ if (typeof window !== 'undefined') {
 			addEventListener: () => {},
 			removeEventListener: () => {},
 		}))
+	Object.defineProperty(window, 'scrollTo', {
+		value: () => {},
+		writable: true,
+	})
 }

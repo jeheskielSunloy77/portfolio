@@ -15,7 +15,6 @@ export interface Props {
 	lang: Language
 	languageSwitchUrls?: Partial<Record<Language, string>>
 	chatBot?: boolean
-	gutter?: boolean
 	dockNavbar?: boolean
 }
 
@@ -25,7 +24,6 @@ const {
 	lang,
 	languageSwitchUrls,
 	chatBot = true,
-	gutter = true,
 	dockNavbar = true,
 } = Astro.props
 const t = dictionary[lang]
@@ -71,23 +69,10 @@ const t = dictionary[lang]
 			dockNavbar={dockNavbar}
 			client:load
 		/>
-		{
-			gutter ? (
-				<div class='mx-auto flex max-w-3xl flex-col px-4 sm:px-8 py-24'>
-					<main class='grow'>
-						<slot />
-					</main>
-					{chatBot && <ChatBot client:idle t={t} lang={lang} />}
-				</div>
-			) : (
-				<>
-					<main>
-						<slot />
-					</main>
-					{chatBot && <ChatBot client:idle t={t} lang={lang} />}
-				</>
-			)
-		}
+		<main>
+			<slot />
+		</main>
+		{chatBot && <ChatBot client:idle t={t} lang={lang} />}
 		<Footer lang={lang} />
 		<script>
 			import { initRevealObserver } from '@/lib/motion'

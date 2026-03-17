@@ -9,12 +9,13 @@ export interface Props {
 	description: string
 	viewMoreHref?: string
 	t: Dictionary
+	class?: string
 }
 
-const { t, id, title, description, viewMoreHref } = Astro.props
+const { t, id, title, description, viewMoreHref, class: className } = Astro.props
 ---
 
-<section id={id} class='space-y-8' data-reveal-group>
+<section id={id} class:list={['space-y-8', className]} data-reveal-group>
 	<div class='space-y-4' data-reveal='fade-up'>
 		<div class='flex justify-between w-full'>
 			<h2

@@ -12,7 +12,7 @@
 		"coverage": "vitest --coverage --run"
 	},
 	"dependencies": {
-		"@ai-sdk/langchain": "^1.0.22",
+		"@ai-sdk/google": "2.0.62",
 		"@ai-sdk/react": "^2.0.22",
 		"@astrojs/mdx": "^4.3.4",
 		"@astrojs/react": "^4.3.0",
@@ -23,9 +23,6 @@
 		"@fontsource/calistoga": "^5.2.6",
 		"@fontsource/inter": "^5.2.6",
 		"@hookform/resolvers": "^5.2.1",
-		"@langchain/community": "^0.3.53",
-		"@langchain/core": "^0.3.72",
-		"@langchain/google-genai": "^0.2.16",
 		"@nanostores/react": "^1.0.0",
 		"@splinetool/react-spline": "^4.1.0",
 		"@splinetool/runtime": "^1.12.69",
@@ -35,7 +32,6 @@
 		"@types/canvas-confetti": "^1.9.0",
 		"@types/react": "^19.1.10",
 		"@types/react-dom": "^19.1.7",
-		"@upstash/redis": "^1.35.3",
 		"ai": "^5.0.22",
 		"astro": "^5.13.2",
 		"astro-seo": "^0.8.4",

@@ -241,7 +241,7 @@ export function ChatPage({ t, lang }: ChatPageProps) {
 			transition={{ duration: 0.45, delay: 0.1 }}
 		>
 			<div className='flex min-h-[75vh] flex-col'>
-				<div ref={scrollRef} className='flex-1 overflow-y-auto px-6 py-6'>
+				<div ref={scrollRef} className='scrollbar-page flex-1 overflow-y-auto px-6 py-6'>
 					<ul className='space-y-5'>
 						{messages.map((message) => (
 							<li key={message.id}>

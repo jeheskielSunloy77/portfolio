@@ -33,71 +33,70 @@ function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 	return (
 		<motion.section
 			id={sectionId}
-			layout
 			initial={false}
-			transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-			className='flex w-80 flex-col overflow-hidden rounded-md border bg-background shadow-lg'
+			animate={{
+				width: isOpen ? 352 : 56,
+				height: isOpen ? 512 : 56,
+			}}
+			transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+			className='origin-bottom-right overflow-hidden rounded-2xl border bg-background shadow-lg'
 		>
 			<button
 				type='button'
 				aria-controls={contentId}
 				aria-expanded={isOpen}
+				aria-label={`${t['Chat with']} ${BOT_NAME}`}
 				onClick={() => setIsOpen((value) => !value)}
 				className={cn(
-					'flex w-full items-center justify-between px-6 py-4 text-left',
-					isOpen && 'border-b',
+					'flex w-full text-left transition-[padding] duration-200',
+					isOpen
+						? 'items-center justify-between border-b px-5 py-4'
+						: 'size-14 items-center justify-center px-0 py-0',
 				)}
 			>
 				<ChatHeader isOpen={isOpen} t={t} />
-				<motion.span
-					animate={{ rotate: isOpen ? 180 : 0, opacity: isOpen ? 1 : 0.7 }}
-					transition={{ duration: 0.18 }}
-					className='text-muted-foreground'
-				>
-					<ChevronDown className='size-4' />
-				</motion.span>
+				{isOpen && (
+					<motion.span
+						initial={{ opacity: 0, rotate: -90 }}
+						animate={{ rotate: 180, opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.18 }}
+						className='text-muted-foreground'
+					>
+						<ChevronDown className='size-4' />
+					</motion.span>
+				)}
 			</button>
 			<AnimatePresence initial={false}>
 				{isOpen && (
 					<motion.div
 						id={contentId}
 						key='chat-panel'
-						initial={{ height: 0, opacity: 0 }}
-						animate={{ height: 'auto', opacity: 1 }}
-						exit={{ height: 0, opacity: 0 }}
-						transition={{
-							height: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
-							opacity: { duration: 0.16 },
-						}}
-						className='overflow-hidden'
+						initial={{ opacity: 0, y: 12 }}
+						animate={{ opacity: 1, y: 0 }}
+						exit={{ opacity: 0, y: 12 }}
+						transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+						className='flex h-[calc(100%-72px)] flex-col overflow-hidden'
 					>
-						<motion.div
-							initial={{ y: 8, opacity: 0.7 }}
-							animate={{ y: 0, opacity: 1 }}
-							exit={{ y: 8, opacity: 0.7 }}
-							transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-							className='flex max-h-96 min-h-80 flex-col'
-						>
-							<div className='flex items-center justify-between border-b px-3 py-2 text-[11px] text-muted-foreground'>
-								<span>
-									{t['Chat with']} {BOT_NAME}
-								</span>
-								<a
-									href={`/${lang}/chat`}
-									className='text-foreground/80 underline underline-offset-4 transition hover:text-foreground'
-								>
-									{t['Open full chat']}
-								</a>
-							</div>
-							<ChatMessages messages={messages} error={error} status={status} t={t} />
-							<ChatInput
-								sendMessage={sendMessage}
-								setMessages={setMessages}
-								status={status}
-								isClearable={messages.length > 0}
-								t={t}
-							/>
-						</motion.div>
+						<div className='flex items-center justify-between border-b px-3 py-2 text-[11px] text-muted-foreground'>
+							<span>
+								{t['Chat with']} {BOT_NAME}
+							</span>
+							<a
+								href={`/${lang}/chat`}
+								className='text-foreground/80 underline underline-offset-4 transition hover:text-foreground'
+							>
+								{t['Open full chat']}
+							</a>
+						</div>
+						<ChatMessages messages={messages} error={error} status={status} t={t} />
+						<ChatInput
+							sendMessage={sendMessage}
+							setMessages={setMessages}
+							status={status}
+							isClearable={messages.length > 0}
+							t={t}
+						/>
 					</motion.div>
 				)}
 			</AnimatePresence>
@@ -107,16 +106,26 @@ function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 
 function ChatHeader({ isOpen, t }: { isOpen: boolean; t: Dictionary }) {
 	return (
-		<section className='flex w-full items-center justify-start gap-3'>
-			{!isOpen && <Bot className='size-5' />}
-			<div className='flex flex-col items-start'>
-				<p className='text-xs text-muted-foreground'>{t['Chat with']}</p>
-				<div className='flex items-center gap-2'>
-					<span className='size-2 rounded-full bg-emerald-500 animate-pulse' />
-					<p className='text-sm font-medium'>{BOT_NAME}</p>
-				</div>
+		<div className={cn('flex items-center', isOpen ? 'gap-3' : 'justify-center')}>
+			<div className='relative shrink-0'>
+				<Bot className='size-5' />
+				{!isOpen && (
+					<span className='absolute -right-0.5 -top-0.5 flex size-2'>
+						<span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75' />
+						<span className='relative inline-flex size-2 rounded-full border border-background bg-emerald-500' />
+					</span>
+				)}
 			</div>
-		</section>
+			{isOpen && (
+				<section className='flex w-full flex-col items-start'>
+					<p className='text-xs text-muted-foreground'>{t['Chat with']}</p>
+					<div className='flex items-center gap-2'>
+						<span className='size-2 animate-pulse rounded-full bg-emerald-500' />
+						<p className='text-sm font-medium'>{BOT_NAME}</p>
+					</div>
+				</section>
+			)}
+		</div>
 	)
 }
 
@@ -213,7 +222,7 @@ function ChatMessages({ messages, error, status, t }: ChatMessagesProps) {
 	}, [messages])
 
 	return (
-		<div className='flex-1 overflow-y-auto p-3' ref={scrollRef}>
+		<div className='scrollbar-page flex-1 overflow-y-auto p-3' ref={scrollRef}>
 			<ul>
 				{messages.map((msg) => (
 					<li key={msg.id}>
@@ -223,7 +232,7 @@ function ChatMessages({ messages, error, status, t }: ChatMessagesProps) {
 			</ul>
 
 			{!error && messages.length === 0 && (
-				<div className='mt-16 flex h-full flex-col items-center justify-center gap-2'>
+				<div className='flex h-full flex-col items-center justify-center gap-2'>
 					<Bot />
 					<p className='font-medium text-center text-sm'>
 						{t['Beep boop! Systems online — fire away, human!']}

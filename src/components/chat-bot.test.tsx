@@ -7,7 +7,7 @@ const t: any = new Proxy(
 	{},
 	{
 		get: (_t, p) => String(p),
-	}
+	},
 )
 
 // Mock the AI chat hook with controllable values
@@ -33,16 +33,16 @@ describe('ChatBot', () => {
 		render(<ChatBot t={t} lang='en' />)
 
 		// open the chat
-		await userEvent.click(screen.getByRole('button', { name: /J-assist/i }))
+		await userEvent.click(screen.getByRole('button', { name: /jassist/i }))
 
 		// Placeholder lines from component text keys should be present
 		expect(
-			await screen.findByText('Beep boop! Systems online — fire away, human!')
+			await screen.findByText('Beep boop! Systems online — fire away, human!'),
 		).toBeInTheDocument()
 		expect(
 			screen.getByText(
-				"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps)."
-			)
+				"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).",
+			),
 		).toBeInTheDocument()
 	})
 
@@ -53,7 +53,7 @@ describe('ChatBot', () => {
 		render(<ChatBot t={t} lang='en' />)
 
 		// open the chat
-		await userEvent.click(screen.getByRole('button', { name: /J-assist/i }))
+		await userEvent.click(screen.getByRole('button', { name: /jassist/i }))
 
 		const input = screen.getByPlaceholderText('Ask something...')
 		await userEvent.type(input, 'hello{Enter}')
@@ -71,19 +71,19 @@ describe('ChatBot', () => {
 			<div>
 				<button type='button'>Outside</button>
 				<ChatBot t={t} lang='en' />
-			</div>
+			</div>,
 		)
 
-		await userEvent.click(screen.getByRole('button', { name: /J-assist/i }))
+		await userEvent.click(screen.getByRole('button', { name: /jassist/i }))
 		expect(
-			screen.getByText('Beep boop! Systems online — fire away, human!')
+			screen.getByText('Beep boop! Systems online — fire away, human!'),
 		).toBeInTheDocument()
 
 		await userEvent.click(screen.getByRole('button', { name: 'Outside' }))
 
 		await waitFor(() => {
 			expect(
-				screen.queryByText('Beep boop! Systems online — fire away, human!')
+				screen.queryByText('Beep boop! Systems online — fire away, human!'),
 			).not.toBeInTheDocument()
 		})
 	})

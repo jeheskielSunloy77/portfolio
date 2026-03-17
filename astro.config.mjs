@@ -65,11 +65,6 @@ export default defineConfig({
         context: 'server',
         optional: false,
       }),
-      SMTP_RECEIVER_EMAIL: envField.string({
-        access: 'secret',
-        context: 'server',
-        optional: false,
-      }),
     },
     validateSecrets: true,
   },

@@ -1,10 +1,10 @@
+import { EMAIL } from '@/lib/constants'
 import { log } from '@/lib/utils'
 import { defineAction } from 'astro:actions'
 import {
 	SMTP_HOST,
 	SMTP_PASS,
 	SMTP_PORT,
-	SMTP_RECEIVER_EMAIL,
 	SMTP_USER,
 } from 'astro:env/server'
 import { z } from 'astro:schema'
@@ -33,7 +33,7 @@ export const server = {
 			try {
 				const payload = {
 					from: `"${name}" <${email}>`,
-					to: SMTP_RECEIVER_EMAIL,
+					to: EMAIL,
 					subject: `New Contact Form Submission from ${name}`,
 					text: message,
 					html: `<p><b>From:</b> ${name} (${email})</p>

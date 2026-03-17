@@ -114,8 +114,8 @@ export const dictionary = {
 		'Welcome to {APP_NAME}, the personal portfolio of {FULL_NAME}. Explore my projects, blog posts, and more.':
 			'Welcome to {APP_NAME}, the personal portfolio of {FULL_NAME}. Explore my projects, blog posts, and more.',
 		'hi {NICK_NAME} here 👋': 'hi {NICK_NAME} here 👋',
-		'{AGE} yo software engineer hailing from Indonesia 🇮🇩':
-			'{AGE} yo software engineer hailing from Indonesia 🇮🇩',
+		'software engineer hailing from Indonesia 🇮🇩':
+			'software engineer hailing from Indonesia 🇮🇩',
 		'I turn bugs into features and coffee into code. AI wrote this tagline. I just hit enter.':
 			'I turn bugs into features and coffee into code. AI wrote this tagline. I just hit enter.',
 		'For Q&A, raise a ticket with': 'For Q&A, raise a ticket with',
@@ -393,8 +393,8 @@ export const dictionary = {
 		'Welcome to {APP_NAME}, the personal portfolio of {FULL_NAME}. Explore my projects, blog posts, and more.':
 			'Selamat datang di {APP_NAME}, portofolio pribadi {FULL_NAME}. Jelajahi proyek-proyek, postingan blog, dan lainnya.',
 		'hi {NICK_NAME} here 👋': 'hai {NICK_NAME} di sini 👋',
-		'{AGE} yo software engineer hailing from Indonesia 🇮🇩':
-			'software engineer {AGE} tahun dari Indonesia 🇮🇩',
+		'software engineer hailing from Indonesia 🇮🇩':
+			'software engineer dari Indonesia 🇮🇩',
 		'I turn bugs into features and coffee into code. AI wrote this tagline. I just hit enter.':
 			'Aku ubah bug jadi fitur dan kopi jadi kode. AI yang nulis tagline ini, aku cuma pencet enter.',
 		'For Q&A, raise a ticket with': 'Untuk tanya jawab, ajukan tiket ke',

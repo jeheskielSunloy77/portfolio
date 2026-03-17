@@ -1,24 +1,11 @@
 ---
-import photoOfMe from '@/assets/me/me.webp'
-import { BIRTH_DATE, BOT_NAME, NICK_NAME } from '@/lib/constants'
+import { BOT_NAME, NICK_NAME } from '@/lib/constants'
 import type { Dictionary } from '@/lib/types'
-import { Image } from 'astro:assets'
 import { ArrowDown, ArrowDownRight, Bot } from 'lucide-react'
+import { HeroRobot } from './hero-robot'
 import { ResumeButton } from './hero-section.client'
 import Socials from './socials.astro'
 
-function getAge(birthDate: Date) {
-	const today = new Date()
-	let age = today.getFullYear() - birthDate.getFullYear()
-	const monthDiff = today.getMonth() - birthDate.getMonth()
-	if (
-		monthDiff < 0 ||
-		(monthDiff === 0 && today.getDate() < birthDate.getDate())
-	) {
-		age--
-	}
-	return age
-}
 export interface Props {
 	t: Dictionary
 }
@@ -28,20 +15,11 @@ const { t }: Props = Astro.props
 
 <section
 	id='hero'
-	class='mx-auto w-full max-w-3xl px-4 sm:px-8 flex flex-col items-start gap-8 md:flex-row-reverse md:items-center md:justify-between'
 	data-reveal-group
 	data-reveal-stagger='100'
+	class='mx-auto max-w-3xl px-4 sm:px-8 grid grid-cols-1 sm:grid-cols-2 items-center sm:border-b'
 >
-	<div data-reveal='scale-in'>
-		<Image
-			class='rounded-lg shadow-sm'
-			src={photoOfMe}
-			alt={`Photo of ${NICK_NAME}`}
-			width={175}
-			height={175}
-		/>
-	</div>
-	<div class='flex max-w-[320px] flex-col sm:max-w-full'>
+	<div class='flex flex-col'>
 		<h1
 			class='font-serif text-5xl tracking-wide decoration-border/75 decoration-2 text-balance'
 			data-reveal='fade-up'
@@ -53,12 +31,7 @@ const { t }: Props = Astro.props
 			class='mt-2 whitespace-nowrap text-sm font-medium sm:text-base'
 			data-reveal='fade-up'
 		>
-			{
-				t['{AGE} yo software engineer hailing from Indonesia 🇮🇩'].replace(
-					'{AGE}',
-					String(getAge(BIRTH_DATE)),
-				)
-			}
+			{t['software engineer hailing from Indonesia 🇮🇩']}
 		</p>
 
 		<p
@@ -105,5 +78,9 @@ const { t }: Props = Astro.props
 			<ResumeButton client:idle />
 			<Socials />
 		</section>
+	</div>
+
+	<div data-reveal='scale-in' class='sm:block hidden'>
+		<HeroRobot client:load />
 	</div>
 </section>

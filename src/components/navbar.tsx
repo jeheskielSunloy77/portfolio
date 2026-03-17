@@ -225,7 +225,7 @@ export function Navbar(props: {
 					initial={{ opacity: 0, y: -18 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-					className='z-50 w-full border-b border-border/50 bg-background/60 backdrop-blur-2xl'
+					className='z-50 w-full bg-background/60 backdrop-blur-2xl'
 				>
 					<div className='mx-auto max-w-3xl px-8 py-6'>
 						<nav className='flex items-center justify-between'>

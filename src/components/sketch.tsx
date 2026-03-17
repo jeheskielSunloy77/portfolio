@@ -65,7 +65,7 @@ function SketchContent({
 					}
 				})
 			},
-			{ root: null, rootMargin: '200px' }
+			{ root: null, rootMargin: '200px' },
 		)
 		observer.observe(el)
 		return () => observer.disconnect()
@@ -85,7 +85,7 @@ function SketchContent({
 	}
 
 	const createSketchMutationFn = async (
-		payload: CreateSketchPayload
+		payload: CreateSketchPayload,
 	): Promise<CreatedSketch> => {
 		const res = await fetch('/api/sketches', {
 			method: 'POST',
@@ -159,7 +159,7 @@ function SketchContent({
 		onSuccess: (
 			data: CreatedSketch,
 			_variables: CreateSketchPayload,
-			context: any
+			context: any,
 		) => {
 			// replace optimistic item with server response
 			qc.setQueryData(queryKey, (old: any) => {
@@ -167,7 +167,7 @@ function SketchContent({
 				const newPages = old.pages.map((p: any, i: number) => {
 					if (i !== 0) return p
 					const dataArr = (p.data ?? []).map((item: any) =>
-						item._id === context?.optimisticSketch?._id ? data : item
+						item._id === context?.optimisticSketch?._id ? data : item,
 					)
 					return { ...p, data: dataArr }
 				})
@@ -235,7 +235,7 @@ function SketchContent({
 
 function SketchCard({ sketch }: { sketch: Sketch }) {
 	return (
-		<article className='rounded-lg border border-border p-2'>
+		<article className='rounded-lg border bg-background p-2'>
 			<div
 				dangerouslySetInnerHTML={{ __html: sketch.svg }}
 				className='aspect-square bg-muted-foreground/25 mb-2 dark:bg-secondary-foreground/75 rounded-lg overflow-hidden'
@@ -250,7 +250,7 @@ function SketchCard({ sketch }: { sketch: Sketch }) {
 
 function SketchSkeleton() {
 	return (
-		<article className='rounded-lg border border-border p-2 space-y-2 animate-pulse'>
+		<article className='rounded-lg border bg-background p-2 space-y-2 animate-pulse'>
 			<div className='aspect-square bg-muted-foreground/10 dark:bg-secondary-foreground/20 rounded-lg overflow-hidden' />
 			<div>
 				<div className='h-3 bg-muted rounded w-3/4 mb-2' />
@@ -271,7 +271,7 @@ function Header({
 	isSaving?: boolean
 }) {
 	return (
-		<div className='flex items-center justify-between bg-muted/30 px-4 py-2 rounded-lg'>
+		<div className='flex items-center justify-between border bg-background px-4 py-2 rounded-lg'>
 			<div className='text-sm text-muted-foreground'>
 				{t['canvas of chaos, gallery of giggles. 🎨😂']}
 			</div>

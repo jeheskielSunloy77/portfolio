@@ -15,11 +15,7 @@ import {
 	LANGUAGES,
 	type Language,
 } from '@/i18n/i18n'
-import { $isChatBotVisible } from '@/stores/chat-bot'
-import { useStore } from '@nanostores/react'
 import {
-	Bot,
-	BotOff,
 	CalendarIcon,
 	HomeIcon,
 	Languages,
@@ -34,7 +30,6 @@ import { useEffect, useState, type ReactElement, type ReactNode } from 'react'
 
 import { Dock, DockIcon } from '@/components/magicui/dock'
 import { buttonVariants } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import {
 	Tooltip,
 	TooltipContent,
@@ -43,22 +38,6 @@ import {
 } from '@/components/ui/tooltip'
 import type { Dictionary, LocalizedString } from '@/lib/types'
 import { cn } from '@/lib/utils'
-
-function ChatToggle() {
-	const isVisible = useStore($isChatBotVisible)
-
-	function toggle() {
-		$isChatBotVisible.set(!isVisible)
-	}
-	if (isVisible) return
-
-	return (
-		<Button size='icon' variant='ghost' onClick={toggle}>
-			{isVisible ? <Bot className='size-5' /> : <BotOff className='size-5' />}
-			<span className='sr-only'>Chat Toggle</span>
-		</Button>
-	)
-}
 
 function ThemeToggle() {
 	const { theme, toggle, buttonRef } = useTheme()
@@ -84,7 +63,7 @@ function LanguageDropdown(props: {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger render={props.children as ReactElement} />
-			<DropdownMenuContent>
+			<DropdownMenuContent className='min-w-44'>
 				<DropdownMenuGroup>
 					<DropdownMenuLabel>{props.label}</DropdownMenuLabel>
 					<DropdownMenuSeparator />
@@ -109,14 +88,9 @@ function LanguageDropdown(props: {
 function DockNavbar(props: {
 	lang: Language
 	pathname: string
-	languageSwitchUrls?: Partial<Record<Language, string>>
 	t: Dictionary
 }) {
-	const { t, lang, pathname, languageSwitchUrls } = props
-
-	const { theme, toggle: toggleTheme, buttonRef: themeButtonRef } = useTheme()
-
-	const isChatBotVisible = useStore($isChatBotVisible)
+	const { t, lang, pathname } = props
 
 	const navItems = [
 		{ label: t['home'], href: `/${lang}`, icon: HomeIcon },
@@ -125,9 +99,21 @@ function DockNavbar(props: {
 			href: `/${lang}/projects`,
 			icon: CalendarIcon,
 		},
-		{ label: t['blog'], href: `/${lang}/blog`, icon: PenLineIcon },
-		{ label: t['contact'], href: `/${lang}/contact`, icon: MailIcon },
-		{ label: t['visitors'], href: `/${lang}/visitors`, icon: UsersIcon },
+		{
+			label: t['blog'],
+			href: `/${lang}/blog`,
+			icon: PenLineIcon,
+		},
+		{
+			label: t['contact'],
+			href: `/${lang}/contact`,
+			icon: MailIcon,
+		},
+		{
+			label: t['visitors'],
+			href: `/${lang}/visitors`,
+			icon: UsersIcon,
+		},
 	]
 
 	return (
@@ -163,78 +149,6 @@ function DockNavbar(props: {
 						</DockIcon>
 					)
 				})}
-				<Separator orientation='vertical' className='h-full' />
-				<DockIcon>
-					<Tooltip>
-						<TooltipTrigger
-							render={
-								<Button
-									onClick={toggleTheme}
-									ref={themeButtonRef}
-									aria-label={t['toggle theme']}
-									variant='ghost'
-									size='icon'
-									className='size-12 rounded-full'
-								/>
-							}
-						>
-							{theme === 'dark' ? (
-								<Sun className='size-4' />
-							) : (
-								<Moon className='size-4' />
-							)}
-						</TooltipTrigger>
-						<TooltipContent>
-							<p>{t['toggle theme']}</p>
-						</TooltipContent>
-					</Tooltip>
-				</DockIcon>
-				<DockIcon>
-					<Tooltip>
-						<TooltipTrigger
-							render={
-								<LanguageDropdown
-									label='languages'
-									lang={lang}
-									pathname={getPathnameWithoutLang(pathname, lang)}
-									languageSwitchUrls={languageSwitchUrls}
-								>
-									<Button
-										aria-label={t['toggle language']}
-										variant='ghost'
-										size='icon'
-										className='size-12 rounded-full'
-									>
-										<Languages className='size-4' />
-									</Button>
-								</LanguageDropdown>
-							}
-						/>
-						<TooltipContent>
-							<p>{t['toggle language']}</p>
-						</TooltipContent>
-					</Tooltip>
-				</DockIcon>
-				<DockIcon>
-					<Tooltip>
-						<TooltipTrigger
-							render={
-								<Button
-									aria-label={t['toggle chat']}
-									variant='ghost'
-									size='icon'
-									className='size-12 rounded-full'
-									onClick={() => ($isChatBotVisible.set(!isChatBotVisible), true)}
-								/>
-							}
-						>
-							<Bot className='size-4' />
-						</TooltipTrigger>
-						<TooltipContent>
-							<p>{t['toggle chat']}</p>
-						</TooltipContent>
-					</Tooltip>
-				</DockIcon>
 			</Dock>
 		</TooltipProvider>
 	)
@@ -329,11 +243,7 @@ export function Navbar(props: {
 										return (
 											<li
 												key={nav.label}
-												className={
-													isActive
-														? 'font-semibold underline'
-														: ''
-												}
+												className={isActive ? 'font-semibold underline' : ''}
 											>
 												<a
 													href={nav.href}
@@ -352,12 +262,11 @@ export function Navbar(props: {
 										pathname={getPathnameWithoutLang(pathname, lang)}
 										languageSwitchUrls={languageSwitchUrls}
 									>
-										<Button size='icon' variant='ghost' className='rounded-full'>
+										<Button size='icon' variant='ghost'>
 											<Languages />
 											<span className='sr-only'>{t['toggle language']}</span>
 										</Button>
 									</LanguageDropdown>
-									<ChatToggle />
 									<ThemeToggle />
 								</div>
 							</div>
@@ -375,12 +284,7 @@ export function Navbar(props: {
 							transition={{ type: 'spring', stiffness: 320, damping: 26 }}
 							className='fixed bottom-4 left-1/2 -translate-x-1/2 z-50'
 						>
-							<DockNavbar
-								lang={lang}
-								pathname={pathname}
-								languageSwitchUrls={languageSwitchUrls}
-								t={t}
-							/>
+							<DockNavbar lang={lang} pathname={pathname} t={t} />
 						</motion.nav>
 					)}
 				</AnimatePresence>

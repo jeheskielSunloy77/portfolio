@@ -15,7 +15,7 @@ export function ResumeButton() {
 				Resume
 				<FileDownIcon />
 			</DropdownMenuTrigger>
-			<DropdownMenuContent>
+			<DropdownMenuContent className='min-w-44'>
 				{LANGUAGES.map((language) => (
 					<DropdownMenuItem
 						key={language}

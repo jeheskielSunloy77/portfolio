@@ -19,11 +19,6 @@ vi.mock('@/hooks/use-theme', () => ({
 	}),
 }))
 
-// Mock nanostores/react useStore for chat visibility
-vi.mock('@nanostores/react', () => ({
-	useStore: () => false,
-}))
-
 vi.mock('@/components/ui/dropdown-menu', () => ({
 	DropdownMenu: ({ children }: any) => <>{children}</>,
 	DropdownMenuTrigger: ({ children, render }: any) => (

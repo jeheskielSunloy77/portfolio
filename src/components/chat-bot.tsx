@@ -2,9 +2,7 @@ import type { Language } from '@/i18n/i18n'
 import { BOT_NAME } from '@/lib/constants'
 import type { Dictionary } from '@/lib/types'
 import { cn } from '@/lib/utils'
-import { $isChatBotVisible } from '@/stores/chat-bot'
 import { useChat, type UIMessage } from '@ai-sdk/react'
-import { useStore } from '@nanostores/react'
 import { type ChatStatus, type UIDataTypes, type UITools } from 'ai'
 import { Bot, ChevronDown, Loader2, SendHorizontal, Trash } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
@@ -14,32 +12,27 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 
 export function ChatBot({ t, lang }: { t: Dictionary; lang: Language }) {
-	const isVisible = useStore($isChatBotVisible)
-
 	return (
-		<AnimatePresence>
-			{isVisible && (
-				<motion.div
-					initial={{ opacity: 0, y: 18, scale: 0.96 }}
-					animate={{ opacity: 1, y: 0, scale: 1 }}
-					exit={{ opacity: 0, y: 18, scale: 0.96 }}
-					transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-					className='fixed bottom-8 right-8 z-40'
-				>
-					<Chat t={t} lang={lang} />
-				</motion.div>
-			)}
-		</AnimatePresence>
+		<motion.div
+			initial={{ opacity: 0, y: 18, scale: 0.96 }}
+			animate={{ opacity: 1, y: 0, scale: 1 }}
+			transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+			className='fixed bottom-8 right-8 z-40'
+		>
+			<Chat t={t} lang={lang} />
+		</motion.div>
 	)
 }
 
 function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 	const { messages, setMessages, error, status, sendMessage } = useChat()
 	const [isOpen, setIsOpen] = useState(false)
-	const panelId = 'chat-bot-panel'
+	const sectionId = 'chat-bot-panel'
+	const contentId = 'chat-bot-content'
 
 	return (
 		<motion.section
+			id={sectionId}
 			layout
 			initial={false}
 			transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
@@ -47,7 +40,7 @@ function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 		>
 			<button
 				type='button'
-				aria-controls={panelId}
+				aria-controls={contentId}
 				aria-expanded={isOpen}
 				onClick={() => setIsOpen((value) => !value)}
 				className={cn(
@@ -67,7 +60,7 @@ function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 			<AnimatePresence initial={false}>
 				{isOpen && (
 					<motion.div
-						id={panelId}
+						id={contentId}
 						key='chat-panel'
 						initial={{ height: 0, opacity: 0 }}
 						animate={{ height: 'auto', opacity: 1 }}

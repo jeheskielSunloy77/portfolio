@@ -10,11 +10,6 @@ const t: any = new Proxy(
 	}
 )
 
-// Mock nanostores useStore to control visibility
-vi.mock('@nanostores/react', () => ({
-	useStore: () => true,
-}))
-
 // Mock the AI chat hook with controllable values
 const sendMessageMock = vi.fn()
 vi.mock('@ai-sdk/react', () => ({

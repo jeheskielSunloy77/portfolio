@@ -8,6 +8,7 @@ import ArticleSchema from '@/components/article-schema.astro'
 import { type Language } from '@/i18n/i18n'
 import { Navbar } from '@/components/navbar'
 import { dictionary } from '@/i18n/dictionary'
+import { BackgroundParticles } from '@/components/background-particles'
 
 export interface Props {
 	seo: Omit<ComponentProps<typeof Seo>, 'lang'>
@@ -60,7 +61,8 @@ const t = dictionary[lang]
 		<Seo {...seo} lang={lang} />
 		{articleSchema && <ArticleSchema {...articleSchema} />}
 	</head>
-	<body class='font-sans text-foreground bg-background bg-pattern'>
+	<body class='font-sans text-foreground bg-background'>
+		<BackgroundParticles client:load />
 		<Navbar
 			lang={lang}
 			pathname={Astro.url.pathname}

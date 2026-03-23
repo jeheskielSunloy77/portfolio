@@ -44,7 +44,7 @@ describe('ResumeButton', () => {
 		expect(idLink).toBeInTheDocument()
 
 		// hrefs should point to the expected resume assets
-		expect(enLink.getAttribute('href')).toBe('/resume-en.pdf')
-		expect(idLink.getAttribute('href')).toBe('/resume-id.pdf')
+		expect(enLink.getAttribute('href')).toBe('/resume/en')
+		expect(idLink.getAttribute('href')).toBe('/resume/id')
 	})
 })

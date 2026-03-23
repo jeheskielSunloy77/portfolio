@@ -82,6 +82,9 @@ export default defineConfig({
       },
     }),
   ],
-
+  redirects: {
+    "resume/en": "https://drive.google.com/uc?export=download&id=17wnmxr6lTSdWMYS4YtYdU9i_w23IEqf7",
+    "resume/id": "https://drive.google.com/uc?export=download&id=1KGXAMT65Ir0-i_PFdlHJIlap5mcjlJnP",
+  },
   adapter: vercel(),
 });

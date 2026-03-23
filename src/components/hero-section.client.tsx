@@ -21,7 +21,7 @@ export function ResumeButton() {
 						key={language}
 						render={
 							<a
-								href={`/resume-${language}.pdf`}
+								href={`/resume/${language}`}
 								target='_blank'
 								rel='noopener noreferrer'
 							/>

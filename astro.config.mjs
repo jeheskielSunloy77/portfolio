@@ -5,7 +5,7 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig, envField } from 'astro/config';
+import { defineConfig, envField, fontProviders } from 'astro/config';
 import { loadEnv } from 'vite';
 // import "./src/env";
 
@@ -13,10 +13,30 @@ const env = loadEnv(process.env.NODE_ENV ?? 'development', process.cwd(), "");
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server',
-  vite: {
-    plugins: [tailwindcss()],
-  },
+	output: 'server',
+	fonts: [
+		{
+			provider: fontProviders.fontsource(),
+			name: 'Inter',
+			cssVariable: '--font-inter',
+			weights: [400, 500, 600, 700],
+			styles: ['normal'],
+			subsets: ['latin'],
+			display: 'swap',
+		},
+		{
+			provider: fontProviders.fontsource(),
+			name: 'Calistoga',
+			cssVariable: '--font-calistoga',
+			weights: [400],
+			styles: ['normal'],
+			subsets: ['latin'],
+			display: 'swap',
+		},
+	],
+	vite: {
+		plugins: [tailwindcss()],
+	},
   env: {
     schema: {
       APP_URL: envField.string({

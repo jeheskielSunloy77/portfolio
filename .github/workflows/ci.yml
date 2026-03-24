@@ -11,6 +11,7 @@ permissions:
 env:
  APP_URL: ${{ secrets.APP_URL != '' && secrets.APP_URL || 'https://example.com' }}
  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY != '' && secrets.GEMINI_API_KEY || 'placeholder-gemini-key' }}
+ GEMINI_MODEL: ${{ secrets.GEMINI_MODEL != '' && secrets.GEMINI_MODEL || 'placeholder-gemini-model' }}
  MONGODB_URI: ${{ secrets.MONGODB_URI != '' && secrets.MONGODB_URI || 'mongodb://localhost:27017/test' }}
  MONGODB_DB: ${{ secrets.MONGODB_DB != '' && secrets.MONGODB_DB || 'portfolio_ci' }}
  SMTP_HOST: ${{ secrets.SMTP_HOST != '' && secrets.SMTP_HOST || 'smtp.example.com' }}

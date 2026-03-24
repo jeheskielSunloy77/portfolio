@@ -27,3 +27,6 @@ pnpm-debug.log*
 coverage/
 
 .ignore/
+
+.worktrees/*
+!.worktrees/.gitkeep

@@ -17,10 +17,9 @@ export interface Experience {
 	start?: string
 	end?: string
 	subtitle?: string
-	description?: string
 	list?: {
 		isMarkdown?: boolean
-		content: string
+		content: LocalizedString
 	}[]
 	links?: Link[]
 }

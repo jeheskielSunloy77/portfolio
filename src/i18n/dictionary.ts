@@ -176,16 +176,23 @@ export const dictionary = {
 		'Working as a software engineer, building and maintaining mobile and web applications.':
 			'Working as a software engineer, building and maintaining mobile and web applications.',
 		'A part of the [digipémad](https://digipemad.com) team, a child company of PéMad that focuses on software development products and services.':
-			'A part of the [digipémad](https://digipemad.com) team, a child company of PéMad that focuses on software development products and services.',
-		'Collaborating with cross-functional teams to deliver high-quality software solutions.':
-			'Collaborating with cross-functional teams to deliver high-quality software solutions.',
-		'Internship program by Refactory': 'Internship program by Refactory',
-		'Intensive 7-week program focused on full-stack web development.':
-			'Intensive 7-week program focused on full-stack web development.',
-		'Learned modern web technologies including React, Node.js, and Golang.':
-			'Learned modern web technologies including React, Node.js, and Golang.',
-		'Paired with experienced professionals to enhance my skills.':
-			'Paired with experienced professionals to enhance my skills.',
+		'A part of the [digipemad](https://digipemad.com) team, a child company of PéMad that focuses on software development products and services.',
+		"Rewrote the company’s project management system using Laravel, improving maintainability and scalability.":
+		"Rewrote the company’s project management system using Laravel, improving maintainability and scalability.",
+		'Led development of a Client Lifecycle & Operations platform supporting core business processes.':
+		'Led development of a Client Lifecycle & Operations platform supporting core business processes.',
+		'Contributed to web and mobile projects, including building the ERM mobile app with React Native.':
+		'Contributed to web and mobile projects, including building the ERM mobile app with React Native.',
+		'Mentored closely by an experienced senior engineer, accelerating technical and professional growth.':
+			'Mentored closely by an experienced senior engineer, accelerating technical and professional growth.',
+		'Designed and built a full-stack HR application for PT Indodev Niaga Internet using React.js.':
+			'Designed and built a full-stack HR application for PT Indodev Niaga Internet using React.js.',
+		'Contributed to 4 client projects in total, developing full-stack solutions using TypeScript and Go.':
+			'Contributed to 4 client projects in total, developing full-stack solutions using TypeScript and Go.',
+		'Developed web-based games and interactive websites for client events.':
+			'Developed web-based games and interactive websites for client events.',
+		'Collaborated with clients to deliver interactive digital experiences on a near-monthly basis':
+			'Collaborated with clients to deliver interactive digital experiences on a near-monthly basis',
 		'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase':
 			'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase',
 		'Focused on algorithms, web development, and software engineering principles.':
@@ -457,15 +464,22 @@ export const dictionary = {
 			'Bekerja sebagai insinyur perangkat lunak, membangun dan memelihara aplikasi seluler dan web.',
 		'A part of the [digipémad](https://digipemad.com) team, a child company of PéMad that focuses on software development products and services.':
 			'Bagian dari tim [digipémad](https://digipemad.com), anak perusahaan PéMad yang berfokus pada produk dan layanan pengembangan perangkat lunak.',
-		'Collaborating with cross-functional teams to deliver high-quality software solutions.':
-			'Berkolaborasi dengan tim lintas fungsi untuk memberikan solusi perangkat lunak berkualitas tinggi.',
-		'Internship program by Refactory': 'Program magang oleh Refactory',
-		'Intensive 7-week program focused on full-stack web development.':
-			'Program intensif 7 minggu yang berfokus pada pengembangan web full-stack.',
-		'Learned modern web technologies including React, Node.js, and Golang.':
-			'Mempelajari teknologi web modern termasuk React, Node.js, dan Golang.',
-		'Paired with experienced professionals to enhance my skills.':
-			'Berpasangan dengan para profesional berpengalaman untuk meningkatkan keterampilan saya.',
+		"Rewrote the company’s project management system using Laravel, improving maintainability and scalability.":
+			'Membangun ulang sistem manajemen proyek dengan Laravel guna meningkatkan skalabilitas dan pemeliharaan.',
+		'Led development of a Client Lifecycle & Operations platform supporting core business processes.':
+			'Memimpin pengembangan platform Client Lifecycle & Operations guna mendukung proses perusahaan.',
+		'Contributed to web and mobile projects, including building the ERM mobile app with React Native.':
+			'Berkontribusi pada proyek web dan mobile, termasuk membangun aplikasi mobile ERM dengan React Native.',
+		'Mentored closely by an experienced senior engineer, accelerating technical and professional growth.':
+			'Dibimbing langsung oleh engineer senior, mempercepat pertumbuhan aspek teknis maupun profesional saya.',
+		'Designed and built a full-stack HR application for PT Indodev Niaga Internet using React.js.':
+			'Merancang dan membangun aplikasi HR full-stack untuk PT Indodev Niaga Internet menggunakan React.js.',
+		'Contributed to 4 client projects in total, developing full-stack solutions using TypeScript and Go.':
+			'Berkontribusi dalam total 4 proyek klien, mengembangkan solusi full-stack memakai TypeScript dan Go.',
+		'Developed web-based games and interactive websites for client events.':
+			'Mengembangkan game berbasis web dan situs interaktif untuk berbagai acara atau event klien.',
+		'Collaborated with clients to deliver interactive digital experiences on a near-monthly basis':
+			'Berkolaborasi dengan klien dalam menghadirkan pengalaman digital interaktif secara rutin setiap bulannya',
 		'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase':
 			'Pengalaman magang pertama saya, salah satu proyek yang saya lakukan selama magang adalah membangun backend untuk situs web perusahaan menggunakan Node.js dan Firebase',
 		'Focused on algorithms, web development, and software engineering principles.':

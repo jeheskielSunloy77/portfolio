@@ -103,25 +103,17 @@ function Timeline({
 										<ul className='ml-4 list-outside list-disc'>
 											{exp.list.map((l, i) => (
 												<li key={i} className='prose pr-8 text-sm dark:prose-invert'>
-													{l.isMarkdown ? <Markdown>{l.content}</Markdown> : l.content}
+													{l.isMarkdown ? <Markdown>{t[l.content]}</Markdown> : t[l.content]}
 												</li>
 											))}
 										</ul>
-									)}
-									{exp.description && (
-										<p className='prose pr-8 text-sm dark:prose-invert'>
-											{exp.description}
-										</p>
 									)}
 								</div>
 								{!!exp.links?.length && (
 									<div className='mt-2 flex flex-row flex-wrap items-start gap-2'>
 										{exp.links.map((link, i) => (
 											<a href={link.href} key={i}>
-												<Badge
-													title={link.name}
-													className='motion-pill flex gap-2'
-												>
+												<Badge title={link.name} className='motion-pill flex gap-2'>
 													<link.icon aria-hidden='true' className='size-3' />
 													{link.name}
 												</Badge>

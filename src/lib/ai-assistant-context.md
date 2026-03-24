@@ -20,14 +20,23 @@ Jay is a software engineer focused on web and mobile development. His core stack
 
 - Duration: Mar 2024 to Present
 - Builds and maintains mobile and web applications.
-- Works as part of the digipemad team, which focuses on software development products and services.
-- Collaborates with cross-functional teams to deliver software solutions.
+- Rewrote the company’s project management system using Laravel, improving maintainability and scalability.
+- Led development of a Client Lifecycle & Operations platform supporting core business processes.
+- Contributed to web and mobile projects, including building the ERM mobile app with React Native.
 
 ### Software Engineer Intern at Refactory
 
 - Duration: Jul 2022 to Sep 2022
 - Completed an intensive 7-week full-stack web development program.
-- Worked with React, Node.js, and Go on a real-world project with mentorship.
+- Mentored closely by an experienced senior engineer, accelerating technical and professional growth.
+- Designed and built a full-stack HR application for PT Indodev Niaga Internet using React.js.
+- Contributed to 4 client projects in total, developing full-stack solutions using TypeScript and Go.
+
+### Freelance Developer, The Blue Pocket Services
+
+- Duration: Feb 2025 to Present
+- Developed web-based games and interactive websites for client events.
+- Collaborated with clients to deliver interactive digital experiences on a near-monthly basis
 
 ### Developer Intern at PT. KreasiX, Salatiga
 

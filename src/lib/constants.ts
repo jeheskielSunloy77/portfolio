@@ -1,8 +1,9 @@
+import kreasixLogo from '@/assets/companies/kreasix.jpeg'
+import pemadLogo from '@/assets/companies/pemad.svg'
+import refactoryLogo from '@/assets/companies/refactory.jpg'
+import tbpLogo from '@/assets/companies/tbp.webp'
 import education1 from '@/assets/me/education1.svg'
 import education2 from '@/assets/me/education2.webp'
-import work1 from '@/assets/me/work1.jpeg'
-import work2 from '@/assets/me/work2.jpg'
-import work3 from '@/assets/me/work3.svg'
 
 import skillAwsDark from '@/assets/skills/aws-dark.svg'
 import skillAws from '@/assets/skills/aws.svg'
@@ -65,63 +66,50 @@ export const CAREERS: Experience[] = [
 		name: 'PéMad International Transearch',
 		href: 'https://pemad.or.id',
 		title: 'Software Engineer',
-		logo: work3.src,
+		logo: pemadLogo.src,
 		start: 'Mar 2024',
 		list: [
-			{
-				content:
-					t[
-						'Working as a software engineer, building and maintaining mobile and web applications.'
-					],
-			},
-			{
-				content:
-					t[
-						'A part of the [digipémad](https://digipemad.com) team, a child company of PéMad that focuses on software development products and services.'
-					],
-				isMarkdown: true,
-			},
-			{
-				content:
-					t[
-						'Collaborating with cross-functional teams to deliver high-quality software solutions.'
-					],
-			},
+			{ content: "Rewrote the company’s project management system using Laravel, improving maintainability and scalability."},
+			{ content: 'Led development of a Client Lifecycle & Operations platform supporting core business processes.' },
+			{ content: 'Contributed to web and mobile projects, including building the ERM mobile app with React Native.' },
+		],
+	},
+	{
+		name: 'The Blue Pocket Services',
+		href: 'https://thebluepocket.com.sg/',
+		title: 'Freelance Developer',
+		logo: tbpLogo.src,
+		start: 'Feb 2025',
+		list: [
+			{ content: 'Developed web-based games and interactive websites for client events.' },
+			{ content: 'Collaborated with clients to deliver interactive digital experiences on a near-monthly basis' },
 		],
 	},
 	{
 		name: 'Refactory Internship',
 		href: 'https://refactory.id',
 		title: 'Software Engineer Intern',
-		logo: work2.src,
+		logo: refactoryLogo.src,
 		start: 'Jul 2022',
-		end: 'Sep 2022',
+		end: 'Oct 2022',
 		list: [
-			{ content: t['Internship program by Refactory'] },
-			{
-				content:
-					t['Intensive 7-week program focused on full-stack web development.'],
-			},
-			{
-				content:
-					t['Learned modern web technologies including React, Node.js, and Golang.'],
-			},
-			{
-				content: t['Paired with experienced professionals to enhance my skills.'],
-			},
+			{ content: 'Mentored closely by an experienced senior engineer, accelerating technical and professional growth.' },
+			{ content: 'Designed and built a full-stack HR application for PT Indodev Niaga Internet using React.js.' },
+			{ content: 'Contributed to 4 client projects in total, developing full-stack solutions using TypeScript and Go.' },
 		],
 	},
 	{
 		name: 'KreasiX Internship',
 		href: 'https://www.kreasix.com',
 		title: 'Developer Intern',
-		logo: work1.src,
+		logo: kreasixLogo.src,
 		start: 'May 2022',
 		end: 'Jul 2022',
-		description:
-			t[
-				'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase'
-			],
+		list: [
+			{
+				content: 'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase'
+			}
+		]
 	},
 ]
 
@@ -131,13 +119,10 @@ export const EDUCATIONS: Experience[] = [
 		href: 'https://uksw.edu',
 		title: 'Bachelor of Science in Computer Science',
 		logo: education1.src,
-		subtitle: 'Enroled on Aug 2017',
+		subtitle: 'Jan 2024',
 		list: [
 			{
-				content: t['Completed a senior project on real‑time collaboration tools.'],
-			},
-			{
-				content: t['Completed a senior project on real‑time collaboration tools.'],
+				content: 'Completed a senior project on real‑time collaboration tools.',
 			},
 		],
 	},
@@ -149,10 +134,11 @@ export const EDUCATIONS: Experience[] = [
 		logo: education2.src,
 		start: 'Jul 2014',
 		end: 'Jul 2017',
-		description:
-			t[
-				'Not the best student, but always tried my best. Learned a lot of things during my time in high school and developed a strong interest in programming.'
-			],
+		list: [
+			{
+				content: 'Not the best student, but always tried my best. Learned a lot of things during my time in high school and developed a strong interest in programming.'
+			}
+		]
 	},
 ]
 

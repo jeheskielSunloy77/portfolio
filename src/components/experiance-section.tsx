@@ -76,6 +76,9 @@ function Timeline({
 										<AvatarImage
 											src={exp.logo}
 											alt={exp.name}
+											loading='lazy'
+											width={48}
+											height={48}
 											className='bg-background object-contain'
 										/>
 										<AvatarFallback>{exp.name[0]}</AvatarFallback>

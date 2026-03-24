@@ -266,6 +266,8 @@ function ChatPanel({
 							<button
 								type='button'
 								onClick={() => setIsOpen(false)}
+								aria-label={t['Close chat']}
+								title={t['Close chat']}
 								className='text-muted-foreground transition hover:text-foreground'
 							>
 								<X className='size-4' />

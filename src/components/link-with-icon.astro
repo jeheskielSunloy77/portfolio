@@ -4,13 +4,21 @@ export interface Props {
 	position?: 'left' | 'right'
 	text?: string
 	class?: string
+	ariaLabel?: string
 }
 
-const { href, position = 'left', text, class: className = '' } = Astro.props
+const {
+	href,
+	position = 'left',
+	text,
+	class: className = '',
+	ariaLabel,
+} = Astro.props
 ---
 
 <a
 	href={href}
+	aria-label={ariaLabel}
 	class={`motion-link link flex group items-center gap-2 font-light ${className} hover:underline`}
 >
 	{

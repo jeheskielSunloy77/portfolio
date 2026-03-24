@@ -8,11 +8,20 @@ export interface Props {
 	title: string
 	description: string
 	viewMoreHref?: string
+	viewMoreLabel?: string
 	t: Dictionary
 	class?: string
 }
 
-const { t, id, title, description, viewMoreHref, class: className } = Astro.props
+const {
+	t,
+	id,
+	title,
+	description,
+	viewMoreHref,
+	viewMoreLabel,
+	class: className,
+} = Astro.props
 ---
 
 <section id={id} class:list={['space-y-8', className]} data-reveal-group>
@@ -25,7 +34,12 @@ const { t, id, title, description, viewMoreHref, class: className } = Astro.prop
 			</h2>
 			{
 				viewMoreHref && (
-					<LinkWithIcon href={viewMoreHref} position='right' text={t['view more']}>
+					<LinkWithIcon
+						href={viewMoreHref}
+						position='right'
+						text={t['view more']}
+						ariaLabel={viewMoreLabel ?? `${t['view more']}: ${title}`}
+					>
 						<ArrowRightIcon className='size-5' />
 					</LinkWithIcon>
 				)

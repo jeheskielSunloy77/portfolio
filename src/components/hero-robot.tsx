@@ -1,6 +1,11 @@
-import Spline from '@splinetool/react-spline'
 import type { Application } from '@splinetool/runtime'
-import { useEffect, useRef, useState } from 'react'
+import {
+	type CSSProperties,
+	type ComponentType,
+	useEffect,
+	useRef,
+	useState,
+} from 'react'
 
 type RotationBaseline = {
 	x: number
@@ -14,10 +19,21 @@ const MAX_HEAD_PITCH = 0.28
 const MAX_TOP_PART_YAW = 0.18
 const SMOOTHING = 0.12
 
+type SplineProps = {
+	scene: string
+	onLoad?: (app: Application) => void
+	style?: CSSProperties
+}
+
 export function HeroRobot() {
 	const [isLoaded, setIsLoaded] = useState(false)
+	const [isEligible, setIsEligible] = useState(false)
+	const [isInView, setIsInView] = useState(false)
+	const [SplineComponent, setSplineComponent] =
+		useState<ComponentType<SplineProps> | null>(null)
 	const appRef = useRef<Application | null>(null)
 	const animationFrameRef = useRef<number | null>(null)
+	const containerRef = useRef<HTMLDivElement | null>(null)
 	const targetRef = useRef({ x: 0, y: 0 })
 	const currentRef = useRef({ x: 0, y: 0 })
 	const baselinesRef = useRef<{
@@ -27,9 +43,83 @@ export function HeroRobot() {
 		head: null,
 		topPart: null,
 	})
+	const pointerTrackingEnabledRef = useRef(false)
 
 	useEffect(() => {
+		const mediaQueries = {
+			reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)'),
+			pointerFine: window.matchMedia('(pointer: fine)'),
+			desktop: window.matchMedia('(min-width: 640px)'),
+		}
+
+		const updateEligibility = () => {
+			const hasEnoughCores = (navigator.hardwareConcurrency ?? 4) >= 4
+			setIsEligible(
+				hasEnoughCores &&
+					mediaQueries.pointerFine.matches &&
+					mediaQueries.desktop.matches &&
+					!mediaQueries.reducedMotion.matches,
+			)
+		}
+
+		updateEligibility()
+
+		for (const mediaQuery of Object.values(mediaQueries)) {
+			mediaQuery.addEventListener('change', updateEligibility)
+		}
+
+		return () => {
+			for (const mediaQuery of Object.values(mediaQueries)) {
+				mediaQuery.removeEventListener('change', updateEligibility)
+			}
+		}
+	}, [])
+
+	useEffect(() => {
+		if (!isEligible || !containerRef.current) {
+			return
+		}
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				setIsInView(entry.isIntersecting)
+			},
+			{ rootMargin: '240px 0px' },
+		)
+
+		observer.observe(containerRef.current)
+
+		return () => observer.disconnect()
+	}, [isEligible])
+
+	useEffect(() => {
+		if (!isEligible || !isInView || SplineComponent) {
+			return
+		}
+
+		let cancelled = false
+
+		void import('@splinetool/react-spline').then((module) => {
+			if (!cancelled) {
+				setSplineComponent(() => module.default)
+			}
+		})
+
+		return () => {
+			cancelled = true
+		}
+	}, [SplineComponent, isEligible, isInView])
+
+	useEffect(() => {
+		if (!isEligible) {
+			return
+		}
+
 		const updateTarget = (event: PointerEvent) => {
+			if (!pointerTrackingEnabledRef.current) {
+				return
+			}
+
 			const normalizedX = event.clientX / window.innerWidth
 			const normalizedY = event.clientY / window.innerHeight
 
@@ -38,6 +128,27 @@ export function HeroRobot() {
 				y: normalizedY * 2 - 1,
 			}
 		}
+
+		window.addEventListener('pointermove', updateTarget, { passive: true })
+
+		return () => {
+			window.removeEventListener('pointermove', updateTarget)
+		}
+	}, [isEligible])
+
+	useEffect(() => {
+		if (!isEligible || !isInView) {
+			pointerTrackingEnabledRef.current = false
+
+			if (animationFrameRef.current !== null) {
+				window.cancelAnimationFrame(animationFrameRef.current)
+				animationFrameRef.current = null
+			}
+
+			return
+		}
+
+		pointerTrackingEnabledRef.current = true
 
 		const animate = () => {
 			const app = appRef.current
@@ -64,17 +175,17 @@ export function HeroRobot() {
 			animationFrameRef.current = window.requestAnimationFrame(animate)
 		}
 
-		window.addEventListener('pointermove', updateTarget, { passive: true })
 		animationFrameRef.current = window.requestAnimationFrame(animate)
 
 		return () => {
-			window.removeEventListener('pointermove', updateTarget)
+			pointerTrackingEnabledRef.current = false
 
 			if (animationFrameRef.current !== null) {
 				window.cancelAnimationFrame(animationFrameRef.current)
+				animationFrameRef.current = null
 			}
 		}
-	}, [])
+	}, [isEligible, isInView])
 
 	const handleLoad = (app: Application) => {
 		appRef.current = app
@@ -98,18 +209,25 @@ export function HeroRobot() {
 		setIsLoaded(true)
 	}
 
+	const showLoader = !isLoaded || SplineComponent === null
+
 	return (
-		<div className='relative h-[300px] w-full sm:h-[400px] md:h-[480px] md:w-[450px]'>
-			<Spline
-				scene='/bot.splinecode'
-				onLoad={handleLoad}
-				style={{
-					width: '100%',
-					height: '100%',
-					pointerEvents: 'none',
-				}}
-			/>
-			{!isLoaded && (
+		<div
+			ref={containerRef}
+			className='relative h-[300px] w-full sm:h-[400px] md:h-[480px] md:w-[450px]'
+		>
+			{SplineComponent && (
+				<SplineComponent
+					scene='/bot.splinecode'
+					onLoad={handleLoad}
+					style={{
+						width: '100%',
+						height: '100%',
+						pointerEvents: 'none',
+					}}
+				/>
+			)}
+			{showLoader && (
 				<div className='absolute inset-0 flex items-center justify-center'>
 					<div className='h-8 w-8 animate-spin rounded-full border-4 border-solid border-muted-foreground border-t-transparent'></div>
 				</div>

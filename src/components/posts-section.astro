@@ -29,6 +29,7 @@ const { t, lang }: Props = Astro.props
 		'Read my latest articles on web development, programming, and technology.'
 	]}
 	viewMoreHref={`/${lang}/blog`}
+	viewMoreLabel={`${t['view more']}: ${t['recent posts']}`}
 >
 	<Card className='motion-card border border-border/80 bg-card/90 py-4'>
 		<ul class='flex flex-col' data-reveal-group>

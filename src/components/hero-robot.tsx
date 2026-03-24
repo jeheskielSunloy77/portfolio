@@ -209,12 +209,14 @@ export function HeroRobot() {
 		setIsLoaded(true)
 	}
 
+	const showLoader = !isLoaded || SplineComponent === null
+
 	return (
 		<div
 			ref={containerRef}
 			className='relative h-[300px] w-full sm:h-[400px] md:h-[480px] md:w-[450px]'
 		>
-			{SplineComponent ? (
+			{SplineComponent && (
 				<SplineComponent
 					scene='/bot.splinecode'
 					onLoad={handleLoad}
@@ -224,10 +226,8 @@ export function HeroRobot() {
 						pointerEvents: 'none',
 					}}
 				/>
-			) : (
-				<div className='absolute inset-0 rounded-[2rem] border border-border/70 bg-gradient-to-br from-muted/80 via-card to-muted/40' />
 			)}
-			{!isLoaded && (
+			{showLoader && (
 				<div className='absolute inset-0 flex items-center justify-center'>
 					<div className='h-8 w-8 animate-spin rounded-full border-4 border-solid border-muted-foreground border-t-transparent'></div>
 				</div>

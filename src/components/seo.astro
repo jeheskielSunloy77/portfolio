@@ -44,17 +44,9 @@ const {
 	lang,
 } = Astro.props
 
-const isRootEnglishAlias =
-	Astro.url.pathname === '/' && lang === DEFAULT_LANGUAGE
-const rootCanonicalURL = new URL(`/${DEFAULT_LANGUAGE}/`, Astro.site)
-const canonicalURL =
-	canonical ||
-	(isRootEnglishAlias
-		? rootCanonicalURL
-		: new URL(Astro.url.pathname, Astro.site))
+const canonicalURL = canonical || new URL(Astro.url.pathname, Astro.site)
 const fullOgImage = new URL(ogImage, Astro.site)
-const robotsContent =
-	robots || (isRootEnglishAlias ? 'noindex, follow' : 'index, follow')
+const robotsContent = robots || 'index, follow'
 const pathnameWithoutLang = getPathnameWithoutLang(Astro.url.pathname, lang)
 const normalizedPath =
 	pathnameWithoutLang === '/'

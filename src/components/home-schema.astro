@@ -1,0 +1,58 @@
+---
+import { FULL_NAME, SOCIALS } from '@/lib/constants'
+import { DEFAULT_LANGUAGE, type Language } from '@/i18n/i18n'
+
+export interface Props {
+	description: string
+	image: string
+	lang: Language
+}
+
+const { description, image, lang } = Astro.props
+const homeUrl = new URL(`/${lang}/`, Astro.site)
+const defaultHomeUrl = new URL(`/${DEFAULT_LANGUAGE}/`, Astro.site)
+const personId = new URL('/#person', Astro.site)
+const websiteId = new URL('/#website', Astro.site)
+
+const schema = {
+	'@context': 'https://schema.org',
+	'@graph': [
+		{
+			'@type': 'Person',
+			'@id': personId,
+			name: FULL_NAME,
+			url: defaultHomeUrl,
+			image: new URL(image, Astro.site),
+			sameAs: SOCIALS.map((social) => social.href),
+		},
+		{
+			'@type': 'WebSite',
+			'@id': websiteId,
+			url: defaultHomeUrl,
+			name: FULL_NAME,
+			description,
+			inLanguage: [DEFAULT_LANGUAGE, 'id'],
+		},
+		{
+			'@type': 'WebPage',
+			'@id': homeUrl,
+			url: homeUrl,
+			name: FULL_NAME,
+			description,
+			isPartOf: {
+				'@id': websiteId,
+			},
+			about: {
+				'@id': personId,
+			},
+			primaryImageOfPage: {
+				'@type': 'ImageObject',
+				url: new URL(image, Astro.site),
+			},
+			inLanguage: lang,
+		},
+	],
+}
+---
+
+<script is:inline type='application/ld+json' set:html={JSON.stringify(schema)} />

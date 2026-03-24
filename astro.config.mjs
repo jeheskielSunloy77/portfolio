@@ -10,33 +10,40 @@ import { loadEnv } from 'vite';
 // import "./src/env";
 
 const env = loadEnv(process.env.NODE_ENV ?? 'development', process.cwd(), "");
+const configuredSiteUrl = new URL(
+  env.APP_URL,
+);
+
+if (configuredSiteUrl.hostname.startsWith('www.')) {
+  configuredSiteUrl.hostname = 'jeheskielsunloy.com';
+}
 
 // https://astro.build/config
 export default defineConfig({
-	output: 'server',
-	fonts: [
-		{
-			provider: fontProviders.fontsource(),
-			name: 'Inter',
-			cssVariable: '--font-inter',
-			weights: [400, 500, 600, 700],
-			styles: ['normal'],
-			subsets: ['latin'],
-			display: 'swap',
-		},
-		{
-			provider: fontProviders.fontsource(),
-			name: 'Calistoga',
-			cssVariable: '--font-calistoga',
-			weights: [400],
-			styles: ['normal'],
-			subsets: ['latin'],
-			display: 'swap',
-		},
-	],
-	vite: {
-		plugins: [tailwindcss()],
-	},
+  output: 'server',
+  fonts: [
+    {
+      provider: fontProviders.fontsource(),
+      name: 'Inter',
+      cssVariable: '--font-inter',
+      weights: [400, 500, 600, 700],
+      styles: ['normal'],
+      subsets: ['latin'],
+      display: 'swap',
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: 'Calistoga',
+      cssVariable: '--font-calistoga',
+      weights: [400],
+      styles: ['normal'],
+      subsets: ['latin'],
+      display: 'swap',
+    },
+  ],
+  vite: {
+    plugins: [tailwindcss()],
+  },
   env: {
     schema: {
       APP_URL: envField.string({
@@ -88,7 +95,7 @@ export default defineConfig({
     },
     validateSecrets: true,
   },
-  site: env.APP_URL || 'http://localhost:4321',
+  site: configuredSiteUrl.toString(),
   integrations: [
     react(),
     mdx(),

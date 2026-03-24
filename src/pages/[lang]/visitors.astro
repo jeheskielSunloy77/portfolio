@@ -1,9 +1,15 @@
 ---
 import VisitorsPage from '@/components/pages/visitors.astro'
-import { getLangPaths } from '@/i18n/i18n'
+import { LANGUAGES, type Language } from '@/i18n/i18n'
 
 export const prerender = false
-export const getStaticPaths = getLangPaths
+
+const langParam = Astro.params.lang
+if (!langParam || !LANGUAGES.includes(langParam as Language)) {
+	return Astro.rewrite('/404')
+}
+
+const lang = langParam as Language
 ---
 
-<VisitorsPage lang={Astro.params.lang} />
+<VisitorsPage lang={lang} />

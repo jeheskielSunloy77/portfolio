@@ -3,12 +3,6 @@
 @plugin 'tailwindcss-animate';
 @plugin "@tailwindcss/typography";
 
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/inter/600.css';
-@import '@fontsource/inter/700.css';
-@import '@fontsource/calistoga/400.css';
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -65,9 +59,9 @@
 
 :root {
 	--font-sans:
-		'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+		var(--font-inter), system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
 		Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-	--font-serif: 'Calistoga', ui-serif, Georgia, 'Times New Roman', Times;
+	--font-serif: var(--font-calistoga), ui-serif, Georgia, 'Times New Roman', Times;
 	--motion-duration-fast: 180ms;
 	--motion-duration-base: 320ms;
 	--motion-duration-slow: 560ms;

@@ -7,8 +7,8 @@ import {
 	SMTP_PORT,
 	SMTP_USER,
 } from 'astro:env/server'
-import { z } from 'astro:schema'
 import nodemailer from 'nodemailer'
+import { z } from 'zod'
 
 const transporter = nodemailer.createTransport({
 	host: SMTP_HOST,
@@ -25,7 +25,7 @@ export const server = {
 		accept: 'json',
 		input: z.object({
 			name: z.string().min(2),
-			email: z.string().email(),
+			email: z.email(),
 			message: z.string().min(5),
 		}),
 		handler: async ({ name, email, message }) => {

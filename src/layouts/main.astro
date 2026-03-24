@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import { Font } from 'astro:assets'
 import Footer from '@/components/footer.astro'
 import { ChatBot } from '@/components/chat-bot'
 import Seo from '@/components/seo.astro'
@@ -58,6 +59,8 @@ const t = dictionary[lang]
 		</script>
 		<meta charset='utf-8' />
 		<meta name='viewport' content='width=device-width' />
+		<Font cssVariable='--font-inter' preload />
+		<Font cssVariable='--font-calistoga' preload />
 		<Seo {...seo} lang={lang} />
 		{articleSchema && <ArticleSchema {...articleSchema} />}
 	</head>

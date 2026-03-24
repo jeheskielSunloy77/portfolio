@@ -21,7 +21,7 @@ vi.mock('./ui/dropdown-menu', () => ({
 			<div data-open={actualOpen}>
 				{React.Children.map(children, (child: any) =>
 					React.isValidElement(child)
-						? React.cloneElement(child, {
+						? React.cloneElement(child as any, {
 								__dropdownOpen: actualOpen,
 								__setDropdownOpen: (next: boolean) => {
 									if (!isControlled) {
@@ -30,21 +30,30 @@ vi.mock('./ui/dropdown-menu', () => ({
 									onOpenChange?.(next)
 								},
 							})
-						: child
+						: child,
 				)}
 			</div>
 		)
 	},
-	DropdownMenuTrigger: ({ children, render, __dropdownOpen, __setDropdownOpen }: any) =>
-		render
-			? React.cloneElement(render, {
+	DropdownMenuTrigger: ({
+		children,
+		render,
+		__dropdownOpen,
+		__setDropdownOpen,
+	}: any) =>
+		render ? (
+			React.cloneElement(
+				render,
+				{
 					onClick: () => __setDropdownOpen(!__dropdownOpen),
-				}, children)
-			: (
-				<button type='button' onClick={() => __setDropdownOpen(!__dropdownOpen)}>
-					{children}
-				</button>
-			),
+				},
+				children,
+			)
+		) : (
+			<button type='button' onClick={() => __setDropdownOpen(!__dropdownOpen)}>
+				{children}
+			</button>
+		),
 	DropdownMenuContent: ({ children, __dropdownOpen }: any) =>
 		__dropdownOpen ? <div>{children}</div> : null,
 	DropdownMenuItem: ({ children, disabled, onSelect }: any) => (
@@ -115,8 +124,12 @@ describe('ResumeButton', () => {
 
 		expect(indonesianItem).toBeDisabled()
 		expect(englishItem).toBeDisabled()
-		expect(screen.getByRole('button', { name: /terima kasih/i })).toBeInTheDocument()
-		expect(screen.queryByRole('button', { name: /bahasa/i })).not.toBeInTheDocument()
+		expect(
+			screen.getByRole('button', { name: /terima kasih/i }),
+		).toBeInTheDocument()
+		expect(
+			screen.queryByRole('button', { name: /bahasa/i }),
+		).not.toBeInTheDocument()
 		expect(clickMock).toHaveBeenCalledTimes(1)
 		expect(createObjectUrlMock).toHaveBeenCalledTimes(1)
 		expect(revokeObjectUrlMock).toHaveBeenCalledWith('blob:resume')
@@ -126,7 +139,9 @@ describe('ResumeButton', () => {
 		})
 
 		expect(screen.getByRole('button', { name: /bahasa/i })).toBeInTheDocument()
-		expect(screen.queryByRole('button', { name: /terima kasih/i })).not.toBeInTheDocument()
+		expect(
+			screen.queryByRole('button', { name: /terima kasih/i }),
+		).not.toBeInTheDocument()
 		expect(screen.getByRole('button', { name: /english/i })).toBeEnabled()
 	})
 })

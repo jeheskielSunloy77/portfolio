@@ -56,11 +56,14 @@ vi.mock('./ui/dropdown-menu', () => ({
 		),
 	DropdownMenuContent: ({ children, __dropdownOpen }: any) =>
 		__dropdownOpen ? <div>{children}</div> : null,
-	DropdownMenuItem: ({ children, disabled, onSelect }: any) => (
+	DropdownMenuItem: ({ children, disabled, onClick, onSelect }: any) => (
 		<button
 			type='button'
 			disabled={disabled}
-			onClick={(event) => onSelect?.(event)}
+			onClick={(event) => {
+				onClick?.(event)
+				onSelect?.(event)
+			}}
 		>
 			{children}
 		</button>
@@ -71,23 +74,19 @@ import { ResumeButton } from './hero-section.client'
 
 describe('ResumeButton', () => {
 	const fetchMock = vi.fn()
-	const createObjectUrlMock = vi.fn(() => 'blob:resume')
-	const revokeObjectUrlMock = vi.fn()
+	const clickedHrefMock = vi.fn()
 	const clickMock = vi
 		.spyOn(HTMLAnchorElement.prototype, 'click')
-		.mockImplementation(() => {})
+		.mockImplementation(function (this: HTMLAnchorElement) {
+			clickedHrefMock(this.getAttribute('href'))
+		})
 
 	beforeEach(() => {
 		vi.useFakeTimers()
 		fetchMock.mockReset()
-		createObjectUrlMock.mockClear()
-		revokeObjectUrlMock.mockClear()
+		clickedHrefMock.mockClear()
 		clickMock.mockClear()
 		vi.stubGlobal('fetch', fetchMock)
-		vi.stubGlobal('URL', {
-			createObjectURL: createObjectUrlMock,
-			revokeObjectURL: revokeObjectUrlMock,
-		})
 	})
 
 	afterEach(() => {
@@ -95,15 +94,7 @@ describe('ResumeButton', () => {
 		vi.unstubAllGlobals()
 	})
 
-	test('shows loading then success state for the selected language and resets after 4 seconds', async () => {
-		fetchMock.mockResolvedValue({
-			ok: true,
-			blob: vi.fn().mockResolvedValue(new Blob(['resume'])),
-			headers: {
-				get: vi.fn(() => 'attachment; filename="resume-id.pdf"'),
-			},
-		})
-
+	test('allows each language to download independently and resets after 4 seconds', async () => {
 		render(<ResumeButton />)
 
 		const trigger = screen.getByRole('button', { name: /resume/i })
@@ -116,32 +107,44 @@ describe('ResumeButton', () => {
 
 		await act(async () => {
 			fireEvent.click(indonesianItem)
-			await Promise.resolve()
-			await Promise.resolve()
 		})
 
-		expect(fetchMock).toHaveBeenCalledWith('/resume/id')
+		expect(indonesianItem).toBeDisabled()
+		expect(englishItem).toBeEnabled()
+
+		await act(async () => {
+			fireEvent.click(englishItem)
+		})
 
 		expect(indonesianItem).toBeDisabled()
 		expect(englishItem).toBeDisabled()
+
+		await act(async () => {
+			await vi.advanceTimersByTimeAsync(500)
+		})
+
+		expect(fetchMock).not.toHaveBeenCalled()
+		expect(clickMock).toHaveBeenCalledTimes(2)
+		expect(clickedHrefMock).toHaveBeenNthCalledWith(1, '/resume/id')
+		expect(clickedHrefMock).toHaveBeenNthCalledWith(2, '/resume/en')
+		expect(
+			screen.getByRole('button', { name: /thank you/i }),
+		).toBeInTheDocument()
 		expect(
 			screen.getByRole('button', { name: /terima kasih/i }),
 		).toBeInTheDocument()
-		expect(
-			screen.queryByRole('button', { name: /bahasa/i }),
-		).not.toBeInTheDocument()
-		expect(clickMock).toHaveBeenCalledTimes(1)
-		expect(createObjectUrlMock).toHaveBeenCalledTimes(1)
-		expect(revokeObjectUrlMock).toHaveBeenCalledWith('blob:resume')
 
 		await act(async () => {
 			await vi.advanceTimersByTimeAsync(4000)
 		})
 
 		expect(screen.getByRole('button', { name: /bahasa/i })).toBeInTheDocument()
+		expect(screen.getByRole('button', { name: /english/i })).toBeInTheDocument()
 		expect(
 			screen.queryByRole('button', { name: /terima kasih/i }),
 		).not.toBeInTheDocument()
-		expect(screen.getByRole('button', { name: /english/i })).toBeEnabled()
+		expect(
+			screen.queryByRole('button', { name: /thank you/i }),
+		).not.toBeInTheDocument()
 	})
 })

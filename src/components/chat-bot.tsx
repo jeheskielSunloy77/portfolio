@@ -11,25 +11,103 @@ import Markdown from 'react-markdown'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 
-export function ChatBot({ t, lang }: { t: Dictionary; lang: Language }) {
+interface ChatBotProps {
+	t: Dictionary
+	lang: Language
+	mode?: 'floating' | 'dock-sheet'
+	isOpen?: boolean
+	onOpenChange?: (isOpen: boolean) => void
+}
+
+export function ChatBot({
+	t,
+	lang,
+	mode = 'floating',
+	isOpen,
+	onOpenChange,
+}: ChatBotProps) {
+	const isMobile = useIsMobile()
+
+	if (mode === 'floating') {
+		if (isMobile) return null
+
+		return (
+			<motion.div
+				initial={{ opacity: 0, y: 18, scale: 0.96 }}
+				animate={{ opacity: 1, y: 0, scale: 1 }}
+				transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+				className='fixed bottom-8 right-8 z-40'
+			>
+				<Chat t={t} lang={lang} mode='floating' />
+			</motion.div>
+		)
+	}
+
 	return (
-		<motion.div
-			initial={{ opacity: 0, y: 18, scale: 0.96 }}
-			animate={{ opacity: 1, y: 0, scale: 1 }}
-			transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-			className='fixed bottom-8 right-8 z-40'
-		>
-			<Chat t={t} lang={lang} />
-		</motion.div>
+		<Chat
+			t={t}
+			lang={lang}
+			mode={mode}
+			isOpen={isOpen}
+			onOpenChange={onOpenChange}
+		/>
 	)
 }
 
-function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
+function useIsMobile() {
+	const [isMobile, setIsMobile] = useState(false)
+
+	useEffect(() => {
+		if (
+			typeof window === 'undefined' ||
+			typeof window.matchMedia !== 'function'
+		) {
+			return
+		}
+
+		const mq = window.matchMedia('(max-width: 639px)')
+		const onChange = (event: MediaQueryListEvent) => setIsMobile(event.matches)
+
+		setIsMobile(mq.matches)
+		mq.addEventListener('change', onChange)
+
+		return () => mq.removeEventListener('change', onChange)
+	}, [])
+
+	return isMobile
+}
+
+function Chat({
+	t,
+	lang,
+	mode,
+	isOpen: controlledIsOpen,
+	onOpenChange,
+}: {
+	t: Dictionary
+	lang: Language
+	mode: 'floating' | 'dock-sheet'
+	isOpen?: boolean
+	onOpenChange?: (isOpen: boolean) => void
+}) {
 	const { messages, setMessages, error, status, sendMessage } = useChat()
-	const [isOpen, setIsOpen] = useState(false)
+	const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(false)
 	const containerRef = useRef<HTMLElement>(null)
 	const sectionId = 'chat-bot-panel'
 	const contentId = 'chat-bot-content'
+	const isControlled = controlledIsOpen !== undefined
+	const isOpen = isControlled ? controlledIsOpen : uncontrolledIsOpen
+
+	function setIsOpen(nextValue: boolean | ((value: boolean) => boolean)) {
+		const nextOpen =
+			typeof nextValue === 'function' ? nextValue(isOpen) : nextValue
+
+		if (!isControlled) {
+			setUncontrolledIsOpen(nextOpen)
+		}
+
+		onOpenChange?.(nextOpen)
+	}
 
 	useEffect(() => {
 		if (!isOpen) return
@@ -50,6 +128,39 @@ function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 			document.removeEventListener('touchstart', handleOutsideInteraction)
 		}
 	}, [isOpen])
+
+	if (mode === 'dock-sheet') {
+		return (
+			<AnimatePresence initial={false}>
+				{isOpen && (
+					<motion.section
+						ref={containerRef}
+						id={sectionId}
+						initial={{ opacity: 0, y: 20, scale: 0.96 }}
+						animate={{ opacity: 1, y: 0, scale: 1 }}
+						exit={{ opacity: 0, y: 20, scale: 0.96 }}
+						transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+						className='fixed bottom-24 left-1/2 z-40 flex h-[min(32rem,65svh)] w-[min(calc(100vw-1.5rem),28rem)] -translate-x-1/2 flex-col overflow-hidden rounded-[1.75rem] border bg-background shadow-lg'
+					>
+						<ChatPanel
+							contentId={contentId}
+							isOpen={isOpen}
+							lang={lang}
+							messages={messages}
+							error={error}
+							panelClassName='h-full'
+							showPanelHeader={true}
+							sendMessage={sendMessage}
+							setIsOpen={setIsOpen}
+							setMessages={setMessages}
+							status={status}
+							t={t}
+						/>
+					</motion.section>
+				)}
+			</AnimatePresence>
+		)
+	}
 
 	return (
 		<motion.section
@@ -89,21 +200,83 @@ function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 					</motion.span>
 				)}
 			</button>
-			<AnimatePresence initial={false}>
-				{isOpen && (
-					<motion.div
-						id={contentId}
-						key='chat-panel'
-						initial={{ opacity: 0, y: 12 }}
-						animate={{ opacity: 1, y: 0 }}
-						exit={{ opacity: 0, y: 12 }}
-						transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-						className='flex h-[calc(100%-72px)] flex-col overflow-hidden'
-					>
-						<div className='flex items-center justify-between border-b px-3 py-2 text-[11px] text-muted-foreground'>
-							<span>
-								{t['Chat with']} {BOT_NAME}
-							</span>
+			<ChatPanel
+				contentId={contentId}
+				isOpen={isOpen}
+				lang={lang}
+				messages={messages}
+				error={error}
+				panelClassName='h-[calc(100%-72px)]'
+				sendMessage={sendMessage}
+				setIsOpen={setIsOpen}
+				setMessages={setMessages}
+				status={status}
+				t={t}
+			/>
+		</motion.section>
+	)
+}
+
+interface ChatPanelProps {
+	contentId: string
+	isOpen: boolean
+	lang: Language
+	messages: Message[]
+	error: Error | undefined
+	panelClassName?: string
+	showPanelHeader?: boolean
+	sendMessage: ReturnType<typeof useChat>['sendMessage']
+	setIsOpen: (value: boolean | ((value: boolean) => boolean)) => void
+	setMessages: (
+		messages: Message[] | ((messages: Message[]) => Message[]),
+	) => void
+	status: ChatStatus
+	t: Dictionary
+}
+
+function ChatPanel({
+	contentId,
+	isOpen,
+	lang,
+	messages,
+	error,
+	panelClassName,
+	showPanelHeader = false,
+	sendMessage,
+	setIsOpen,
+	setMessages,
+	status,
+	t,
+}: ChatPanelProps) {
+	return (
+		<AnimatePresence initial={false}>
+			{isOpen && (
+				<motion.div
+					id={contentId}
+					key='chat-panel'
+					initial={{ opacity: 0, y: 12 }}
+					animate={{ opacity: 1, y: 0 }}
+					exit={{ opacity: 0, y: 12 }}
+					transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+					className={cn('flex flex-col overflow-hidden', panelClassName)}
+				>
+					{showPanelHeader && (
+						<div className='flex items-center justify-between border-b px-5 py-4'>
+							<ChatHeader isOpen={true} t={t} />
+							<button
+								type='button'
+								onClick={() => setIsOpen(false)}
+								className='text-muted-foreground transition hover:text-foreground'
+							>
+								<X className='size-4' />
+							</button>
+						</div>
+					)}
+					<div className='flex items-center justify-between border-b px-4 py-3 text-[11px] text-muted-foreground'>
+						<span>
+							{t['Chat with']} {BOT_NAME}
+						</span>
+						<div className='flex items-center gap-3'>
 							<a
 								href={`/${lang}/chat`}
 								className='text-foreground/80 underline underline-offset-4 transition hover:text-foreground'
@@ -111,18 +284,18 @@ function Chat({ t, lang }: { t: Dictionary; lang: Language }) {
 								{t['Open full chat']}
 							</a>
 						</div>
-						<ChatMessages messages={messages} error={error} status={status} t={t} />
-						<ChatInput
-							sendMessage={sendMessage}
-							setMessages={setMessages}
-							status={status}
-							isClearable={messages.length > 0}
-							t={t}
-						/>
-					</motion.div>
-				)}
-			</AnimatePresence>
-		</motion.section>
+					</div>
+					<ChatMessages messages={messages} error={error} status={status} t={t} />
+					<ChatInput
+						sendMessage={sendMessage}
+						setMessages={setMessages}
+						status={status}
+						isClearable={messages.length > 0}
+						t={t}
+					/>
+				</motion.div>
+			)}
+		</AnimatePresence>
 	)
 }
 

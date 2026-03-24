@@ -27,6 +27,12 @@ import { ChatBot } from './chat-bot'
 describe('ChatBot', () => {
 	beforeEach(() => {
 		sendMessageMock.mockReset()
+		;(window as any).matchMedia = vi.fn().mockImplementation((query: string) => ({
+			matches: false,
+			media: query,
+			addEventListener: () => {},
+			removeEventListener: () => {},
+		}))
 	})
 
 	test('renders placeholder content when there are no messages', async () => {
@@ -86,5 +92,41 @@ describe('ChatBot', () => {
 				screen.queryByText('Beep boop! Systems online — fire away, human!'),
 			).not.toBeInTheDocument()
 		})
+	})
+
+	test('dock-sheet mode renders only when open and can be closed from its button', async () => {
+		const onOpenChange = vi.fn()
+
+		const { rerender } = render(
+			<ChatBot
+				t={t}
+				lang='en'
+				mode='dock-sheet'
+				isOpen={false}
+				onOpenChange={onOpenChange}
+			/>,
+		)
+
+		expect(
+			screen.queryByText('Beep boop! Systems online — fire away, human!'),
+		).not.toBeInTheDocument()
+
+		rerender(
+			<ChatBot
+				t={t}
+				lang='en'
+				mode='dock-sheet'
+				isOpen={true}
+				onOpenChange={onOpenChange}
+			/>,
+		)
+
+		expect(
+			await screen.findByText('Beep boop! Systems online — fire away, human!'),
+		).toBeInTheDocument()
+
+		await userEvent.click(screen.getByRole('button', { name: 'Close chat' }))
+
+		expect(onOpenChange).toHaveBeenCalledWith(false)
 	})
 })

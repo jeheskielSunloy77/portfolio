@@ -94,7 +94,7 @@ describe('ResumeButton', () => {
 		vi.unstubAllGlobals()
 	})
 
-	test('allows each language to download independently and resets after 4 seconds', async () => {
+	test('blocks all resume downloads while one is in progress and resets after 4 seconds', async () => {
 		render(<ResumeButton />)
 
 		const trigger = screen.getByRole('button', { name: /resume/i })
@@ -110,29 +110,24 @@ describe('ResumeButton', () => {
 		})
 
 		expect(indonesianItem).toBeDisabled()
-		expect(englishItem).toBeEnabled()
+		expect(indonesianItem).toBeDisabled()
+		expect(englishItem).toBeDisabled()
 
 		await act(async () => {
 			fireEvent.click(englishItem)
 		})
-
-		expect(indonesianItem).toBeDisabled()
-		expect(englishItem).toBeDisabled()
 
 		await act(async () => {
 			await vi.advanceTimersByTimeAsync(500)
 		})
 
 		expect(fetchMock).not.toHaveBeenCalled()
-		expect(clickMock).toHaveBeenCalledTimes(2)
-		expect(clickedHrefMock).toHaveBeenNthCalledWith(1, '/resume/id')
-		expect(clickedHrefMock).toHaveBeenNthCalledWith(2, '/resume/en')
-		expect(
-			screen.getByRole('button', { name: /thank you/i }),
-		).toBeInTheDocument()
+		expect(clickMock).toHaveBeenCalledTimes(1)
+		expect(clickedHrefMock).toHaveBeenCalledWith('/resume/id')
 		expect(
 			screen.getByRole('button', { name: /terima kasih/i }),
 		).toBeInTheDocument()
+		expect(screen.getByRole('button', { name: /english/i })).toBeInTheDocument()
 
 		await act(async () => {
 			await vi.advanceTimersByTimeAsync(4000)
@@ -142,9 +137,6 @@ describe('ResumeButton', () => {
 		expect(screen.getByRole('button', { name: /english/i })).toBeInTheDocument()
 		expect(
 			screen.queryByRole('button', { name: /terima kasih/i }),
-		).not.toBeInTheDocument()
-		expect(
-			screen.queryByRole('button', { name: /thank you/i }),
 		).not.toBeInTheDocument()
 	})
 })

@@ -22,6 +22,7 @@ export function ResumeButton() {
 				LANGUAGES.map((language) => [language, 'idle']),
 			) as Record<Language, 'idle' | 'loading' | 'success'>,
 	)
+	const isDownloading = Object.values(statuses).includes('loading')
 	const resetTimeoutRef = useRef<Partial<Record<Language, number>>>({})
 
 	useEffect(() => {
@@ -43,7 +44,7 @@ export function ResumeButton() {
 	}
 
 	async function handleDownload(language: Language) {
-		if (statuses[language] === 'loading') {
+		if (isDownloading) {
 			return
 		}
 
@@ -79,7 +80,7 @@ export function ResumeButton() {
 				{LANGUAGES.map((language) => (
 					<DropdownMenuItem
 						key={language}
-						disabled={statuses[language] === 'loading'}
+						disabled={isDownloading}
 						closeOnClick={false}
 						onClick={() => handleDownload(language)}
 					>

@@ -26,6 +26,17 @@ export function ResumeButton() {
 	)
 	const isDownloading = Object.values(statuses).includes('loading')
 	const resetTimeoutRef = useRef<Partial<Record<Language, number>>>({})
+	const statusesRef = useRef(statuses)
+
+	useEffect(() => {
+		statusesRef.current = statuses
+	}, [statuses])
+
+	function hasPendingDownloads(
+		nextStatuses: Record<Language, 'idle' | 'loading' | 'success'>,
+	) {
+		return Object.values(nextStatuses).some((status) => status !== 'idle')
+	}
 
 	useEffect(() => {
 		return () => {
@@ -40,7 +51,17 @@ export function ResumeButton() {
 	function showSuccessState(language: Language) {
 		setStatuses((current) => ({ ...current, [language]: 'success' }))
 		resetTimeoutRef.current[language] = window.setTimeout(() => {
-			setStatuses((current) => ({ ...current, [language]: 'idle' }))
+			const nextStatuses: Record<Language, 'idle' | 'loading' | 'success'> = {
+				...statusesRef.current,
+				[language]: 'idle',
+			}
+
+			setStatuses(nextStatuses)
+
+			if (!hasPendingDownloads(nextStatuses)) {
+				setOpen(false)
+			}
+
 			delete resetTimeoutRef.current[language]
 		}, 4000)
 	}

@@ -118,7 +118,7 @@ describe('ResumeButton', () => {
 		})
 
 		await act(async () => {
-			await vi.advanceTimersByTimeAsync(500)
+			await vi.advanceTimersByTimeAsync(2000)
 		})
 
 		expect(fetchMock).not.toHaveBeenCalled()
@@ -133,10 +133,70 @@ describe('ResumeButton', () => {
 			await vi.advanceTimersByTimeAsync(4000)
 		})
 
-		expect(screen.getByRole('button', { name: /bahasa/i })).toBeInTheDocument()
-		expect(screen.getByRole('button', { name: /english/i })).toBeInTheDocument()
+		expect(
+			screen.queryByRole('button', { name: /bahasa/i }),
+		).not.toBeInTheDocument()
+		expect(
+			screen.queryByRole('button', { name: /english/i }),
+		).not.toBeInTheDocument()
 		expect(
 			screen.queryByRole('button', { name: /terima kasih/i }),
+		).not.toBeInTheDocument()
+	})
+
+	test('keeps the dropdown open until the last pending resume finishes', async () => {
+		render(<ResumeButton />)
+
+		const trigger = screen.getByRole('button', { name: /resume/i })
+		fireEvent.click(trigger)
+
+		const indonesianItem = screen.getByRole('button', { name: /bahasa/i })
+
+		await act(async () => {
+			fireEvent.click(indonesianItem)
+		})
+
+		await act(async () => {
+			await vi.advanceTimersByTimeAsync(2000)
+		})
+
+		expect(
+			screen.getByRole('button', { name: /terima kasih/i }),
+		).toBeInTheDocument()
+
+		const englishItem = screen.getByRole('button', { name: /english/i })
+
+		await act(async () => {
+			fireEvent.click(englishItem)
+		})
+
+		await act(async () => {
+			await vi.advanceTimersByTimeAsync(2000)
+		})
+
+		expect(screen.getByRole('button', { name: /thank you/i })).toBeInTheDocument()
+		expect(
+			screen.getByRole('button', { name: /terima kasih/i }),
+		).toBeInTheDocument()
+
+		await act(async () => {
+			await vi.advanceTimersByTimeAsync(2000)
+		})
+
+		expect(screen.getByRole('button', { name: /thank you/i })).toBeInTheDocument()
+		expect(
+			screen.queryByRole('button', { name: /terima kasih/i }),
+		).not.toBeInTheDocument()
+
+		await act(async () => {
+			await vi.advanceTimersByTimeAsync(2000)
+		})
+
+		expect(
+			screen.queryByRole('button', { name: /thank you/i }),
+		).not.toBeInTheDocument()
+		expect(
+			screen.queryByRole('button', { name: /bahasa/i }),
 		).not.toBeInTheDocument()
 	})
 })

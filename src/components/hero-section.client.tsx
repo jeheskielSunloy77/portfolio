@@ -16,7 +16,9 @@ const THANK_YOU_LABELS: Record<Language, string> = {
 
 export function ResumeButton() {
 	const [open, setOpen] = useState(false)
-	const [statuses, setStatuses] = useState<Record<Language, 'idle' | 'loading' | 'success'>>(
+	const [statuses, setStatuses] = useState<
+		Record<Language, 'idle' | 'loading' | 'success'>
+	>(
 		() =>
 			Object.fromEntries(
 				LANGUAGES.map((language) => [language, 'idle']),
@@ -52,7 +54,6 @@ export function ResumeButton() {
 		setStatuses((current) => ({ ...current, [language]: 'loading' }))
 
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 500))
 			if (resetTimeoutRef.current[language] !== undefined) {
 				window.clearTimeout(resetTimeoutRef.current[language])
 				delete resetTimeoutRef.current[language]
@@ -64,6 +65,7 @@ export function ResumeButton() {
 			document.body.appendChild(link)
 			link.click()
 			link.remove()
+			await new Promise((resolve) => setTimeout(resolve, 2000))
 			showSuccessState(language)
 		} catch {
 			setStatuses((current) => ({ ...current, [language]: 'idle' }))

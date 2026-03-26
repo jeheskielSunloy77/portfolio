@@ -193,8 +193,8 @@ export const dictionary = {
 			'Developed web-based games and interactive websites for client events.',
 		'Collaborated with clients to deliver interactive digital experiences on a near-monthly basis':
 			'Collaborated with clients to deliver interactive digital experiences on a near-monthly basis',
-		'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase':
-			'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase',
+		"Collaborated on backend integration using Node.js and Firebase to enhance a company's static website with dynamic features.":
+			"Collaborated on backend integration using Node.js and Firebase to enhance a company's static website with dynamic features.",
 		'Focused on algorithms, web development, and software engineering principles.':
 			'Focused on algorithms, web development, and software engineering principles.',
 		'Completed a senior project on real‑time collaboration tools.':
@@ -480,8 +480,8 @@ export const dictionary = {
 			'Mengembangkan game berbasis web dan situs interaktif untuk berbagai acara atau event klien.',
 		'Collaborated with clients to deliver interactive digital experiences on a near-monthly basis':
 			'Berkolaborasi dengan klien dalam menghadirkan pengalaman digital interaktif secara rutin setiap bulannya',
-		'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase':
-			'Pengalaman magang pertama saya, salah satu proyek yang saya lakukan selama magang adalah membangun backend untuk situs web perusahaan menggunakan Node.js dan Firebase',
+		"Collaborated on backend integration using Node.js and Firebase to enhance a company's static website with dynamic features.":
+		'Berkolaborasi dalam integrasi backend menggunakan Node.js dan Firebase untuk meningkatkan website statis dengan fitur dinamis.',
 		'Focused on algorithms, web development, and software engineering principles.':
 			'Berfokus pada algoritma, pengembangan web, dan prinsip-prinsip rekayasa perangkat lunak.',
 		'Completed a senior project on real‑time collaboration tools.':

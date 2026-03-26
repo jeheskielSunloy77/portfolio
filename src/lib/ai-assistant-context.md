@@ -41,7 +41,7 @@ Jay is a software engineer focused on web and mobile development. His core stack
 ### Developer Intern at PT. KreasiX, Salatiga
 
 - Duration: May 2022 to Jul 2022
-- Built backend functionality for the company website using Node.js and Firebase.
+- Collaborated on backend integration using Node.js and Firebase to enhance a company's static website with dynamic features.
 
 ## Education
 

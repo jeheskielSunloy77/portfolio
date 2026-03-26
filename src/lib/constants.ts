@@ -107,7 +107,7 @@ export const CAREERS: Experience[] = [
 		end: 'Jul 2022',
 		list: [
 			{
-				content: 'My first internship experience, one of the project i did during my internship was to build a backend for the company website using Node.js and Firebase'
+				content: `Collaborated on backend integration using Node.js and Firebase to enhance a company's static website with dynamic features.`
 			}
 		]
 	},

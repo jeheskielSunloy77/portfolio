@@ -113,9 +113,9 @@ function Timeline({
 									<div className='mt-2 flex flex-row flex-wrap items-start gap-2'>
 										{exp.links.map((link, i) => (
 											<a href={link.href} key={i}>
-												<Badge title={link.name} className='motion-pill flex gap-2'>
+												<Badge title={t[link.label]} className='motion-pill flex gap-2'>
 													<link.icon aria-hidden='true' className='size-3' />
-													{link.name}
+													{t[link.label]}
 												</Badge>
 											</a>
 										))}

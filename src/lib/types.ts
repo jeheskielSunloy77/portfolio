@@ -6,7 +6,7 @@ export type LocalizedString = keyof typeof dictionary.en
 interface Link {
 	icon: LucideIcon
 	href: string
-	name: LocalizedString
+	label: LocalizedString
 }
 
 export interface Experience {

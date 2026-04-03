@@ -3,6 +3,7 @@ import { PROJECTS } from '@/lib/constants'
 import type { Dictionary } from '@/lib/types'
 import { Image } from 'astro:assets'
 import { Badge } from './ui/badge'
+import { Button } from './ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 
 export interface Props {
@@ -64,14 +65,15 @@ const projects = limit ? filteredProjects.slice(0, limit) : filteredProjects
 						<div class='flex flex-row flex-wrap items-start gap-1'>
 							{project.links.toSorted().map((link, idx) => (
 								<a href={link?.href} target='_blank'>
-									<Badge
+									<Button
 										key={idx}
-										className='motion-pill flex gap-2 px-2 py-1 text-[10px]'
+										size='sm'
+										className='text-xs'
 										variant={idx === 0 ? 'default' : 'secondary'}
 									>
 										<link.icon className='size-3' />
-										{t[link.name]}
-									</Badge>
+										{t[link.label]}
+									</Button>
 								</a>
 							))}
 						</div>

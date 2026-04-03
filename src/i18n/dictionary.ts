@@ -215,6 +215,10 @@ export const dictionary = {
 		'JOIN pain ON suffering': 'JOIN pain ON suffering',
 		'A full featured academic information system for IAKN Kupang University. It includes features like student registration, course management, academic records, LMS, and more.':
 			'A full featured academic information system for IAKN Kupang University. It includes features like student registration, course management, academic records, LMS, and more.',
+		'Built to streamline university operations, SIA unifies student registration, class administration, learning management, and academic reporting in a single web platform.':
+			'Built to streamline university operations, SIA unifies student registration, class administration, learning management, and academic reporting in a single web platform.',
+		'A cross-platform coffee ordering app built with React Native, Expo, Supabase, TypeScript, and Tailwind CSS for fast menu browsing, seamless checkout, and smooth pickup experiences.':
+			'A cross-platform coffee ordering app built with React Native, Expo, Supabase, TypeScript, and Tailwind CSS for fast menu browsing, seamless checkout, and smooth pickup experiences.',
 		'A cross-platform mobile application for ordering coffee from local shops.':
 			'A cross-platform mobile application for ordering coffee from local shops.',
 		'The Ecommerce App is a full-stack web application built using PHP, Laravel, and Tailwindcss. The app is designed to provide users with a seamless shopping experience, from browsing products to placing orders.':
@@ -227,15 +231,57 @@ export const dictionary = {
 			'A progressive web application that can be installed on any device that can provide an accurate weather report from all around the world.',
 		'A Fullstack web app for IAKN Kupang University build with Astro, Tailwindcss and Postgresql.':
 			'A Fullstack web app for IAKN Kupang University build with Astro, Tailwindcss and Postgresql.',
+		'A CLI scaffolder that generates a production-ready monorepo with a Go API, Vite React app, and shared TypeScript packages.':
+			'A CLI scaffolder that generates a production-ready monorepo with a Go API, Vite React app, and shared TypeScript packages.',
+		'An interactive and scriptable scaffolder that creates a clean architecture codebase with auth, PostgreSQL, Redis jobs, email templating, and optional frontend support in one guided flow.':
+			'An interactive and scriptable scaffolder that creates a clean architecture codebase with auth, PostgreSQL, Redis jobs, email templating, and optional frontend support in one guided flow.',
+		'A monorepo for a Go API and terminal e-reader app with shared TypeScript packages, powered by Turborepo and Bun workspaces.':
+			'A monorepo for a Go API and terminal e-reader app with shared TypeScript packages, powered by Turborepo and Bun workspaces.',
+		'A cross-platform reading platform with a Go-powered TUI CLI, modern web app, and native-feeling iOS and Android apps built with React Native Expo, all backed by a shared backend core.':
+			'A cross-platform reading platform with a Go-powered TUI CLI, modern web app, and native-feeling iOS and Android apps built with React Native Expo, all backed by a shared backend core.',
+		'A TypeScript-first job scraping library built on Crawlee for aggregating listings from multiple job boards through one unified API.':
+			'A TypeScript-first job scraping library built on Crawlee for aggregating listings from multiple job boards through one unified API.',
+		'A modular scraping engine powered by Crawlee that supports batch collection and event streaming, making it easy to build job feeds, alerts, and hiring intelligence products.':
+			'A modular scraping engine powered by Crawlee that supports batch collection and event streaming, making it easy to build job feeds, alerts, and hiring intelligence products.',
+		'An Electron desktop app for managing Redis and Memcached cache connections, operational workflows, and release-ready incident exports.':
+			'An Electron desktop app for managing Redis and Memcached cache connections, operational workflows, and release-ready incident exports.',
+		'A modern desktop platform for cache operations that combines observability dashboards, workflow orchestration, and governance controls across Redis and Memcached connections.':
+			'A modern desktop platform for cache operations that combines observability dashboards, workflow orchestration, and governance controls across Redis and Memcached connections.',
+		'An industrial scale RAG system that collects, compile and store any kind of digital data and then make it searchable with natural language using a LLM.':
+			'An industrial scale RAG system that collects, compile and store any kind of digital data and then make it searchable with natural language using a LLM.',
+		'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.':
+			'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.',
 		Source: 'Source',
-		Demo: 'Demo',
+		Visit: 'Visit',
+		Download: 'Download',
+		'NPM Registry': 'NPM Registry',
 		'Academic Information System': 'Academic Information System',
+		'SIA, The Digital Backbone for Modern Campuses':
+			'SIA, The Digital Backbone for Modern Campuses',
+		'Roasty, Your Daily Brew, Streamlined':
+			'Roasty, Your Daily Brew, Streamlined',
 		'Cross Platform Coffee Shop App': 'Cross Platform Coffee Shop App',
 		'Ecommerce App': 'Ecommerce App',
 		'Ecommerce Web Scraper': 'Ecommerce Web Scraper',
 		'CRUD App': 'CRUD App',
 		'PWA Weather App': 'PWA Weather App',
 		'IAKN Kupang Profile Website': 'IAKN Kupang Profile Website',
+		'Go Kickstart': 'Go Kickstart',
+		'Go Kickstart, Launch Full-Stack Go with Structure':
+			'Go Kickstart, Launch Full-Stack Go with Structure',
+		Kern: 'Kern',
+		'Kern, Read Anywhere on Any Screen':
+			'Kern, Read Anywhere on Any Screen',
+		'Job Scout': 'Job Scout',
+		'Job Scout, Developer-First Engine for Job Board Aggregation':
+			'Job Scout, Developer-First Engine for Job Board Aggregation',
+		Volatile: 'Volatile',
+		'Volatile, The Ops Studio for Stateful Caching Systems':
+			'Volatile, The Ops Studio for Stateful Caching Systems',
+		'Promptu, AI Data Concierge for Organizations':
+			'Promptu, AI Data Concierge for Organizations',
+		'Vettor, End-to-End Automated Job Hunting Suite':
+			'Vettor, End-to-End Automated Job Hunting Suite',
 		'related posts': 'related posts',
 		visitors: 'visitors',
 		'Visitors Wall': 'Visitors Wall',
@@ -502,6 +548,10 @@ export const dictionary = {
 		'JOIN pain ON suffering': 'JOIN rasa_sakit ON penderitaan',
 		'A full featured academic information system for IAKN Kupang University. It includes features like student registration, course management, academic records, LMS, and more.':
 			'Sistem informasi akademik berfitur lengkap untuk Universitas IAKN Kupang. Ini mencakup fitur-fitur seperti pendaftaran mahasiswa, manajemen mata kuliah, catatan akademik, LMS, dan lainnya.',
+		'Built to streamline university operations, SIA unifies student registration, class administration, learning management, and academic reporting in a single web platform.':
+			'Dibangun untuk menyederhanakan operasional kampus, SIA menyatukan pendaftaran mahasiswa, administrasi kelas, manajemen pembelajaran, dan pelaporan akademik dalam satu platform web.',
+		'A cross-platform coffee ordering app built with React Native, Expo, Supabase, TypeScript, and Tailwind CSS for fast menu browsing, seamless checkout, and smooth pickup experiences.':
+			'Aplikasi pemesanan kopi lintas platform yang dibangun dengan React Native, Expo, Supabase, TypeScript, dan Tailwind CSS untuk penelusuran menu cepat, checkout mulus, dan pengalaman pengambilan pesanan yang lancar.',
 		'A cross-platform mobile application for ordering coffee from local shops.':
 			'Aplikasi seluler lintas platform untuk memesan kopi dari kedai kopi lokal.',
 		'The Ecommerce App is a full-stack web application built using PHP, Laravel, and Tailwindcss. The app is designed to provide users with a seamless shopping experience, from browsing products to placing orders.':
@@ -514,15 +564,57 @@ export const dictionary = {
 			'Aplikasi web progresif yang dapat dipasang di perangkat apa pun yang dapat memberikan laporan cuaca yang akurat dari seluruh dunia.',
 		'A Fullstack web app for IAKN Kupang University build with Astro, Tailwindcss and Postgresql.':
 			'Aplikasi web Fullstack untuk Universitas IAKN Kupang yang dibangun dengan Astro, Tailwindcss, dan Postgresql.',
+		'A CLI scaffolder that generates a production-ready monorepo with a Go API, Vite React app, and shared TypeScript packages.':
+			'CLI scaffolder yang menghasilkan monorepo siap produksi dengan Go API, aplikasi React berbasis Vite, dan paket TypeScript bersama.',
+		'An interactive and scriptable scaffolder that creates a clean architecture codebase with auth, PostgreSQL, Redis jobs, email templating, and optional frontend support in one guided flow.':
+			'CLI scaffolder yang interaktif dan dapat discript untuk membuat codebase clean architecture lengkap dengan auth, PostgreSQL, Redis jobs, email templating, serta dukungan frontend opsional dalam satu alur terpandu.',
+		'A monorepo for a Go API and terminal e-reader app with shared TypeScript packages, powered by Turborepo and Bun workspaces.':
+			'Monorepo untuk Go API dan aplikasi e-reader terminal dengan paket TypeScript bersama, ditenagai oleh Turborepo dan workspace Bun.',
+		'A cross-platform reading platform with a Go-powered TUI CLI, modern web app, and native-feeling iOS and Android apps built with React Native Expo, all backed by a shared backend core.':
+			'Platform membaca lintas platform dengan TUI CLI bertenaga Go, web app modern, dan aplikasi iOS serta Android berbasis React Native Expo, semuanya ditopang oleh backend core yang sama.',
+		'A TypeScript-first job scraping library built on Crawlee for aggregating listings from multiple job boards through one unified API.':
+			'Library scraping lowongan kerja berbasis TypeScript dan Crawlee untuk menggabungkan listing dari banyak job board melalui satu API terpadu.',
+		'A modular scraping engine powered by Crawlee that supports batch collection and event streaming, making it easy to build job feeds, alerts, and hiring intelligence products.':
+			'Mesin scraping modular berbasis Crawlee yang mendukung pengambilan data batch dan event streaming, sehingga mudah digunakan untuk membangun feed lowongan, alert, dan produk hiring intelligence.',
+		'An Electron desktop app for managing Redis and Memcached cache connections, operational workflows, and release-ready incident exports.':
+			'Aplikasi desktop Electron untuk mengelola koneksi cache Redis dan Memcached, alur kerja operasional, dan ekspor insiden yang siap dirilis.',
+		'A modern desktop platform for cache operations that combines observability dashboards, workflow orchestration, and governance controls across Redis and Memcached connections.':
+			'Platform desktop modern untuk operasi cache yang menggabungkan dashboard observabilitas, orkestrasi workflow, dan kontrol tata kelola pada koneksi Redis dan Memcached.',
+		'An industrial scale RAG system that collects, compile and store any kind of digital data and then make it searchable with natural language using a LLM.':
+			'Sistem RAG skala industri yang mengumpulkan, menyusun, dan menyimpan berbagai jenis data digital lalu membuatnya dapat dicari dengan bahasa alami menggunakan LLM.',
+		'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.':
+			'Platform pencarian kerja bertenaga AI yang menemukan dan memberi peringkat lowongan relevan, membuat resume yang disesuaikan secara otomatis, serta mengotomatisasi lamaran sambil mengumpulkan dan menganalisis insight pencarian kerja pengguna.',
 		Source: 'Sumber',
-		Demo: 'Demo',
+		Visit: 'Kunjungi',
+		Download: 'Unduh',
+		'NPM Registry': 'Registri NPM',
 		'Academic Information System': 'Sistem informasi Akademik',
+		'SIA, The Digital Backbone for Modern Campuses':
+			'SIA, Tulang Punggung Digital untuk Kampus Modern',
+		'Roasty, Your Daily Brew, Streamlined':
+			'Roasty, Seduhan Harianmu, Kini Lebih Ringkas',
 		'Cross Platform Coffee Shop App': 'Aplikasi Kafe Cross Platform',
 		'Ecommerce App': 'Aplikasi Ecommerce',
 		'Ecommerce Web Scraper': 'Web Scraper Ecommerce',
 		'CRUD App': 'Aplikasi CRUD',
 		'PWA Weather App': 'Aplikasi Cuaca PWA',
 		'IAKN Kupang Profile Website': 'Website Profil IAKN Kupang',
+		'Go Kickstart': 'Go Kickstart',
+		'Go Kickstart, Launch Full-Stack Go with Structure':
+			'Go Kickstart, Luncurkan Go Full-Stack dengan Struktur',
+		Kern: 'Kern',
+		'Kern, Read Anywhere on Any Screen':
+			'Kern, Baca di Mana Saja di Layar Apa Saja',
+		'Job Scout': 'Job Scout',
+		'Job Scout, Developer-First Engine for Job Board Aggregation':
+			'Job Scout, Mesin Utama Berorientasi Developer untuk Agregasi Job Board',
+		Volatile: 'Volatile',
+		'Volatile, The Ops Studio for Stateful Caching Systems':
+			'Volatile, Ops Studio untuk Sistem Caching Stateful',
+		'Promptu, AI Data Concierge for Organizations':
+			'Promptu, AI Data Concierge for Organizations',
+		'Vettor, End-to-End Automated Job Hunting Suite':
+			'Vettor, End-to-End Automated Job Hunting Suite',
 		'related posts': 'postingan terkait',
 	},
 } as const

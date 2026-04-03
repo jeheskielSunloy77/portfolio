@@ -4,7 +4,13 @@ import refactoryLogo from '@/assets/companies/refactory.jpg'
 import tbpLogo from '@/assets/companies/tbp.webp'
 import education1 from '@/assets/me/education1.svg'
 import education2 from '@/assets/me/education2.webp'
-
+import projectCoffeeShopApp from '@/assets/projects/coffeeShopApp.webp'
+import projectGoKickstart from '@/assets/projects/goKickstart.png'
+import projectIaknKupang from '@/assets/projects/iaknKupang.webp'
+import projectJobScout from '@/assets/projects/job-scout.png'
+import projectKern from '@/assets/projects/kern.png'
+import projectPromptu from '@/assets/projects/promptu.png'
+import projectVolatile from '@/assets/projects/volatile.png'
 import skillAwsDark from '@/assets/skills/aws-dark.svg'
 import skillAws from '@/assets/skills/aws.svg'
 import skillDocker from '@/assets/skills/docker.svg'
@@ -18,22 +24,8 @@ import skillReact from '@/assets/skills/react.svg'
 import skillRedis from '@/assets/skills/redis.svg'
 import skillTailwind from '@/assets/skills/tailwind.svg'
 import skillTypescript from '@/assets/skills/typescript.svg'
-
-import projectCoffeeShop from '@/assets/projects/coffeeShopApp.webp'
-import projectCrud from '@/assets/projects/crudApp.webp'
-import projectEcommerce from '@/assets/projects/ecommerce.webp'
-import projectIaknKupang from '@/assets/projects/iaknKupang.webp'
-import projectIaknProfile from '@/assets/projects/iaknProfile.webp'
-import projectOldPortfolio from '@/assets/projects/oldPortfolio.webp'
-import projectWeather from '@/assets/projects/weatherApp.webp'
-import projectWebscraper from '@/assets/projects/webscraper.webp'
-
-import { dictionary } from '@/i18n/dictionary'
-import { DEFAULT_LANGUAGE } from '@/i18n/i18n'
 import type { Experience, Project, Skill } from '@/lib/types'
-import { Github, Globe, Linkedin, Mail, Rss } from 'lucide-react'
-
-const t = dictionary[DEFAULT_LANGUAGE]
+import { Download, Github, Globe, Linkedin, Mail } from 'lucide-react'
 
 export const NICK_NAME = 'jay'
 export const FULL_NAME = 'Jeheskiel Sunloy'
@@ -221,149 +213,117 @@ export const SKILLS: Skill[] = [
 export const PROJECTS: Project[] = [
 	{
 		isFeatured: true,
-		name: 'Academic Information System',
+		name: 'SIA, The Digital Backbone for Modern Campuses',
 		href: 'https://nextjs-iakn-kupang.vercel.app/',
 		description:
-			'A full featured academic information system for IAKN Kupang University. It includes features like student registration, course management, academic records, LMS, and more.',
+			'Built to streamline university operations, SIA unifies student registration, class administration, learning management, and academic reporting in a single web platform.',
 		tags: ['nextjs', 'postgresql', 'tailwindcss', 'typescript'],
 		image: projectIaknKupang,
 		links: [
 			{
-				name: 'Demo',
+				label: 'Visit',
 				href: 'https://nextjs-iakn-kupang.vercel.app/',
 				icon: Globe,
 			},
 		],
 	},
 	{
-		isFeatured: true,
-		name: 'Cross Platform Coffee Shop App',
-		href: 'https://github.com/jeheskielSunloy77/react-native-coffee-shop',
+		name: 'Roasty, Your Daily Brew, Streamlined',
 		description:
-			'A cross-platform mobile application for ordering coffee from local shops.',
+			'A cross-platform coffee ordering app built with React Native, Expo, Supabase, TypeScript, and Tailwind CSS for fast menu browsing, seamless checkout, and smooth pickup experiences.',
 		tags: ['react-native', 'expo', 'supabase', 'typescript', 'tailwindcss'],
-		image: projectCoffeeShop,
-		links: [
+		image: projectCoffeeShopApp,
+	},
+	{
+		name: 'Go Kickstart, Launch Full-Stack Go with Structure',
+		href: 'https://github.com/jeheskielSunloy77/go-kickstart',
+			description:
+				'An interactive and scriptable scaffolder that creates a clean architecture codebase with auth, PostgreSQL, Redis jobs, email templating, and optional frontend support in one guided flow.',
+			tags: ['go', 'cli', 'dev-tools', 'turborepo','clean-architecture'],
+			image: projectGoKickstart,
+			links: [
 			{
-				name: 'Source',
-				href: 'https://github.com/jeheskielSunloy77/react-native-coffee-shop',
+				label: 'Source',
+				href: 'https://github.com/jeheskielSunloy77/go-kickstart',
 				icon: Github,
 			},
 		],
 	},
 	{
-		name: 'Ecommerce App',
-		href: 'https://github.com/jeheskielSunloy77/laravel-ecommerce',
-		description:
-			'The Ecommerce App is a full-stack web application built using PHP, Laravel, and Tailwindcss. The app is designed to provide users with a seamless shopping experience, from browsing products to placing orders.',
-		tags: ['php', 'laravel', 'tailwindcss'],
-		image: projectEcommerce,
-		links: [
+		name: 'Kern, Read Anywhere on Any Screen',
+		href: 'https://github.com/jeheskielSunloy77/kern',
+			description:
+				'A cross-platform reading platform with a Go-powered TUI CLI, modern web app, and native-feeling iOS and Android apps built with React Native Expo, all backed by a shared backend core.',
+			tags: ['go', 'tui', 'bun', 'turborepo', 'typescript', 'postgresql'],
+			image: projectKern,
+			links: [
 			{
-				name: 'Source',
-				href: 'https://github.com/jeheskielSunloy77/laravel-ecommerce',
+				label: 'Source',
+				href: 'https://github.com/jeheskielSunloy77/kern',
 				icon: Github,
 			},
 		],
 	},
 	{
-		name: 'Ecommerce Web Scraper',
-		href: 'https://go-ecommerce-scraper.vercel.app/',
-		description:
-			'A webscraper build with GO using serverless functions technology, that can scrape the web looking for any product from the user.',
-		tags: ['go', 'colly'],
-		image: projectWebscraper,
-		links: [
+		name: 'Job Scout, Developer-First Engine for Job Board Aggregation',
+		href: 'https://github.com/jeheskielSunloy77/job-scout',
+			description:
+				'A modular scraping engine powered by Crawlee that supports batch collection and event streaming, making it easy to build job feeds, alerts, and hiring intelligence products.',
+			tags: ['typescript', 'library', 'scraping', 'nodejs'],
+			image: projectJobScout,
+			links: [
 			{
-				name: 'Demo',
-				href: 'https://go-ecommerce-scraper.vercel.app/',
-				icon: Globe,
-			},
-			{
-				name: 'Source',
-				href: 'https://github.com/jeheskielSunloy77/go-ecommerce-scraper',
+				label: 'Source',
+				href: 'https://github.com/jeheskielSunloy77/job-scout',
 				icon: Github,
 			},
-		],
-	},
-	{
-		name: 'CRUD App',
-		href: 'https://dataon-project.vercel.app/',
-		description:
-			'A simple CRUD application with Antd on the frontend and using mockapi.io to handle the resources.',
-		tags: ['react', 'antd', 'tailwindcss'],
-		image: projectCrud,
-		links: [
 			{
-				name: 'Demo',
-				href: 'https://dataon-project.vercel.app/',
-				icon: Globe,
-			},
-			{
-				name: 'Source',
-				href: 'https://github.com/jeheskielSunloy77/dataon-project',
-				icon: Github,
-			},
-		],
-	},
-	{
-		name: 'PWA Weather App',
-		href: 'https://nextjs-weather-app-lemon.vercel.app/',
-		description:
-			'A progressive web application that can be installed on any device that can provide an accurate weather report from all around the world.',
-		tags: ['nextjs', 'tailwindcss', 'typescript'],
-		image: projectWeather,
-		links: [
-			{
-				name: 'Demo',
-				href: 'https://nextjs-weather-app-lemon.vercel.app/',
-				icon: Globe,
-			},
-			{
-				name: 'Source',
-				href: 'https://github.com/jeheskielSunloy77/nextjs-weather-app',
-				icon: Github,
-			},
-		],
-	},
-	{
-		name: 'IAKN Kupang Profile Website',
-		href: 'https://iakn-kupang-profile.vercel.app/',
-		description:
-			'A Fullstack web app for IAKN Kupang University build with Astro, Tailwindcss and Postgresql.',
-		tags: ['nextjs', 'tailwindcss', 'postgresql', 'typescript'],
-		image: projectIaknProfile,
-		links: [
-			{
-				name: 'Demo',
-				href: 'https://iakn-kupang-profile.vercel.app/',
+				label: 'NPM Registry',
+				href: 'https://www.npmjs.com/package/job-scout',
 				icon: Globe,
 			},
 		],
 	},
 	{
-		name: 'Old Portfolio Website',
-		href: 'https://jeheskielSunloy77.github.io',
+		name: 'Volatile, The Ops Studio for Stateful Caching Systems',
+		href: 'https://github.com/jeheskielSunloy77/volatile',
 		description:
-			'My old portfolio website, read more about it on my blog post below.',
-		tags: ['react', 'tailwindcss'],
-		image: projectOldPortfolio,
-		links: [
+			'A modern desktop platform for cache operations that combines observability dashboards, workflow orchestration, and governance controls across Redis and Memcached connections.',
+			tags: ['electron', 'typescript', 'redis', 'memcached', 'desktop'],
+			image: projectVolatile,
+			links: [
 			{
-				name: 'Demo',
-				href: 'https://jeheskielsunloy.netlify.app',
-				icon: Globe,
-			},
-			{
-				name: 'Source',
-				href: 'https://github.com/jeheskielSunloy77/old-portfolio',
+				label: 'Source',
+				href: 'https://github.com/jeheskielSunloy77/volatile',
 				icon: Github,
 			},
 			{
-				name: 'Blog Post',
-				href: '/en/blog/redesigning-my-portfolio-making-space-for-what-matters',
-				icon: Rss,
+				label: 'Download',
+				href: 'https://github.com/jeheskielSunloy77/volatile/releases/latest',
+				icon: Download,
 			},
 		],
+	},
+	{
+		name: 'Promptu, AI Data Concierge for Organizations',
+		href: 'https://promptu-nu.vercel.app/',
+		description:
+			'An industrial scale RAG system that collects, compile and store any kind of digital data and then make it searchable with natural language using a LLM.',
+		tags: ['RAG', 'typescript','go', 'saas'],
+		image: projectPromptu,
+		links: [
+			{
+				label: 'Visit',
+				href: 'https://promptu-nu.vercel.app/',
+				icon: Globe,
+			},
+		],
+	},
+	{
+		name: 'Vettor, End-to-End Automated Job Hunting Suite',
+		description:
+			'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.',
+		tags: ['AI', 'typescript', 'automation', 'scraping', 'saas'],
+		image: projectIaknKupang,
 	},
 ]

@@ -87,42 +87,57 @@ Jay is a software engineer focused on web and mobile development. His core stack
 - Agile Methodologies
 - Git and GitHub
 
-## Selected Projects
+## Projects
 
-### Academic Information System
+### SIA, The Digital Backbone for Modern Campuses
 
-- Description: Full-featured academic information system for IAKN Kupang University.
+- Description: Built to streamline university operations, SIA unifies student registration, class administration, learning management, and academic reporting in a single web platform.
 - Tech: Next.js, PostgreSQL, Tailwind CSS, TypeScript
+- Link: https://nextjs-iakn-kupang.vercel.app/
 
-### Cross-Platform Coffee Shop App
+### Roasty, Your Daily Brew, Streamlined
 
-- Description: Mobile app for ordering coffee.
+- Description: A cross-platform coffee ordering app built with React Native, Expo, Supabase, TypeScript, and Tailwind CSS for fast menu browsing, seamless checkout, and smooth pickup experiences.
 - Tech: React Native, Expo, Supabase, TypeScript, Tailwind CSS
 
-### Ecommerce App
+### Go Kickstart, Launch Full-Stack Go with Structure
 
-- Description: Full-stack ecommerce application.
-- Tech: PHP, Laravel, Tailwind CSS
+- Description: An interactive and scriptable scaffolder that creates a clean architecture codebase with auth, PostgreSQL, Redis jobs, email templating, and optional frontend support in one guided flow.
+- Tech: Go, CLI, Dev Tools, Turborepo, Clean Architecture
+- Link: https://github.com/jeheskielSunloy77/go-kickstart
 
-### Ecommerce Web Scraper
+### Kern, Read Anywhere on Any Screen
 
-- Description: Web scraper for finding products online.
-- Tech: Go, Colly
+- Description: A cross-platform reading platform with a Go-powered TUI CLI, modern web app, and native-feeling iOS and Android apps built with React Native Expo, all backed by a shared backend core.
+- Tech: Go, TUI, Bun, Turborepo, TypeScript, PostgreSQL
+- Link: https://github.com/jeheskielSunloy77/kern
 
-### IAKN Kupang Profile Website
+### Job Scout, Developer-First Engine for Job Board Aggregation
 
-- Description: Full-stack university profile website.
-- Tech: Astro, PostgreSQL, Tailwind CSS
+- Description: A modular scraping engine powered by Crawlee that supports batch collection and event streaming, making it easy to build job feeds, alerts, and hiring intelligence products.
+- Tech: TypeScript, Library, Scraping, Node.js
+- Links:
+  - Source: https://github.com/jeheskielSunloy77/job-scout
+  - NPM: https://www.npmjs.com/package/job-scout
 
-### PWA Weather App
+### Volatile, The Ops Studio for Stateful Caching Systems
 
-- Description: Progressive web app for weather reports.
-- Tech: Next.js, Tailwind CSS, TypeScript
+- Description: A modern desktop platform for cache operations that combines observability dashboards, workflow orchestration, and governance controls across Redis and Memcached connections.
+- Tech: Electron, TypeScript, Redis, Memcached, Desktop
+- Links:
+  - Source: https://github.com/jeheskielSunloy77/volatile
+  - Download: https://github.com/jeheskielSunloy77/volatile/releases/latest
 
-### CRUD App
+### Promptu, AI Data Concierge for Organizations
 
-- Description: Simple CRUD application.
-- Tech: React, Ant Design, Tailwind CSS
+- Description: An industrial scale RAG system that collects, compile and store any kind of digital data and then make it searchable with natural language using a LLM.
+- Tech: RAG, TypeScript, Go, SaaS
+- Link: https://promptu-nu.vercel.app/
+
+### Vettor, End-to-End Automated Job Hunting Suite
+
+- Description: AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.
+- Tech: AI, TypeScript, Automation, Scraping, SaaS
 
 ## Portfolio Website
 

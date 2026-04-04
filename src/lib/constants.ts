@@ -60,6 +60,7 @@ export const CAREERS: Experience[] = [
 		title: 'Software Engineer',
 		logo: pemadLogo.src,
 		start: 'Mar 2024',
+		end: 'Mar 2026',
 		list: [
 			{ content: "Rewrote the company’s project management system using Laravel, improving maintainability and scalability."},
 			{ content: 'Led development of a Client Lifecycle & Operations platform supporting core business processes.' },
@@ -211,8 +212,58 @@ export const SKILLS: Skill[] = [
 ]
 
 export const PROJECTS: Project[] = [
+		{
+		isFeatured: true,
+		name: 'Promptu, AI Data Concierge for Organizations',
+		href: 'https://promptu-nu.vercel.app/',
+		description:
+			'An industrial scale RAG system that collects, compile and store any kind of digital data and then make it searchable with natural language using a LLM.',
+		tags: ['RAG', 'typescript','go', 'saas'],
+		image: projectPromptu,
+		links: [
+			{
+				label: 'Visit',
+				href: 'https://promptu-nu.vercel.app/',
+				icon: Globe,
+			},
+		],
+	},
 	{
 		isFeatured: true,
+		name: 'Vettor, End-to-End Automated Job Hunting Suite',
+		description:
+			'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.',
+		tags: ['AI', 'typescript', 'automation', 'scraping', 'saas'],
+		image: projectIaknKupang,
+		links: [
+			{
+				label: 'Visit',
+				href: 'https://vettor.cloud/',
+				icon: Globe,
+			},
+		],
+	},
+	{
+		name: 'Job Scout, Developer-First Engine for Job Board Aggregation',
+		href: 'https://github.com/jeheskielSunloy77/job-scout',
+			description:
+				'A modular scraping engine powered by Crawlee that supports batch collection and event streaming, making it easy to build job feeds, alerts, and hiring intelligence products.',
+			tags: ['typescript', 'library', 'scraping', 'nodejs'],
+			image: projectJobScout,
+			links: [
+			{
+				label: 'Source',
+				href: 'https://github.com/jeheskielSunloy77/job-scout',
+				icon: Github,
+			},
+			{
+				label: 'NPM Registry',
+				href: 'https://www.npmjs.com/package/job-scout',
+				icon: Globe,
+			},
+		],
+	},
+	{
 		name: 'SIA, The Digital Backbone for Modern Campuses',
 		href: 'https://nextjs-iakn-kupang.vercel.app/',
 		description:
@@ -226,13 +277,6 @@ export const PROJECTS: Project[] = [
 				icon: Globe,
 			},
 		],
-	},
-	{
-		name: 'Roasty, Your Daily Brew, Streamlined',
-		description:
-			'A cross-platform coffee ordering app built with React Native, Expo, Supabase, TypeScript, and Tailwind CSS for fast menu browsing, seamless checkout, and smooth pickup experiences.',
-		tags: ['react-native', 'expo', 'supabase', 'typescript', 'tailwindcss'],
-		image: projectCoffeeShopApp,
 	},
 	{
 		name: 'Go Kickstart, Launch Full-Stack Go with Structure',
@@ -265,26 +309,6 @@ export const PROJECTS: Project[] = [
 		],
 	},
 	{
-		name: 'Job Scout, Developer-First Engine for Job Board Aggregation',
-		href: 'https://github.com/jeheskielSunloy77/job-scout',
-			description:
-				'A modular scraping engine powered by Crawlee that supports batch collection and event streaming, making it easy to build job feeds, alerts, and hiring intelligence products.',
-			tags: ['typescript', 'library', 'scraping', 'nodejs'],
-			image: projectJobScout,
-			links: [
-			{
-				label: 'Source',
-				href: 'https://github.com/jeheskielSunloy77/job-scout',
-				icon: Github,
-			},
-			{
-				label: 'NPM Registry',
-				href: 'https://www.npmjs.com/package/job-scout',
-				icon: Globe,
-			},
-		],
-	},
-	{
 		name: 'Volatile, The Ops Studio for Stateful Caching Systems',
 		href: 'https://github.com/jeheskielSunloy77/volatile',
 		description:
@@ -304,26 +328,18 @@ export const PROJECTS: Project[] = [
 			},
 		],
 	},
-	{
-		name: 'Promptu, AI Data Concierge for Organizations',
-		href: 'https://promptu-nu.vercel.app/',
+		{
+		name: 'Roasty, Your Daily Brew, Streamlined',
 		description:
-			'An industrial scale RAG system that collects, compile and store any kind of digital data and then make it searchable with natural language using a LLM.',
-		tags: ['RAG', 'typescript','go', 'saas'],
-		image: projectPromptu,
+			'A cross-platform coffee ordering app built with React Native, Expo, Supabase, TypeScript, and Tailwind CSS for fast menu browsing, seamless checkout, and smooth pickup experiences.',
+		tags: ['react-native', 'expo', 'supabase', 'typescript', 'tailwindcss'],
+		image: projectCoffeeShopApp,
 		links: [
 			{
-				label: 'Visit',
-				href: 'https://promptu-nu.vercel.app/',
-				icon: Globe,
+				label: 'Source',
+				href: 'https://github.com/jeheskielSunloy77/react-native-coffee-shop',
+				icon: Github,
 			},
-		],
-	},
-	{
-		name: 'Vettor, End-to-End Automated Job Hunting Suite',
-		description:
-			'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.',
-		tags: ['AI', 'typescript', 'automation', 'scraping', 'saas'],
-		image: projectIaknKupang,
+		]
 	},
 ]

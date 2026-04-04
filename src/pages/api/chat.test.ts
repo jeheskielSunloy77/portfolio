@@ -15,12 +15,21 @@ const {
 		.mockImplementation(() => new Response(null, { status: 200 })),
 }))
 
-vi.mock('@/lib/ai-assistant-context.md?raw', () => ({
-	default: '# Test Context\n\n- Portfolio link: https://example.com',
-}))
+vi.mock('@/lib/ai-context', () => {
+	return {
+		buildPortfolioAssistantContext: vi
+			.fn()
+			.mockReturnValue('# Test Context\n\n- Portfolio link: https://example.com'),
+	}
+})
 
 vi.mock('@ai-sdk/google', () => ({
 	createGoogleGenerativeAI: vi.fn().mockImplementation(() => googleMock),
+}))
+
+vi.mock('astro:env/server', () => ({
+	GEMINI_API_KEY: 'test-gemini-api-key',
+	GEMINI_MODEL: 'test-gemini-model',
 }))
 
 vi.mock('ai', () => ({
@@ -54,7 +63,7 @@ describe('POST /api/chat', () => {
 		expect(body).toHaveProperty('error', 'Invalid request body')
 	})
 
-	it('passes the markdown context and chat history directly to the model', async () => {
+	it('passes the generated context and chat history directly to the model', async () => {
 		const messages = [
 			{
 				id: '0',

@@ -1,4 +1,4 @@
-import assistantContext from '@/lib/ai-assistant-context.md?raw'
+import { buildPortfolioAssistantContext } from '@/lib/ai-context'
 import { BOT_NAME, NICK_NAME } from '@/lib/constants'
 import { log, tryPromise } from '@/lib/utils'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
@@ -35,6 +35,7 @@ export async function POST({ request }: { request: Request }) {
 		if (body.error) return errResponse(body.error, 'Invalid request body', 400)
 
 		const messages = body.data.messages
+		const assistantContext = buildPortfolioAssistantContext()
 		const prompt =
 			`You are ${BOT_NAME}, a friendly chatbot for ${NICK_NAME}'s personal developer portfolio website. ` +
 			`You are trying to convince potential employers to hire ${NICK_NAME} as a software engineer. ` +

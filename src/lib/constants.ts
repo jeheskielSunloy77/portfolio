@@ -34,6 +34,33 @@ export const EMAIL = 'me@jeheskielsunloy.com'
 export const FEATURED_PROJECTS_LIMIT = 2
 export const FEATURED_POSTS_LIMIT = 3
 export const APP_NAME = 'jeheskielsunloy.com'
+export const WEBSITE_URL = 'https://jeheskielsunloy.com'
+export const BLOG_POSTS = [
+	{
+		title: 'How I Keep My Go Code Clean (Without Going Crazy)',
+		summary: 'Practical Clean Architecture guidance for Go without over-engineering.',
+		english: `${WEBSITE_URL}/en/blog/how-i-keep-my-go-code-clean-without-going-crazy`,
+		indonesian: `${WEBSITE_URL}/id/blog/cara-saya-menjaga-kode-go-tetap-bersih-tanpa-jadi-gila`,
+	},
+	{
+		title: 'How I Made My Portfolio Load Faster Than My Attention Span',
+		summary: 'Why Jay rebuilt the portfolio from Next.js to Astro for better performance and SEO.',
+		english: `${WEBSITE_URL}/en/blog/how-i-made-my-portfolio-load-faster-than-my-attention-span`,
+		indonesian: `${WEBSITE_URL}/id/blog/cara-saya-membuat-portofolio-muat-lebih-cepat-daripada-rentang-perhatian-saya`,
+	},
+	{
+		title: 'Kotlin Multiplatform vs React Native: Which Cross-Platform Framework Should You Choose?',
+		summary: 'Honest comparison of Kotlin Multiplatform and React Native based on real usage.',
+		english: `${WEBSITE_URL}/en/blog/kotlin-multiplatform-vs-react-native`,
+		indonesian: `${WEBSITE_URL}/id/blog/kotlin-multiplatform-vs-react-native`,
+	},
+	{
+		title: 'Redesigning My Portfolio: Making Space for What Matters',
+		summary: 'Behind-the-scenes writeup on simplifying the portfolio design.',
+		english: `${WEBSITE_URL}/en/blog/redesigning-my-portfolio-making-space-for-what-matters`,
+		indonesian: `${WEBSITE_URL}/id/blog/mendesain-ulang-portofolio-memberi-ruang-untuk-hal-yang-penting`,
+	},
+] as const
 
 export const SOCIALS = [
 	{

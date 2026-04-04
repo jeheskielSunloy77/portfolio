@@ -10,6 +10,7 @@ import projectIaknKupang from '@/assets/projects/iaknKupang.webp'
 import projectJobScout from '@/assets/projects/job-scout.png'
 import projectKern from '@/assets/projects/kern.png'
 import projectPromptu from '@/assets/projects/promptu.png'
+import projectVettor from '@/assets/projects/vettor.png'
 import projectVolatile from '@/assets/projects/volatile.png'
 import skillAwsDark from '@/assets/skills/aws-dark.svg'
 import skillAws from '@/assets/skills/aws.svg'
@@ -261,7 +262,7 @@ export const PROJECTS: Project[] = [
 		description:
 			'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.',
 		tags: ['AI', 'typescript', 'automation', 'scraping', 'saas'],
-		image: projectIaknKupang,
+		image: projectVettor,
 		links: [
 			{
 				label: 'Visit',

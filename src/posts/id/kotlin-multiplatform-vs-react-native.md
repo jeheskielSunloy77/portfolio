@@ -1,117 +1,101 @@
 ---
 title: 'Kotlin Multiplatform vs React Native: Framework Cross-Platform Mana yang Sebaiknya Kamu Pilih?'
-description: 'Perbandingan praktis antara Kotlin Multiplatform dan React Native berdasarkan pengalaman nyata — performa, pengalaman developer, dan kapan masing-masing masuk akal.'
+description: 'Setelah bekerja dengan React Native, native Kotlin, dan Kotlin Multiplatform, saya sampai pada kesimpulan sederhana: memilih framework mobile sebenarnya berarti memilih jenis kompromi yang paling bisa timmu tanggung.'
 publishedAt: '2025-05-22'
-tags:
- [
-  'Kotlin Multiplatform',
-  'React Native',
-  'Mobile Development',
-  'Cross Platform',
-  'KMP',
-  'JavaScript',
-  'Native Development',
- ]
+tags: ['Kotlin Multiplatform', 'React Native', 'Mobile Development', 'Cross Platform', 'KMP', 'JavaScript', 'Native Development']
 keywords: 'Kotlin Multiplatform, React Native, cross-platform development, mobile development, KMP vs RN, mobile frameworks 2025, native performance, JavaScript bridge, mobile app development'
 readTime: 8
 lang: id
 key: kotlin-multiplatform-vs-react-native
 ---
 
-Jujur: memilih framework cross-platform terasa kecil sampai kamu benar-benar terlanjur menggunakannya. Saya sudah lewat jalur ini — React Native → native Android dengan Kotlin → lalu KMP — dan tiap pilihan punya komprominya sendiri. Berikut ringkasan pengalaman saya supaya kamu bisa memilih lebih cepat.
+Keputusan cross-platform sering dibahas seperti daftar fitur. Menurut saya itu kurang tepat.
 
-## Intinya dulu
+Saat tim bertanya "lebih baik React Native atau Kotlin Multiplatform?", pertanyaan aslinya biasanya adalah: kita rela membayar di mana? Di kecepatan iterasi, kedalaman integrasi platform, kompleksitas tim, performa, maintainability, atau kombinasi semuanya?
 
-- React Native: cepat untuk prototipe, ekosistem besar, cocok kalau timmu kuat di JS.
-- Native Kotlin: performa terbaik dan akses penuh ke API platform.
-- Kotlin Multiplatform (KMP): bagi logika bisnis, tetapkan UI native — cocok jangka panjang jika tim siap bekerja di dua platform.
+Saya pernah bekerja dengan React Native, native Android di Kotlin, dan Kotlin Multiplatform. Kesimpulan saya bukan bahwa salah satu menang mutlak. Kesimpulannya adalah tiap pilihan menghukum jenis kenaifan yang berbeda.
 
-## Cerita singkat perjalanan saya
+## React Native kuat saat kecepatan lebih penting daripada kemurnian
 
-Dari web dev ke React Native awalnya enak: familiar dan cepat. Lalu pindah native Android dan jelas terasa jauh lebih mulus performanya. KMP muncul sebagai jalan tengah: bagikan logika, tetap tulis UI native.
+React Native tetap populer karena alasannya nyata.
 
-## React Native — kelebihannya
+- Cepat untuk prototipe
+- Ramah untuk tim yang datang dari web
+- Ekosistem besar
+- Siklus feedback produktif
 
-- Familiar untuk web dev (JS + React).
-- Iterasi cepat berkat hot reload.
-- Ekosistem besar: kemungkinan besar ada paket untuk kebutuhanmu.
+Kalau targetmu adalah membawa produk ke tangan pengguna secepat mungkin, React Native masih sangat masuk akal. Terutama untuk aplikasi yang isinya banyak form, list, dashboard, dan interaksi mobile yang standar.
 
-Kekurangannya:
+Masalah mulai muncul ketika tim berpura-pura bahwa React Native cukup native untuk semua kasus. Tidak selalu begitu.
 
-- Bridge JS→native bisa jadi botol leher performa (terutama animasi kompleks).
-- Masih ada kasus spesifik platform yang mesti di-handle terpisah.
-- Ukuran bundle dan dependensi native kadang merepotkan.
+Begitu aplikasi menuntut animasi kompleks, perilaku platform yang sangat spesifik, atau interaksi yang sensitif terhadap performa, abstraksinya mulai terlihat. Waktu engineering habis untuk bernegosiasi dengan framework, bridge, dan modul native di bawahnya.
 
-Cocok untuk: MVP, prototipe, aplikasi CRUD sederhana, tim web-first.
+React Native paling bagus saat kita menghormati batas kemampuannya. Nilainya turun saat kita berharap batas itu menghilang.
 
-## Native Android (Kotlin) — kelebihannya
+## Native Kotlin mahal, tapi tagihannya jujur
 
-- Performa native tanpa kompromi.
-- Akses penuh ke API terbaru dan tooling bagus (Android Studio).
-- Keamanan tipe dan null-safety Kotlin kurangi bug runtime.
+Native development meminta lebih banyak dari tim. Tidak ada jalan pintas tersembunyi. Kalau kamu ingin perilaku aplikasi yang benar-benar terasa milik platform, akses API penuh, dan performa yang rapat, kamu membangunnya langsung di atas platform lalu menerima biayanya.
 
-Kekurangannya: kamu harus mengelola codebase terpisah untuk iOS, dan waktu develop lebih lama.
+Biaya itu nyata:
 
-Cocok untuk: aplikasi performa-krusial, integrasi fitur platform dalam, atau proyek jangka panjang.
+- Pekerjaan platform terpisah
+- Hiring yang lebih spesifik
+- Duplikasi usaha lebih besar antara iOS dan Android
 
-## Kotlin Multiplatform — kenapa menarik
+Tapi keuntungannya juga nyata. Aplikasi native cenderung menua dengan baik karena arsitekturnya dekat dengan platform, bukan sekadar lapisan tambahan di atasnya. Saat performa atau fidelity platform benar-benar penting, native sulit ditandingi.
 
-Pendekatannya: bagikan logic (networking, validasi, rules), tulis UI secara native di masing-masing platform.
+Saya lebih suka membayar harga itu dengan sadar daripada berpura-pura mendapat kualitas native secara gratis.
 
-Kelebihan:
+## Kotlin Multiplatform menarik karena pendekatannya disiplin
 
-- Performa native (tidak ada bridge JS).
-- Adopsi bertahap: mulai dari satu modul yang dibagikan.
-- Type-safety di seluruh stack jika timmu nyaman dengan Kotlin.
+Alasan utama saya tertarik pada Kotlin Multiplatform adalah karena ia tidak mencoba meratakan seluruh masalah.
 
-Kekurangan:
+Idenya sederhana: bagikan logika yang memang layak dibagikan, biarkan UI tetap native, lalu terima bahwa sebagian hal memang seharusnya spesifik per platform. Itu jauh lebih matang daripada janji satu codebase untuk semuanya.
 
-- Butuh pengetahuan native di kedua platform untuk UI.
-- Ekosistem belum sebesar RN; sesekali kamu bikin solusi sendiri.
-- Tooling makin baik tapi masih ada bagian yang perlu pembenahan.
+Kelebihannya jelas:
 
-Cocok untuk: tim yang ingin maintainability jangka panjang, aplikasi dengan business logic kompleks tapi UI standar.
+- Logika bisnis bisa dipakai bersama
+- UI tetap native di tiap platform
+- Konsistensi lebih baik untuk networking, validasi, dan pengolahan data
+- Peluang maintainability jangka panjang tanpa harus menduplikasi seluruh stack
 
-## Performa & DX — ringkasan saya
+Kelemahannya juga jelas. KMP menuntut lebih banyak dari tim dibanding React Native. Kamu tetap perlu kompetensi native. Tooling sudah jauh lebih baik, tapi belum bebas gesekan. Beberapa kekosongan ekosistem masih harus kamu selesaikan sendiri.
 
-- Performa: Native ≈ KMP > RN untuk kasus UI/processing berat.
-- DX: RN tercepat untuk prototipe; KMP dan Native lebih stabil untuk proyek jangka panjang.
+KMP bukan jalan pintas. KMP adalah strategi.
 
-## Contoh singkat
+## Rekomendasi praktis saya
 
-React Native (JS):
+Kalau kamu mengutamakan kecepatan rilis dan produknya tidak terlalu sensitif terhadap performa, React Native biasanya pilihan paling pragmatis.
 
-```javascript
-interface User {
-  id: string
-  name: string
-  email: string
-}
+Kalau produkmu sangat bergantung pada rasa native, integrasi platform yang dalam, atau performa di bawah beban, pilih native lalu berhenti menawar kenyataan.
 
-async function fetchUser(id: string): Promise<User> {
-  const res = await fetch(`/api/users/${id}`)
-  return res.json()
-}
-```
+Kalau kamu membangun untuk jangka panjang, sangat peduli pada shared domain logic, dan timmu sanggup memelihara keahlian platform yang nyata, Kotlin Multiplatform jadi sangat menarik.
 
-KMP (shared Kotlin):
+Versi itulah yang menurut saya paling jujur.
 
-```kotlin
-@Serializable
-data class User(val id: String, val name: String, val email: String)
+## Kesalahan yang sering saya lihat
 
-class UserRepository {
-  suspend fun fetchUser(id: String): User =
-    httpClient.get("/api/users/$id").body()
-}
-```
+Banyak tim memilih framework berdasarkan apa yang sudah mereka kuasai, lalu mencari argumen pembenarannya belakangan.
 
-Shared Kotlin berjalan native di tiap platform dan menjaga logika bisnis tetap konsisten.
+Itu manusiawi. Tetap berbahaya.
 
-## Rekomendasi praktis
+Cara yang lebih baik adalah mengidentifikasi kegagalan seperti apa yang paling mahal untuk produkmu.
 
-- Pilih React Native kalau kamu harus cepat dan timmu web-first.
-- Pilih Native kalau performa dan integrasi platform sangat penting.
-- Pilih KMP kalau ingin kompromi: performa native + logika bersama untuk jangka panjang.
+- Rilis awal terlalu lambat?
+- Aplikasi terasa canggung dan tidak benar-benar native?
+- Dua codebase bergerak makin jauh satu sama lain?
+- Tim tidak sanggup menopang arsitekturnya sendiri enam bulan lagi?
 
-Mulai kecil: coba bagikan satu modul KMP, ukur manfaatnya, lalu tentukan langkah berikutnya. Gimana kondisi timmu dan target produkmu? Itu yang paling menentukan keputusan terbaik.
+Begitu kamu tahu kerugian mana yang paling tidak bisa diterima, keputusan framework biasanya langsung lebih terang.
+
+## Posisi saya sekarang
+
+Saya tidak melihat React Native dan Kotlin Multiplatform sebagai musuh. Saya melihatnya sebagai alat dengan tingkat kejujuran yang berbeda.
+
+React Native berkata, "kami akan membantumu bergerak cepat, tapi nanti kamu mungkin akan merasakan biaya abstraksinya."
+
+Kotlin Multiplatform berkata, "kami tidak akan pura-pura punya cerita UI tunggal, tapi kami bisa memberi fondasi jangka panjang yang lebih kuat kalau timmu siap."
+
+Itu sebabnya saya lebih menyukai KMP daripada sekadar mengaguminya. Ia membuat lebih sedikit janji yang mustahil ditepati.
+
+Dalam engineering, alat yang menua paling baik biasanya memang alat yang paling sedikit berbohong.

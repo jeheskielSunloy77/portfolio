@@ -1,7 +1,7 @@
 ---
 title: 'Redesigning My Portfolio: Making Space for What Matters ✨'
 publishedAt: '2025-01-02'
-description: 'A behind-the-scenes look at simplifying my portfolio: I pared back visual noise, focused content, and improved clarity so projects speak for themselves.'
+description: I redesigned my portfolio after realizing the interface was competing with the projects. The new version trades noise for clarity and makes the work easier to understand in seconds.
 tags: ['portfolio', 'web design', 'frontend', 'nextjs', 'tailwind']
 keywords: 'portfolio redesign, clean web design, minimal portfolio website, frontend portfolio, nextjs portfolio, tailwind portfolio, shadcn ui, portfolio before and after, developer portfolio tips, software engineer portfolio'
 readTime: 6
@@ -10,76 +10,72 @@ key: portfolio-redesign
 related: ['how-i-made-my-portfolio-load-faster-than-my-attention-span']
 ---
 
-I redesigned my portfolio. Plain and simple.
+My old portfolio had energy. It also had a bad habit: it kept interrupting the work.
 
-The old site worked, but it shouted. Too many colors, too many sections, and not enough room for the work itself. Over time I noticed visitors skimmed past projects because the design was doing too much of the talking.
+Too many visual ideas were competing at once. Bright accents, extra sections, decorative choices, little moments designed to show personality. None of them were terrible on their own. Together, they made the site harder to read than it needed to be.
 
-So I rebuilt it with a clear goal: make space for projects and let the content lead.
+That is a problem when the site exists to help someone evaluate how I think and what I build.
 
----
+So I redesigned it with a stricter standard. Every part of the interface had to justify its existence. If it did not clarify the work, support the story, or improve navigation, it was a candidate for removal.
 
-## Before: Busy and noisy
+## The first version taught me the right lesson
 
-My first version leaned on personality — bright palettes, lots of sections, and playful UI. It was fun to build, but it started competing with the actual work I wanted to show.
+I do not think the old portfolio was a mistake. It taught me something useful about taste.
 
-Lessons from that phase were useful. I learned what visitors ignored, which bits added value, and which were just decoration.
+Early in your career, it is easy to confuse visible effort with strong design. You add more sections because more feels substantial. You add more visual variation because it feels expressive. You leave things in because deleting them feels like losing work.
 
-If you want to grimace at my old experiments, there’s an old demo available: [Old Portfolio Demo](https://jeheskielsunloy.netlify.app)
+At some point you realize that good portfolio design is mostly editing.
 
----
+Recruiters and hiring managers do not visit to admire how many UI ideas I can stack on one page. They visit to answer a faster question: what kind of engineer is this, and does the work support the claim?
 
-## After: Clean and focused
+Once I accepted that, the redesign became much easier.
 
-The redesign centers on clarity. Key changes:
+## What I changed
 
-- Reduced clutter — only the essentials remain.
-- Limited color palette — less distraction, more contrast where it matters.
-- Better typography — improves scanability and tone.
-- Responsive layouts — projects look clear on phones and desktops.
+I cut back the parts of the interface that were speaking too loudly.
 
-The goal was not to be minimal for the sake of minimalism, but to make it effortless for someone to see what I built and why it matters.
+- Fewer competing colors.
+- More disciplined typography.
+- Simpler section flow.
+- Stronger spacing and grouping.
+- Project content pushed to the front.
 
-Check the live site here: [New Portfolio](/)
+That sounds obvious. It is still surprisingly hard to do. Most redesigns fail because they add a new layer of polish without fixing the original communication problem.
 
----
+I wanted the opposite. I wanted someone to land on the site and understand the shape of my work almost immediately.
 
-## The tech (short)
+## The design goal was clarity, not minimalism
 
-Stack stayed familiar: Next.js, TypeScript, Tailwind CSS. I added shadcn/ui components to speed development and keep a consistent UI system.
+I am not interested in minimalism as a style religion. Empty space is not automatically sophisticated. Neutral palettes are not automatically tasteful. A quiet interface can still be vague.
 
-Both versions are open-source if you want to explore the code:
+What I wanted was clarity with intent.
 
-- Old: [Old Portfolio GitHub](https://github.com/jeheskielSunloy77/personal-portfolio-with-react)
-- New: [New Portfolio GitHub](https://github.com/jeheskielSunloy77/_portfolio)
+That meant reducing noise so the important things became easier to notice: project choices, technical context, and outcomes. It also meant making the site easier to scan on the first pass, because that is how most people actually read portfolios.
 
----
+A recruiter should not have to work to find the signal. If they do, the design has failed.
 
-## Practical steps I took
+## The stack mattered less than the discipline
 
-If you want to simplify your own site, this is the practical checklist I followed:
+The implementation stayed familiar: Next.js, TypeScript, Tailwind CSS, and shadcn/ui where it helped me move quickly.
 
-- Audit content: remove or merge low-value sections.
-- Prioritize projects: lead with work that demonstrates impact.
-- Standardize components: consistent spacing, headings, and cards.
-- Optimize media: lazy-load images and use appropriately sized assets.
-- Keep interactive bits small: only hydrate what needs client-side JS.
+Those tools were not the story. The real work was editorial and structural. I had to decide what deserved space, what needed rewriting, what belonged on the page at all, and what was only there because I was attached to it.
 
-I hit a few regressions during the rewrite — broken spacing, small accessibility gaps — but those were straightforward fixes compared to the benefit of a cleaner experience.
+That process is closer to product design than decoration. It is not about making things prettier. It is about making decisions visible.
 
----
+## What the redesign says about me
 
-## What changed for visitors
+I think portfolios are products. Small ones, personal ones, but still products.
 
-- Faster scanning: people find projects and details quicker.
-- Fewer distractions: attention stays on work, not UI.
-- More consistent previews: social previews and link shares look better.
+A good portfolio should show technical range, but it should also reveal judgment. What did I prioritize? What did I cut? How fast can someone understand the value of the work? How much unnecessary complexity did I allow into the experience?
 
----
+This redesign says something I want recruiters to notice: I care about signal, not theater.
 
-## Final note
+## If I were advising another developer
 
-Redesigns are a trade-off between expression and clarity. The new portfolio favors clarity because the point of a portfolio is to show work — not to be the work.
+Start by removing things. Not polishing them. Removing them.
 
-If you’re thinking of redesigning, start by removing things. You’ll learn fast which parts actually matter.
+Take out sections that repeat themselves. Cut UI patterns that only exist to look busy. Put your strongest work in front of the visitor sooner. Then read the site again like someone with two minutes and a full inbox.
 
-👉 [See the new site](https://jeheskielsunloy.com)
+That perspective is brutal. It is also useful.
+
+The best portfolio upgrade I made was not a fancier component. It was developing the nerve to make the interface quieter.

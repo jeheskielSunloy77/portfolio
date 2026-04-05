@@ -1,67 +1,82 @@
 ---
 title: Bagaimana Saya Membuat Portofolio Saya Memuat Lebih Cepat daripada Rentang Perhatian Saya 🏃‍♂️💨
 publishedAt: 2025-09-25
-description: Saya membangun ulang situs portofolio dari Next.js ke Astro dan mengurangi JavaScript yang tidak perlu. Situs jadi lebih cepat, lebih mudah dirawat, dan tetap menjalankan bagian interaktif yang saya butuhkan.
+description: Saya memindahkan portofolio dari Next.js ke Astro karena website pribadi tidak butuh framework aplikasi yang terlalu berat. Hasilnya lebih ringan, lebih cepat dibuka, dan jauh lebih masuk akal untuk dirawat.
 tags: ['astro', 'nextjs', 'react', 'performa', 'seo']
 keywords: 'astro js portofolio, astro vs nextjs, performa astro, nextjs situs statis, react dengan astro, astro peningkatan seo, arsitektur islands astro, kecepatan situs astro, astro untuk portofolio, alternatif nextjs'
 readTime: 5
 lang: id
 key: portfolio-speed
+related: ['mendesain-ulang-portofolio-memberi-ruang-untuk-hal-yang-penting']
 ---
 
-Saya pakai Next.js bertahun-tahun. Nyaman, lengkap fiturnya, dan cocok kalau butuh server rendering atau API. Untuk portofolio saya, ternyata saya membawa terlalu banyak beban untuk sesuatu yang hampir tidak berubah.
+Saya lama memakai Next.js untuk hampir semua hal. Framework itu bagus, matang, dan saya sudah sangat terbiasa dengannya. Masalahnya, portofolio saya tidak benar-benar membutuhkan sebagian besar yang ditawarkannya.
 
-Suatu sore, sambil nunggu kopi selesai, saya memutuskan untuk membangun ulang situs pakai Astro. Tujuannya sederhana: halaman harus terasa instan, dan komponen kecil yang interaktif tetap bekerja tanpa menyeret runtime JavaScript besar.
+Isi situs itu sederhana: halaman statis, beberapa gambar, dan sedikit interaksi. Tapi arsitekturnya masih membawa kebiasaan dari dunia aplikasi. JavaScript di klien lebih banyak dari yang perlu, struktur lebih rumit, dan beban maintenance terasa lebih besar daripada nilai yang saya dapat.
 
-Hasilnya terasa langsung — bukan karena trik rahasia, tapi karena saya fokus pada tiga hal sederhana: kirim lebih sedikit JS, lazy-load yang tidak terlihat, dan pisahkan bagian interaktif. Sekarang situs terbuka cepat, UI terasa lebih responsif, dan saya tenang karena lebih sedikit yang perlu dipelihara.
+Jadi saya membangun ulang dengan Astro. Bukan karena sedang ramai, tapi karena lebih cocok dengan pekerjaannya.
 
----
+## Masalah utamanya bukan sekadar performa
 
-## Kenapa memilih Astro?
+Orang sering membahas kecepatan situs seolah semuanya dimulai dari skor audit. Buat saya, semuanya dimulai dari keputusan teknis.
 
-Ide utama Astro gampang: sebagian besar HTML bersifat statis, dan Anda hanya melakukan hydrate pada komponen yang perlu JavaScript.
+Saya melihat portofolio itu lalu bertanya: kenapa saya memakai solusi yang bentuknya seperti aplikasi untuk website yang perilakunya lebih mirip dokumen?
 
-Praktisnya:
+Pertanyaan itu mengubah arah rewrite sepenuhnya. Tujuannya bukan lagi "mengoptimalkan setup yang ada." Tujuannya menjadi "berhenti melakukan hal yang sebenarnya tidak perlu."
 
-- Halaman jadi lebih ringan.
-- HTML lebih ramah untuk SEO dan preview sosial.
-- Browser bekerja lebih sedikit di muka, sehingga pengalaman terasa lebih cepat.
+Begitu sudut pandangnya berubah, jawabannya juga jadi jelas:
 
-Untuk portofolio yang isinya mayoritas statis, ini masuk akal. Saya tetap bisa pakai React untuk bagian yang memang butuh interaksi, tanpa mengubah tiap halaman jadi single-page app kecil.
+- Render sebanyak mungkin sebagai HTML statis.
+- Pakai JavaScript hanya di bagian yang memang butuh interaksi.
+- Jangan perlakukan setiap halaman seperti mini app.
 
----
+Di situlah performa yang sehat biasanya dimulai. Dari pengurangan, bukan penambahan.
 
-## Langkah yang saya ambil
+## Kenapa Astro terasa masuk akal
 
-Kalau kamu mau coba rewrite, ini checklist praktis yang saya pakai — sederhana dan bisa langsung dipraktikkan:
+Astro punya bias yang saya suka: statis dulu, hydrate seperlunya.
 
-- Audit bundle: temukan skrip besar dan kode yang tidak terpakai.
-- Konversi halaman ke Astro; gunakan islands (partial hydration) untuk komponen yang perlu.
-- Lazy-load gambar dan aset non-kritis.
-- Ganti beberapa widget kecil dengan HTML/CSS jika memungkinkan.
-- Biarkan form kontak dan UI interaktif tetap sebagai komponen React kecil.
+Untuk portofolio, itu tepat. Saya masih bisa memakai React di bagian kecil yang memang membutuhkan interaksi, tanpa menyeret seluruh halaman masuk ke runtime yang tidak memberi manfaat nyata.
 
-Saya juga sempat merusak layout di beberapa tempat pada percobaan pertama, tapi itu cepat diperbaiki — trade-off yang sepadan dengan peningkatan performa.
+Hasilnya terasa cepat karena browser punya pekerjaan lebih sedikit, bukan karena saya sibuk menyiasati masalah yang saya ciptakan sendiri.
 
----
+Saya lebih suka arsitektur yang menghapus masalah dari awal daripada arsitektur yang menciptakan masalah lalu memberi alat untuk menambalnya.
 
-## Next.js tetap punya tempatnya
+## Perubahan yang benar-benar saya lakukan
 
-Next.js masih hebat untuk aplikasi yang butuh routing, SSR, atau banyak state di klien. Peralihan ini bukan menjelekkan Next.js, melainkan memilih alat yang tepat untuk kebutuhan. Astro membiarkan saya mempertahankan bagian terbaik React di tempat yang perlu, dan membuang default berat yang tidak diperlukan.
+Rewrite ini bukan proyek dramatis. Isinya keputusan-keputusan membosankan, dan biasanya justru di situlah engineering yang bagus hidup.
 
----
+- Saya pindahkan halaman berbasis konten ke Astro.
+- Komponen interaktif saya pisahkan dan buat sekecil mungkin.
+- Aset yang tidak langsung dibutuhkan saya lazy-load.
+- Beberapa detail UI yang terasa keren di kode saya buang karena nilainya kecil untuk pengunjung.
+- Permukaan maintenance saya perkecil dengan sengaja.
 
-## Hasil yang nyata
+Tidak ada trik rahasia di sini. Justru itu poinnya.
 
-- Halaman terasa jauh lebih cepat bagi pengunjung.
-- Lebih sedikit JavaScript yang dikirim berarti lebih sedikit potensi bug.
-- Skor Lighthouse dan preview sosial membaik.
-- Kode lebih sederhana dan lebih mudah dimengerti.
+## Pelajaran yang paling berguna
 
----
+Pelajaran utamanya bukan soal Astro atau Next.js. Pelajarannya soal disiplin memilih alat.
 
-## Penutup
+Banyak engineer, termasuk saya, kadang terlalu lama bertahan di stack yang familiar meski masalahnya sudah berubah. Kita menyebutnya konsistensi. Kadang itu hanya kebiasaan yang sedang mencari pembenaran.
 
-Jika proyekmu kebanyakan berisi konten statis — portofolio, dokumentasi, atau situs marketing kecil — pikirkan lagi: apakah kamu benar-benar butuh framework aplikasi penuh? Kadang solusi tercepat dan paling efektif adalah mengurangi kompleksitas, bukan menambahnya.
+Next.js tetap sangat tepat saat saya butuh routing kompleks, logika di server, auth flow, atau state klien yang kaya. Saya tidak tertarik ikut perang framework. Saya tertarik pada kecocokan.
 
-Mulai kecil: konversi satu halaman, pindahkan satu widget ke island, lalu ukur. Kamu mungkin kaget seberapa lega pengalaman pengguna jadi hanya dengan membiarkan browser melakukan lebih sedikit pekerjaan di awal.
+Untuk portofolio ini, Astro lebih tepat karena membiarkan situsnya menjadi dirinya sendiri.
+
+## Apa yang membaik
+
+- Halaman terasa lebih instan.
+- HTML lebih sederhana, jadi SEO dan preview sosial ikut terbantu.
+- JavaScript yang dikirim lebih sedikit, artinya lebih sedikit potensi masalah.
+- Kode lebih mudah dipahami karena arsitekturnya selaras dengan bentuk kontennya.
+
+Bagian terbaiknya bukan angka di laporan. Bagian terbaiknya adalah situs ini terasa lebih tenang, dan basis kodenya juga begitu.
+
+## Kalau saya harus memberi saran
+
+Kalau kamu sedang membangun portofolio, dokumentasi, atau situs yang berat di konten, coba tanya satu hal sebelum otomatis memakai stack andalanmu: proyek ini benar-benar butuh apa, dan apa yang sebenarnya hanya kamu bawa dari kebiasaan?
+
+Framework yang kita kuasai memang paling gampang dibenarkan. Yang lebih sulit adalah menahan diri.
+
+Rewrite ini mengingatkan saya bahwa kedewasaan teknis bukan cuma soal tahu lebih banyak tools. Kadang justru soal tahu kapan sebuah tool tidak perlu dipakai.

@@ -1,7 +1,7 @@
 ---
 title: Cara Saya Menjaga Kode Go Tetap Bersih (Tanpa Jadi Gila) 🧹
 publishedAt: 2025-03-02
-description: Pendekatan praktis untuk menyusun aplikasi Go—pakai services, repository, dan interface di tempat yang masuk akal supaya kode tetap mudah dipahami dan diuji.
+description: 'Saya berhenti memaksakan Clean Architecture versi textbook ke proyek Go dan memilih struktur yang lebih ringan: service, interface seperlunya, dan wiring yang eksplisit. Hasilnya lebih mudah diuji dan jauh lebih enak dirawat.'
 tags: ['go', 'design patterns', 'clean architecture']
 keywords: 'golang architecture, go clean code, golang project structure, go services pattern, golang repositories, go best practices, golang testing, go code organization, clean architecture go, golang design patterns'
 readTime: 9
@@ -9,54 +9,62 @@ lang: id
 key: go-clean-code
 ---
 
-Dulu saya sering mencoba memaksakan "Clean Architecture" ke setiap proyek Go. Hasilnya: over-engineered, susah dipelihara, dan banyak headache.
+Saya suka kode yang rapi. Saya tidak suka arsitektur yang terlalu sibuk ingin terlihat pintar.
 
-Seiring waktu saya menyusun gaya yang lebih cocok dengan idiom Go: sederhana, eksplisit, dan praktis. Intinya: pakai clarity over ceremony — letakkan interface di tempat yang dipakai, gunakan service untuk logika bisnis, dan biarkan package Go menyusun batas-batasnya.
+Dulu saya sering memaksa setiap proyek Go masuk ke versi Clean Architecture yang tampak meyakinkan di diagram, tapi terasa canggung saat dipakai. Layer terlalu banyak, abstraksi terlalu dini, dan package muncul bukan karena kebutuhan kode, melainkan karena kebutuhan presentasi.
 
-## Kenapa Clean Architecture kadang terasa berlebihan di Go
+Hasilnya hampir selalu sama: development melambat, keterbacaan turun, dan codebase terlihat serius jauh sebelum benar-benar pantas.
 
-- Bahasa seperti Java/C# punya DI container dan pola yang cocok untuk lapisan kaku. Go tidak.
-- Interface untuk segalanya sering jadi berlebihan.
-- Error handling eksplisit di Go tidak cocok dengan pola exception-heavy.
-- Menumpuk paket "abstrak" bisa membuat struktur lebih rumit daripada membantu.
+Sekarang aturan saya lebih sederhana. Di Go, struktur harus membantu saya memahami kode saat sedang lelah, bukan menguji kesabaran saya. Kalau tidak, saya tidak tertarik.
 
-Namun prinsip dasarnya tetap berharga: pisahkan concern, buat kode dapat diuji, dan hindari coupling berlebih.
+## Yang biasanya salah saat Clean Architecture diterapkan berlebihan
 
-## Struktur proyek yang saya pakai
+Prinsip dasar Clean Architecture sebenarnya bagus. Separation of concerns penting. Testability penting. Decoupling juga penting.
 
-```
+Masalahnya, banyak orang menyalin upacaranya, bukan prinsipnya.
+
+Di situlah Go mulai melawan.
+
+- Go suka wiring yang eksplisit.
+- Go lebih nyaman dengan package kecil yang tanggung jawabnya jelas.
+- Go tidak membutuhkan interface untuk setiap hal yang bergerak.
+- Go cepat menjadi sulit dibaca ketika satu konsep dipecah ke banyak layer tanpa alasan kuat.
+
+Saya pernah melihat codebase yang "clean" tapi handler memanggil use case, use case memanggil service, service memanggil repository, semuanya lewat interface yang didefinisikan jauh dari konsumennya. Pada titik itu, kodenya bukan fleksibel. Kodenya cuma tebal.
+
+## Struktur yang paling sering saya pakai
+
+Saya lebih suka susunan yang jujur terhadap cara aplikasi bekerja:
+
+```text
 project/
 ├── cmd/
 │   └── server/
-│       └── main.go          # Entry point
+│       └── main.go
 ├── internal/
-│   ├── domain/              # Business stuff kamu
-│   │   ├── user.go
-│   │   └── errors.go
-│   ├── service/             # Business logic tinggal di sini
-│   │   └── user.go
-│   ├── repository/          # Data access
-│   │   ├── postgres/
-│   │   └── memory/
-│   └── transport/           # HTTP/gRPC/CLI stuff
-│       ├── http/
-│       └── grpc/
-├── pkg/                     # Bagian yang dapat digunakan ulang
+│   ├── domain/
+│   ├── service/
+│   ├── repository/
+│   └── transport/
 └── go.mod
 ```
 
-Fokusnya: services alih-alih "use cases", dan interface didefinisikan dekat tempat yang menggunakannya.
+Ini bukan aturan suci. Ini cuma struktur yang jujur.
 
-## Domain: keep it simple
+Domain menyimpan bahasa bisnis. Service mengorkestrasi alur. Repository menangani persistence. Transport menerjemahkan dunia luar ke dalam bentuk yang dimengerti aplikasi. `main.go` merakit semuanya secara terbuka.
 
-Domain tipe cukup ringan — struct dan beberapa method validasi:
+Dengan susunan seperti itu, saya mendapat sebagian besar manfaat yang orang cari dari kata "arsitektur" tanpa menimbun codebase dengan seremoni.
+
+## Domain saya sengaja dibuat membosankan
+
+Di kode domain, membosankan adalah pujian.
 
 ```go
 type User struct {
-    ID        string    `json:"id"`
-    Email     string    `json:"email"`
-    Name      string    `json:"name"`
-    CreatedAt time.Time `json:"created_at"`
+    ID        string
+    Email     string
+    Name      string
+    CreatedAt time.Time
 }
 
 func (u *User) Validate() error {
@@ -70,16 +78,15 @@ func (u *User) Validate() error {
 }
 ```
 
-Tidak perlu constructor kompleks kalau tidak ada manfaatnya.
+Saya tidak butuh constructor rumit, pola yang terlalu canggih, atau aturan tersembunyi hanya untuk merepresentasikan user. Saya butuh bentuk data yang jelas dan validasi yang gampang dipercaya.
 
-## Services: tempat logika bisnis hidup
+## Service adalah tempat keputusan bisnis terlihat
 
-Services mengorkestrasi domain dan repository:
+Saya suka memakai service karena aturan aplikasi jadi mudah ditemukan.
 
 ```go
 type UserService struct {
-    repo   UserRepository
-    logger *slog.Logger
+    repo UserRepository
 }
 
 func (s *UserService) CreateUser(ctx context.Context, email, name string) (*domain.User, error) {
@@ -102,11 +109,11 @@ func (s *UserService) CreateUser(ctx context.Context, email, name string) (*doma
 }
 ```
 
-Services mudah diuji karena dependensi bisa diganti dengan implementasi in-memory.
+Handler tidak perlu memiliki logika ini. Repository juga tidak. Service adalah tempat yang baik untuk orkestrasi karena aturan bisnis tetap mudah dicari dan mudah diuji.
 
-## Repository: interface di tempat yang masuk akal
+## Interface saya definisikan di dekat pemakainya
 
-Definisikan interface dekat consumer-nya:
+Ini salah satu kebiasaan Go yang paling berguna buat saya.
 
 ```go
 type UserRepository interface {
@@ -115,11 +122,13 @@ type UserRepository interface {
 }
 ```
 
-Implementasi Postgres atau memory tinggal dibuat terpisah.
+Saya tidak membuat package `interfaces` global lalu menyebutnya arsitektur. Kalau service butuh kontrak repository, biasanya kontrak itu sebaiknya hidup dekat service tersebut. Konsumenlah yang mendefinisikan seam-nya.
 
-## Handler: keep it thin
+Pendekatan ini membuat abstraksi tetap rapat dan mencegah codebase berubah menjadi perburuan file.
 
-Handler HTTP hanya menerjemahkan request/response ke service:
+## Layer transport sebaiknya tetap tipis
+
+HTTP atau gRPC cukup menerjemahkan, bukan ikut berpikir.
 
 ```go
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -139,19 +148,18 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-Memisahkan concern membuat kode lebih mudah dirawat.
+Kalau handler tetap tipis, perubahan di layer transport tidak mudah bocor ke logika bisnis. Proyek juga lebih gampang diperluas kalau nanti perlu gRPC, CLI, atau background job.
 
-## Wiring: eksplisit, tanpa magic
+## Wiring yang eksplisit justru kelebihan
 
-Wiring dependency di main.go dengan fungsi sederhana:
+Saya merakit dependency di `main.go` dengan kode biasa.
 
 ```go
 func main() {
     db := setupDatabase()
-    logger := setupLogger()
 
     userRepo := postgres.NewUserRepository(db)
-    userService := service.NewUserService(userRepo, logger)
+    userService := service.NewUserService(userRepo)
     userHandler := http.NewUserHandler(userService)
 
     router := setupRoutes(userHandler)
@@ -159,41 +167,29 @@ func main() {
 }
 ```
 
-Langsung dan mudah ditelusuri saat debugging.
+Saya ingin bisa melihat bagaimana aplikasi dirakit. Dependency graph yang tersembunyi tidak membuat saya terkesan. Biasanya justru membuat debugging lebih buruk.
 
-## Testing: keuntungan nyata
+## Kenapa struktur ini terus terasa berguna
 
-Dengan implementasi in-memory, test jadi simpel:
+Nilai utamanya bukan kemurnian arsitektur. Nilai utamanya adalah kecepatan yang tetap aman.
 
-```go
-func TestUserService_CreateUser(t *testing.T) {
-    repo := memory.NewUserRepository()
-    logger := slog.New(slog.NewTextHandler(io.Discard, nil))
-    service := service.NewUserService(repo, logger)
+Saya bisa menguji service dengan repository in-memory. Saya bisa menelusuri alur request tanpa membuka terlalu banyak file. Saya bisa menjelaskan susunan proyek ke engineer lain tanpa harus menggambar diagram berlapis-lapis lebih dulu.
 
-    user, err := service.CreateUser(context.Background(), "test@example.com", "John")
+Itulah yang seharusnya diberikan struktur yang baik. Bukan gengsi. Bukan poin pola desain. Kejelasan saat tekanan datang.
 
-    assert.NoError(t, err)
-    assert.Equal(t, "test@example.com", user.Email)
-}
-```
+## Yang sekarang saya hindari
 
-Tidak perlu framework mocking rumit.
+- Generic repository yang mengaburkan bentuk database
+- Interface yang dibuat "siapa tahu nanti perlu"
+- Layer berlapis dengan nama samar seperti `usecase`, `manager`, atau `processor`
+- Indirection yang pintar di permukaan tapi menyembunyikan aturan bisnis sederhana
 
-## Kapan cara ini cocok
+Kalau sebuah pola tidak membuat engineer berikutnya lebih cepat, besar kemungkinan itu cuma dekorasi.
 
-- Aplikasi medium (5–50 endpoint)
-- Tim yang butuh jelas boundary antara transport/service/repository
-- Project yang berkembang tapi entitas intinya stabil
+## Patokan saya sekarang
 
-## Hal yang saya hindari
+Go tidak membutuhkan desain yang lebih sedikit. Go membutuhkan desain yang lebih jujur.
 
-- Abstraksi berlebihan tanpa kebutuhan nyata
-- Menyimpan interface di paket terpisah yang sulit diikuti
-- Membuat lapisan hanya demi mengikuti diagram arsitektur
+Saya tetap peduli pada batas yang jelas, testing, dan maintainability. Saya hanya tidak lagi menganggap banyaknya abstraksi sebagai tanda kedewasaan. Kalau kode mudah dibaca, dirakit dengan jelas, dan cukup lentur saat berubah, biasanya itu sudah lebih dari cukup.
 
-## Intinya
-
-Clean Architecture punya ide bagus, tapi di Go pragmatisme menang. Buat batas yang jelas, tempatkan interface di dekat konsumen, dan pilih kesederhanaan daripada kepintaran. Kode yang jelas lebih mudah dimodifikasi, diuji, dan dipahami oleh tim.
-
-Mulai sederhana, refactor ketika perlu, dan selalu utamakan kejelasan. Kode kamu harus menceritakan apa yang dilakukan aplikasi, bukan memaksa pembaca memecahkan teka-teki.
+Banyak proyek Go membaik begitu kita berhenti berusaha membuatnya tampak penting, lalu mulai berusaha membuatnya tampak jelas.

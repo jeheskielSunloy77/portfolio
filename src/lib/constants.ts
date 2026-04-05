@@ -243,7 +243,7 @@ export const PROJECTS: Project[] = [
 		{
 		isFeatured: true,
 		name: 'Promptu, AI Data Concierge for Organizations',
-		href: 'https://promptu-nu.vercel.app/',
+		href: 'https://promptuapp.vercel.app/',
 		description:
 			'An industrial scale RAG system that collects, compile and store any kind of digital data and then make it searchable with natural language using a LLM.',
 		tags: ['RAG', 'typescript','go', 'saas'],
@@ -251,7 +251,7 @@ export const PROJECTS: Project[] = [
 		links: [
 			{
 				label: 'Visit',
-				href: 'https://promptu-nu.vercel.app/',
+				href: 'https://promptuapp.vercel.app/',
 				icon: Globe,
 			},
 		],

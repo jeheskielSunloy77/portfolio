@@ -64,12 +64,16 @@ const projects = limit ? filteredProjects.slice(0, limit) : filteredProjects
 					{!!project.links?.length && (
 						<div class='flex flex-row flex-wrap items-start gap-1'>
 							{project.links.toSorted().map((link, idx) => (
-								<a href={link?.href} target='_blank'>
+								<a
+									href={link?.href}
+									target={link.isExternal === false ? undefined : '_blank'}
+									rel={link.isExternal === false ? undefined : 'noreferrer noopener'}
+								>
 									<Button
 										key={idx}
 										size='sm'
 										className='text-xs'
-										variant={idx === 0 ? 'default' : 'secondary'}
+										variant={link.variation}
 									>
 										<link.icon className='size-3' />
 										{t[link.label]}

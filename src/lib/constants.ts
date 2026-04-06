@@ -26,7 +26,7 @@ import skillRedis from '@/assets/skills/redis.svg'
 import skillTailwind from '@/assets/skills/tailwind.svg'
 import skillTypescript from '@/assets/skills/typescript.svg'
 import type { Experience, Project, Skill } from '@/lib/types'
-import { Download, Github, Globe, Linkedin, Mail } from 'lucide-react'
+import { BookOpen, Download, Github, Globe, Linkedin, Mail } from 'lucide-react'
 
 export const NICK_NAME = 'jay'
 export const FULL_NAME = 'Jeheskiel Sunloy'
@@ -240,27 +240,11 @@ export const SKILLS: Skill[] = [
 ]
 
 export const PROJECTS: Project[] = [
-		{
-		isFeatured: true,
-		name: 'Promptu, AI Data Concierge for Organizations',
-		href: 'https://promptuapp.vercel.app/',
-		description:
-			'An industrial scale RAG system that collects, compile and store any kind of digital data and then make it searchable with natural language using a LLM.',
-		tags: ['RAG', 'typescript','go', 'saas'],
-		image: projectPromptu,
-		links: [
-			{
-				label: 'Visit',
-				href: 'https://promptuapp.vercel.app/',
-				icon: Globe,
-			},
-		],
-	},
 	{
 		isFeatured: true,
 		name: 'Vettor, End-to-End Automated Job Hunting Suite',
 		description:
-			'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.',
+		'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.',
 		tags: ['AI', 'typescript', 'automation', 'scraping', 'saas'],
 		image: projectVettor,
 		links: [
@@ -268,9 +252,27 @@ export const PROJECTS: Project[] = [
 				label: 'Visit',
 				href: 'https://vettor.cloud/',
 				icon: Globe,
+				isExternal: true,
 			},
 		],
 	},
+				{
+				isFeatured: true,
+				name: 'Promptu, AI Data Concierge for Organizations',
+				href: 'https://promptuapp.vercel.app/',
+				description:
+					'An industrial scale RAG system that collects, compile and store any kind of digital data and then make it searchable with natural language using a LLM.',
+				tags: ['RAG', 'typescript','go', 'saas'],
+				image: projectPromptu,
+				links: [
+					{
+						label: 'Visit',
+						href: 'https://promptuapp.vercel.app/',
+						icon: Globe,
+						isExternal: true,
+					},
+				],
+			},
 	{
 		name: 'Job Scout, Developer-First Engine for Job Board Aggregation',
 		href: 'https://github.com/jeheskielSunloy77/job-scout',
@@ -283,11 +285,14 @@ export const PROJECTS: Project[] = [
 				label: 'Source',
 				href: 'https://github.com/jeheskielSunloy77/job-scout',
 				icon: Github,
+				isExternal: true,
 			},
 			{
 				label: 'NPM Registry',
 				href: 'https://www.npmjs.com/package/job-scout',
 				icon: Globe,
+				variation: 'secondary',
+				isExternal: true,
 			},
 		],
 	},
@@ -303,6 +308,7 @@ export const PROJECTS: Project[] = [
 				label: 'Visit',
 				href: 'https://nextjs-iakn-kupang.vercel.app/',
 				icon: Globe,
+				isExternal: true,
 			},
 		],
 	},
@@ -318,6 +324,15 @@ export const PROJECTS: Project[] = [
 				label: 'Source',
 				href: 'https://github.com/jeheskielSunloy77/go-kickstart',
 				icon: Github,
+				variation: 'default',
+				isExternal: true,
+			},
+			{
+				label: 'Blog',
+				href: '/en/blog/how-i-keep-my-go-code-clean-without-going-crazy',
+				icon: BookOpen,
+				variation: 'secondary',
+				isExternal: false,
 			},
 		],
 	},
@@ -333,6 +348,7 @@ export const PROJECTS: Project[] = [
 				label: 'Source',
 				href: 'https://github.com/jeheskielSunloy77/kern',
 				icon: Github,
+				isExternal: true,
 			},
 		],
 	},
@@ -348,11 +364,14 @@ export const PROJECTS: Project[] = [
 				label: 'Source',
 				href: 'https://github.com/jeheskielSunloy77/volatile',
 				icon: Github,
+				isExternal: true,
 			},
 			{
 				label: 'Download',
 				href: 'https://github.com/jeheskielSunloy77/volatile/releases/latest',
 				icon: Download,
+				variation: 'secondary',
+				isExternal: true,
 			},
 		],
 	},
@@ -367,6 +386,7 @@ export const PROJECTS: Project[] = [
 				label: 'Source',
 				href: 'https://github.com/jeheskielSunloy77/react-native-coffee-shop',
 				icon: Github,
+				isExternal: true,
 			},
 		]
 	},

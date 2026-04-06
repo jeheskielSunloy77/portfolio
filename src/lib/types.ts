@@ -7,6 +7,8 @@ interface Link {
 	icon: LucideIcon
 	href: string
 	label: LocalizedString
+	variation?: 'default' | 'outline' | 'secondary' | 'ghost' | 'destructive' | 'link'
+	isExternal?: boolean
 }
 
 export interface Experience {

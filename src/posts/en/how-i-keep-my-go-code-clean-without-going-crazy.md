@@ -1,195 +1,173 @@
 ---
 title: How I Keep My Go Code Clean (Without Going Crazy) 🧹
 publishedAt: 2025-03-02
-description: I stopped forcing textbook Clean Architecture into Go projects and started using a simpler structure built around services, focused interfaces, and explicit wiring. The code got easier to test and much easier to maintain.
+description: I built go-kickstart to scaffold a production-scale full-stack Go and React monorepo with pragmatic Clean Architecture, explicit boundaries, and a structure that stays understandable as the app grows.
 tags: ['go', 'design patterns', 'clean architecture']
-keywords: 'golang architecture, go clean code, golang project structure, go services pattern, golang repositories, go best practices, golang testing, go code organization, clean architecture go, golang design patterns'
-readTime: 9
+keywords: 'golang project structure, go monorepo, clean architecture golang, golang fullstack app, react golang monorepo, golang scaffolding cli, production ready golang, go backend architecture, monorepo go react, golang clean architecture'
+readTime: 10
 lang: en
 key: go-clean-code
 ---
 
-I like clean code. I do not like architecture cosplay.
+When people talk about Go project structure, the conversation usually collapses into two extremes.
 
-For a while, I tried to force every Go project through a version of Clean Architecture that looked great on whiteboards and felt awkward everywhere else. Too many layers. Too many abstractions. Too many packages created to satisfy a diagram instead of a codebase.
+One side says, "Keep it simple," and stops there. The other side ships a diagram with enough layers to qualify as office furniture.
 
-The result was predictable: slower development, weaker readability, and code that looked "enterprise" long before it earned the right.
+I am not interested in either.
 
-These days my rule is simpler. In Go, structure should make the code easier to follow on a tired Tuesday afternoon. If it does not, I am not interested.
+I care about a structure that still makes sense when a project grows past CRUD, gains a frontend, adds authentication, background jobs, email workflows, shared packages, and a second engineer who did not sit through the original architecture pitch.
 
-## What goes wrong when people over-apply Clean Architecture
+That is the reason I built [`go-kickstart`](https://github.com/jeheskielSunloy77/go-kickstart): a CLI that scaffolds a production-scale full-stack monorepo with a Go backend, a React frontend, and a codebase shaped around practical Clean Architecture instead of architecture theater.
 
-The original ideas behind Clean Architecture are fine. Separation of concerns matters. Testability matters. Decoupling matters.
+## Why I built go-kickstart
 
-What people often copy is not the principle. It is the ceremony.
+I kept seeing the same problem.
 
-That is where Go pushes back.
+Starting a Go project is easy. Starting a Go project that stays healthy after real features arrive is not.
 
-- Go likes explicit wiring.
-- Go rewards small packages with obvious responsibilities.
-- Go does not need interfaces for every dependency in sight.
-- Go becomes harder to read when every concept gets split across three layers and five files.
+The hard part is rarely `go mod init`. The hard part is deciding:
 
-I have seen codebases where "clean" meant a handler calling a use case calling a service calling a repository through interfaces defined nowhere near their consumers. At that point the code is not flexible. It is padded.
+- where business logic should live
+- how infrastructure should plug in without leaking everywhere
+- how to keep HTTP handlers thin
+- how to organize auth, database access, jobs, and email flows
+- how to add a frontend without turning the repo into a junk drawer
 
-## The structure I keep coming back to
+I got tired of rebuilding those decisions from scratch, so I turned the structure I trust into a CLI.
 
-I prefer a layout that reflects how the application actually behaves:
+`go-kickstart` is not a toy generator. It scaffolds a monorepo meant to be extended. The output includes a Go API, a React app, shared packages, and an opinionated foundation for building something real.
+
+## The structure I actually believe in
+
+I like Clean Architecture when it behaves like a tool, not a costume.
+
+That means a few things:
+
+- domain rules should stay independent from frameworks
+- transport layers should translate, not make business decisions
+- infrastructure should be replaceable without forcing indirection everywhere
+- dependencies should point inward
+- the code should still be readable without opening fifteen files for one request flow
+
+That last point matters more than people admit.
+
+A structure is only "clean" if another engineer can enter the project cold and understand where things belong. If the architecture is technically pure but painful to navigate, it is already failing.
+
+## What go-kickstart scaffolds
+
+At a high level, I wanted the generated project to reflect how a serious full-stack app actually evolves:
 
 ```text
-project/
-├── cmd/
-│   └── server/
-│       └── main.go
-├── internal/
-│   ├── domain/
-│   ├── service/
-│   ├── repository/
-│   └── transport/
-└── go.mod
+monorepo/
+├── apps/
+│   ├── api/
+│   │   ├── cmd/
+│   │   ├── internal/
+│   │   │   ├── domain/
+│   │   │   ├── usecase/
+│   │   │   ├── repository/
+│   │   │   ├── delivery/
+│   │   │   └── infrastructure/
+│   │   └── migrations/
+│   └── web/
+│       └── src/
+├── packages/
+│   ├── types/
+│   └── config/
+└── turbo.json
 ```
 
-This is not sacred. It is just honest.
+The exact folders matter less than the intent.
 
-Domain types hold the business language. Services coordinate work. Repositories deal with persistence. Transport adapts the outside world to the inside world. `main.go` wires the whole thing together in plain sight.
+The Go side owns business rules, application orchestration, and infrastructure boundaries. The React side owns the user experience. Shared packages reduce duplication where cross-app contracts actually deserve to be shared.
 
-That gets me most of the benefits people want from "architecture" without burying the code under ceremony.
+This is the kind of structure I would want to inherit on a team, not just demo in a screenshot.
 
-## I keep the domain boring on purpose
+## My version of Clean Architecture is pragmatic
 
-Boring domain code is a compliment.
+I do not want handlers talking directly to the database. I also do not want five abstraction layers for a feature that could fit in one clear service.
 
-```go
-type User struct {
-    ID        string
-    Email     string
-    Name      string
-    CreatedAt time.Time
-}
+So the generated code aims for a middle path.
 
-func (u *User) Validate() error {
-    if u.Email == "" {
-        return ErrInvalidEmail
-    }
-    if u.Name == "" {
-        return ErrInvalidName
-    }
-    return nil
-}
-```
+Domain entities define core business language. Use cases coordinate behavior. Repositories abstract persistence where the boundary is useful. Delivery layers handle HTTP and request parsing. Infrastructure packages contain implementation details like database clients, cache wiring, mailers, and background workers.
 
-I do not need clever constructors, hidden mutation rules, or a maze of patterns to represent a user. I need a shape that is obvious and validation that is easy to trust.
+That sounds familiar because the principles are familiar. The difference is in how aggressively I avoid ceremony.
 
-## Services are where the real decisions live
+I do not think every package needs an interface.
 
-I like services because they make the business rules visible.
+I do not think every dependency deserves its own abstraction "just in case."
 
-```go
-type UserService struct {
-    repo UserRepository
-}
+I do think explicit boundaries are worth it when they protect the core of the app from framework noise and infrastructure churn.
 
-func (s *UserService) CreateUser(ctx context.Context, email, name string) (*domain.User, error) {
-    user := &domain.User{
-        ID:        generateID(),
-        Email:     email,
-        Name:      name,
-        CreatedAt: time.Now(),
-    }
+## The backend should be easy to reason about
 
-    if err := user.Validate(); err != nil {
-        return nil, err
-    }
+The generated Go code is shaped around one practical goal: when you follow a feature from request to business rule to persistence, the path should feel obvious.
 
-    if existing, _ := s.repo.GetByEmail(ctx, email); existing != nil {
-        return nil, domain.ErrUserExists
-    }
+That usually means:
 
-    return user, s.repo.Create(ctx, user)
-}
-```
+- thin handlers
+- focused use cases
+- repositories with concrete responsibility
+- explicit dependency wiring
+- validation and business rules close to the domain they protect
 
-Handlers should not own this logic. Repositories should not own this logic. A service is a good place for orchestration because the application rules remain easy to find and easy to test.
+I want the code to be testable, but I also want it to be explainable.
 
-## I define interfaces where they are consumed
+That is an underrated engineering skill. Recruiters may scan for technologies. Engineers who interview you will look for judgment. A project structure says a lot about that judgment.
 
-This is one of the most useful Go habits I picked up.
+## The frontend belongs in the conversation too
 
-```go
-type UserRepository interface {
-    Create(ctx context.Context, user *domain.User) error
-    GetByEmail(ctx context.Context, email string) (*domain.User, error)
-}
-```
+A lot of Go architecture articles quietly pretend the frontend is someone else's problem.
 
-I do not create a global `interfaces` package and call it architecture. If a service depends on a repository contract, that contract should usually live close to the service. The consumer defines the seam.
+That does not match how teams actually build products.
 
-That keeps abstractions tight and prevents the codebase from turning into a scavenger hunt.
+`go-kickstart` scaffolds a monorepo with Go and React because full-stack work benefits from clear boundaries on both sides. The backend can expose stable contracts. The frontend can move fast without reverse-engineering backend decisions. Shared types and shared tooling help the repo behave like one system instead of two disconnected apps living in the same folder.
 
-## Transport should stay thin
+For me, that is part of writing clean Go code too. Good backend structure should support the rest of the product, not isolate itself from it.
 
-HTTP and gRPC layers should translate, not think.
+## Why I chose a CLI instead of another article-sized example
 
-```go
-func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
-    var req CreateUserRequest
-    if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-        writeError(w, "invalid JSON", http.StatusBadRequest)
-        return
-    }
+Anyone can write a post saying, "Here is a folder structure I like."
 
-    user, err := h.service.CreateUser(r.Context(), req.Email, req.Name)
-    if err != nil {
-        handleServiceError(w, err)
-        return
-    }
+I wanted to prove the structure is repeatable.
 
-    writeJSON(w, user, http.StatusCreated)
-}
-```
+Building a CLI forced me to think beyond a single repo. It made me encode the decisions:
 
-When handlers stay thin, changing transport details does not spill all over the business logic. It also makes the project easier to extend if I later add gRPC, a CLI, or background jobs.
+- which defaults are worth standardizing
+- which pieces should be optional
+- how much setup a new project should get on day one
+- how to balance flexibility with sensible conventions
 
-## Explicit wiring is a feature, not a missing framework
+That is a more interesting engineering problem than naming folders.
 
-I wire dependencies in `main.go` with regular code.
+A good scaffolder is product thinking applied to developer experience. It is architecture, automation, and empathy meeting in one tool.
 
-```go
-func main() {
-    db := setupDatabase()
+## What I think recruiters should notice in a project like this
 
-    userRepo := postgres.NewUserRepository(db)
-    userService := service.NewUserService(userRepo)
-    userHandler := http.NewUserHandler(userService)
+If someone lands on this article or the repository, I do not need them to walk away thinking, "He knows Clean Architecture vocabulary."
 
-    router := setupRoutes(userHandler)
-    log.Fatal(http.ListenAndServe(":8080", router))
-}
-```
+I want them to see something better:
 
-I want to see how the application is assembled. Hidden dependency graphs do not impress me. They make debugging worse.
+- I think in systems, not isolated files
+- I care about maintainability after the first release
+- I can design for both backend and frontend workflows
+- I turn repeated engineering pain into reusable tooling
+- I value code that a team can actually live with
 
-## Why this structure keeps paying off
+That is what `go-kickstart` represents for me. Not just a CLI, but a point of view about how production software should start.
 
-The biggest payoff is not purity. It is speed with confidence.
+## The rule I keep coming back to
 
-I can test services with an in-memory repository. I can trace request flow without opening twelve files. I can explain the codebase to another engineer without drawing a multi-layer diagram first.
+Good Go structure should lower the cost of change.
 
-That is what good structure buys you. Not prestige. Not pattern points. Clarity under pressure.
+That is the standard.
 
-## What I avoid now
+If a pattern makes onboarding harder, debugging slower, or feature work more fragile, I do not care how impressive it looks in a thread about architecture.
 
-- Generic repositories that abstract the database into mush
-- Interfaces created "just in case"
-- Deep layers with vague names like `usecase`, `manager`, or `processor`
-- Clever indirection that hides plain business rules
+If a structure helps a team ship faster without turning the codebase into a mess three months later, that is the kind of "clean" I want.
 
-If a pattern does not make the next engineer faster, it is probably decoration.
+That is also why I built `go-kickstart`.
 
-## My rule of thumb
+I wanted a way to start with a codebase that already respects boundaries, supports real product work, and stays readable under pressure.
 
-Go does not need less design. It needs more honest design.
-
-I still care about boundaries, testing, and maintainability. I just do not confuse those goals with abstraction density. If the code reads clearly, wires cleanly, and bends without drama, that is usually enough.
-
-Most Go projects get better when you stop trying to make them look important and start trying to make them obvious.
+That, to me, is the difference between talking about clean Go architecture and actually using it.

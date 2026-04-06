@@ -1,195 +1,173 @@
 ---
 title: Cara Saya Menjaga Kode Go Tetap Bersih (Tanpa Jadi Gila) 🧹
 publishedAt: 2025-03-02
-description: 'Saya berhenti memaksakan Clean Architecture versi textbook ke proyek Go dan memilih struktur yang lebih ringan: service, interface seperlunya, dan wiring yang eksplisit. Hasilnya lebih mudah diuji dan jauh lebih enak dirawat.'
+description: 'Saya membangun go-kickstart untuk men-scaffold monorepo full-stack Go dan React skala produksi dengan Clean Architecture yang pragmatis, boundary yang jelas, dan struktur yang tetap masuk akal saat aplikasi membesar.'
 tags: ['go', 'design patterns', 'clean architecture']
-keywords: 'golang architecture, go clean code, golang project structure, go services pattern, golang repositories, go best practices, golang testing, go code organization, clean architecture go, golang design patterns'
-readTime: 9
+keywords: 'struktur project golang, monorepo go, clean architecture golang, aplikasi fullstack golang, monorepo react golang, cli scaffolding golang, golang production ready, arsitektur backend go, monorepo go react, clean architecture go'
+readTime: 10
 lang: id
 key: go-clean-code
 ---
 
-Saya suka kode yang rapi. Saya tidak suka arsitektur yang terlalu sibuk ingin terlihat pintar.
+Kalau orang bicara soal struktur project Go, biasanya obrolannya jatuh ke dua kubu.
 
-Dulu saya sering memaksa setiap proyek Go masuk ke versi Clean Architecture yang tampak meyakinkan di diagram, tapi terasa canggung saat dipakai. Layer terlalu banyak, abstraksi terlalu dini, dan package muncul bukan karena kebutuhan kode, melainkan karena kebutuhan presentasi.
+Kubu pertama bilang, "yang penting simpel," lalu berhenti di situ. Kubu kedua datang membawa diagram dengan layer sebanyak rak kantor.
 
-Hasilnya hampir selalu sama: development melambat, keterbacaan turun, dan codebase terlihat serius jauh sebelum benar-benar pantas.
+Saya tidak terlalu tertarik dengan keduanya.
 
-Sekarang aturan saya lebih sederhana. Di Go, struktur harus membantu saya memahami kode saat sedang lelah, bukan menguji kesabaran saya. Kalau tidak, saya tidak tertarik.
+Yang saya pedulikan adalah struktur yang masih masuk akal ketika project sudah lewat fase CRUD, mulai punya frontend, authentication, background job, email workflow, shared package, dan engineer kedua yang tidak ikut mendengar penjelasan arsitektur di hari pertama.
 
-## Yang biasanya salah saat Clean Architecture diterapkan berlebihan
+Itulah alasan saya membangun [`go-kickstart`](https://github.com/jeheskielSunloy77/go-kickstart): CLI yang men-scaffold monorepo full-stack skala produksi dengan backend Go, frontend React, dan susunan codebase yang mengikuti Clean Architecture secara pragmatis, bukan sekadar terlihat rapi di diagram.
 
-Prinsip dasar Clean Architecture sebenarnya bagus. Separation of concerns penting. Testability penting. Decoupling juga penting.
+## Kenapa saya membangun go-kickstart
 
-Masalahnya, banyak orang menyalin upacaranya, bukan prinsipnya.
+Saya terus melihat masalah yang sama.
 
-Di situlah Go mulai melawan.
+Memulai project Go itu mudah. Memulai project Go yang tetap sehat setelah fitur-fitur nyata mulai datang, itu yang sulit.
 
-- Go suka wiring yang eksplisit.
-- Go lebih nyaman dengan package kecil yang tanggung jawabnya jelas.
-- Go tidak membutuhkan interface untuk setiap hal yang bergerak.
-- Go cepat menjadi sulit dibaca ketika satu konsep dipecah ke banyak layer tanpa alasan kuat.
+Bagian sulitnya jarang ada di `go mod init`. Bagian sulitnya ada di keputusan seperti:
 
-Saya pernah melihat codebase yang "clean" tapi handler memanggil use case, use case memanggil service, service memanggil repository, semuanya lewat interface yang didefinisikan jauh dari konsumennya. Pada titik itu, kodenya bukan fleksibel. Kodenya cuma tebal.
+- business logic sebaiknya tinggal di mana
+- infrastructure masuk lewat batas yang seperti apa supaya tidak bocor ke mana-mana
+- bagaimana menjaga HTTP handler tetap tipis
+- bagaimana menyusun auth, akses database, job queue, dan email workflow
+- bagaimana menambah frontend tanpa membuat repo terasa seperti gudang campur aduk
 
-## Struktur yang paling sering saya pakai
+Saya capek mengulang keputusan itu dari nol, jadi saya ubah struktur yang saya percaya menjadi sebuah CLI.
 
-Saya lebih suka susunan yang jujur terhadap cara aplikasi bekerja:
+`go-kickstart` bukan generator main-main. CLI ini men-scaffold monorepo yang memang disiapkan untuk dikembangkan. Hasilnya berisi Go API, React app, shared package, dan fondasi yang cukup opinionated untuk mulai membangun sesuatu yang benar-benar dipakai.
+
+## Struktur yang benar-benar saya percaya
+
+Saya suka Clean Architecture kalau ia dipakai sebagai alat, bukan kostum.
+
+Artinya buat saya cukup jelas:
+
+- aturan domain harus tetap terpisah dari framework
+- layer transport harus menerjemahkan, bukan mengambil keputusan bisnis
+- infrastructure harus bisa diganti tanpa memaksa indirection ke semua tempat
+- dependency harus mengarah ke dalam
+- alur kode tetap harus enak diikuti tanpa membuka lima belas file untuk satu request
+
+Poin terakhir itu sering diremehkan.
+
+Sebuah struktur baru layak disebut "clean" kalau engineer lain bisa masuk ke project dan cepat paham apa harus ditaruh di mana. Kalau secara teori arsitekturnya murni tapi secara praktik melelahkan untuk dinavigasi, berarti strukturnya sudah gagal.
+
+## Apa yang dihasilkan go-kickstart
+
+Secara garis besar, saya ingin project hasil scaffolding mencerminkan cara aplikasi full-stack yang serius biasanya tumbuh:
 
 ```text
-project/
-├── cmd/
-│   └── server/
-│       └── main.go
-├── internal/
-│   ├── domain/
-│   ├── service/
-│   ├── repository/
-│   └── transport/
-└── go.mod
+monorepo/
+├── apps/
+│   ├── api/
+│   │   ├── cmd/
+│   │   ├── internal/
+│   │   │   ├── domain/
+│   │   │   ├── usecase/
+│   │   │   ├── repository/
+│   │   │   ├── delivery/
+│   │   │   └── infrastructure/
+│   │   └── migrations/
+│   └── web/
+│       └── src/
+├── packages/
+│   ├── types/
+│   └── config/
+└── turbo.json
 ```
 
-Ini bukan aturan suci. Ini cuma struktur yang jujur.
+Nama folder persisnya bukan bagian yang paling penting. Yang penting adalah niat di balik susunannya.
 
-Domain menyimpan bahasa bisnis. Service mengorkestrasi alur. Repository menangani persistence. Transport menerjemahkan dunia luar ke dalam bentuk yang dimengerti aplikasi. `main.go` merakit semuanya secara terbuka.
+Sisi Go memegang aturan bisnis, orkestrasi aplikasi, dan boundary infrastructure. Sisi React memegang pengalaman pengguna. Shared package dipakai untuk mengurangi duplikasi saat memang ada kontrak lintas aplikasi yang layak dibagi.
 
-Dengan susunan seperti itu, saya mendapat sebagian besar manfaat yang orang cari dari kata "arsitektur" tanpa menimbun codebase dengan seremoni.
+Ini jenis struktur yang ingin saya warisi di tim, bukan cuma yang kelihatan bagus di screenshot.
 
-## Domain saya sengaja dibuat membosankan
+## Clean Architecture versi saya itu pragmatis
 
-Di kode domain, membosankan adalah pujian.
+Saya tidak ingin handler langsung bicara ke database. Tapi saya juga tidak ingin ada lima layer abstraksi untuk fitur yang sebenarnya bisa hidup nyaman di satu service yang jelas.
 
-```go
-type User struct {
-    ID        string
-    Email     string
-    Name      string
-    CreatedAt time.Time
-}
+Jadi kode hasil scaffolding ini sengaja mengambil jalan tengah.
 
-func (u *User) Validate() error {
-    if u.Email == "" {
-        return ErrInvalidEmail
-    }
-    if u.Name == "" {
-        return ErrInvalidName
-    }
-    return nil
-}
-```
+Entity domain menyimpan bahasa inti bisnis. Use case mengorkestrasi behavior aplikasi. Repository mengabstraksikan persistence saat boundary-nya memang berguna. Layer delivery mengurus HTTP dan parsing request. Package infrastructure menyimpan detail implementasi seperti database client, cache, mailer, dan background worker.
 
-Saya tidak butuh constructor rumit, pola yang terlalu canggih, atau aturan tersembunyi hanya untuk merepresentasikan user. Saya butuh bentuk data yang jelas dan validasi yang gampang dipercaya.
+Kedengarannya familiar karena prinsipnya memang familiar. Bedanya ada pada seberapa keras saya menghindari seremoni yang tidak perlu.
 
-## Service adalah tempat keputusan bisnis terlihat
+Saya tidak merasa setiap package harus punya interface.
 
-Saya suka memakai service karena aturan aplikasi jadi mudah ditemukan.
+Saya juga tidak merasa setiap dependency perlu diabstraksikan "siapa tahu nanti dibutuhkan."
 
-```go
-type UserService struct {
-    repo UserRepository
-}
+Yang saya anggap penting adalah boundary yang jelas ketika boundary itu memang melindungi inti aplikasi dari kebisingan framework dan perubahan infrastruktur.
 
-func (s *UserService) CreateUser(ctx context.Context, email, name string) (*domain.User, error) {
-    user := &domain.User{
-        ID:        generateID(),
-        Email:     email,
-        Name:      name,
-        CreatedAt: time.Now(),
-    }
+## Backend harus gampang dipahami
 
-    if err := user.Validate(); err != nil {
-        return nil, err
-    }
+Kode Go yang dihasilkan dibentuk dengan satu tujuan praktis: saat kita mengikuti satu fitur dari request ke business rule lalu ke persistence, jalurnya harus terasa jelas.
 
-    if existing, _ := s.repo.GetByEmail(ctx, email); existing != nil {
-        return nil, domain.ErrUserExists
-    }
+Biasanya itu berarti:
 
-    return user, s.repo.Create(ctx, user)
-}
-```
+- handler tipis
+- use case yang fokus
+- repository dengan tanggung jawab konkret
+- wiring dependency yang eksplisit
+- validasi dan aturan bisnis yang dekat dengan domain yang dijaga
 
-Handler tidak perlu memiliki logika ini. Repository juga tidak. Service adalah tempat yang baik untuk orkestrasi karena aturan bisnis tetap mudah dicari dan mudah diuji.
+Saya ingin kodenya mudah diuji, tapi saya juga ingin kodenya mudah dijelaskan.
 
-## Interface saya definisikan di dekat pemakainya
+Menurut saya itu kemampuan engineering yang sering diremehkan. Recruiter mungkin melihat daftar teknologi. Engineer yang mewawancarai biasanya akan melihat judgment. Struktur project bisa mengatakan banyak hal tentang judgment itu.
 
-Ini salah satu kebiasaan Go yang paling berguna buat saya.
+## Frontend juga bagian dari percakapan
 
-```go
-type UserRepository interface {
-    Create(ctx context.Context, user *domain.User) error
-    GetByEmail(ctx context.Context, email string) (*domain.User, error)
-}
-```
+Banyak artikel tentang arsitektur Go diam-diam bersikap seolah frontend itu urusan orang lain.
 
-Saya tidak membuat package `interfaces` global lalu menyebutnya arsitektur. Kalau service butuh kontrak repository, biasanya kontrak itu sebaiknya hidup dekat service tersebut. Konsumenlah yang mendefinisikan seam-nya.
+Menurut saya itu tidak cocok dengan cara tim modern membangun produk.
 
-Pendekatan ini membuat abstraksi tetap rapat dan mencegah codebase berubah menjadi perburuan file.
+`go-kickstart` men-scaffold monorepo Go dan React karena pekerjaan full-stack butuh boundary yang jelas di dua sisi. Backend bisa mengekspos kontrak yang stabil. Frontend bisa bergerak cepat tanpa harus menebak-nebak keputusan backend. Shared types dan shared tooling membantu repo ini berperilaku seperti satu sistem, bukan dua aplikasi yang kebetulan tinggal di folder yang sama.
 
-## Layer transport sebaiknya tetap tipis
+Buat saya, itu juga bagian dari menulis kode Go yang bersih. Struktur backend yang baik seharusnya mendukung keseluruhan produk, bukan mengisolasi diri darinya.
 
-HTTP atau gRPC cukup menerjemahkan, bukan ikut berpikir.
+## Kenapa saya memilih CLI, bukan sekadar contoh di artikel
 
-```go
-func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
-    var req CreateUserRequest
-    if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-        writeError(w, "invalid JSON", http.StatusBadRequest)
-        return
-    }
+Siapa pun bisa menulis artikel yang berkata, "ini struktur folder yang saya suka."
 
-    user, err := h.service.CreateUser(r.Context(), req.Email, req.Name)
-    if err != nil {
-        handleServiceError(w, err)
-        return
-    }
+Saya ingin membuktikan bahwa strukturnya bisa diulang.
 
-    writeJSON(w, user, http.StatusCreated)
-}
-```
+Membangun CLI memaksa saya berpikir melampaui satu repo. Saya harus mengenkode keputusan-keputusan seperti:
 
-Kalau handler tetap tipis, perubahan di layer transport tidak mudah bocor ke logika bisnis. Proyek juga lebih gampang diperluas kalau nanti perlu gRPC, CLI, atau background job.
+- default mana yang memang layak distandardisasi
+- bagian mana yang sebaiknya opsional
+- seberapa banyak setup yang pantas didapat project baru di hari pertama
+- bagaimana menyeimbangkan fleksibilitas dengan convention yang masuk akal
 
-## Wiring yang eksplisit justru kelebihan
+Menurut saya ini tantangan engineering yang lebih menarik daripada sekadar menamai folder.
 
-Saya merakit dependency di `main.go` dengan kode biasa.
+Scaffolder yang bagus adalah pertemuan antara architecture, automation, dan empati terhadap developer experience.
 
-```go
-func main() {
-    db := setupDatabase()
+## Hal yang saya harap recruiter lihat dari project seperti ini
 
-    userRepo := postgres.NewUserRepository(db)
-    userService := service.NewUserService(userRepo)
-    userHandler := http.NewUserHandler(userService)
+Kalau seseorang mendarat di artikel ini atau repo-nya, saya tidak butuh mereka pulang dengan kesan, "oh, dia hafal istilah Clean Architecture."
 
-    router := setupRoutes(userHandler)
-    log.Fatal(http.ListenAndServe(":8080", router))
-}
-```
+Saya ingin mereka melihat sesuatu yang lebih berguna:
 
-Saya ingin bisa melihat bagaimana aplikasi dirakit. Dependency graph yang tersembunyi tidak membuat saya terkesan. Biasanya justru membuat debugging lebih buruk.
+- saya berpikir dalam sistem, bukan file yang berdiri sendiri
+- saya peduli pada maintainability setelah rilis pertama
+- saya bisa mendesain workflow backend dan frontend sekaligus
+- saya mengubah engineering pain yang berulang menjadi tooling yang bisa dipakai lagi
+- saya menghargai codebase yang benar-benar nyaman dihuni oleh tim
 
-## Kenapa struktur ini terus terasa berguna
+Itulah yang diwakili `go-kickstart` buat saya. Bukan cuma CLI, tapi juga sudut pandang tentang bagaimana software produksi seharusnya dimulai.
 
-Nilai utamanya bukan kemurnian arsitektur. Nilai utamanya adalah kecepatan yang tetap aman.
+## Patokan yang terus saya pakai
 
-Saya bisa menguji service dengan repository in-memory. Saya bisa menelusuri alur request tanpa membuka terlalu banyak file. Saya bisa menjelaskan susunan proyek ke engineer lain tanpa harus menggambar diagram berlapis-lapis lebih dulu.
+Struktur Go yang baik harus menurunkan biaya perubahan.
 
-Itulah yang seharusnya diberikan struktur yang baik. Bukan gengsi. Bukan poin pola desain. Kejelasan saat tekanan datang.
+Itu patokannya.
 
-## Yang sekarang saya hindari
+Kalau sebuah pola membuat onboarding lebih sulit, debugging lebih lambat, atau pengerjaan fitur lebih rapuh, saya tidak terlalu peduli seberapa keren tampilannya di diskusi arsitektur.
 
-- Generic repository yang mengaburkan bentuk database
-- Interface yang dibuat "siapa tahu nanti perlu"
-- Layer berlapis dengan nama samar seperti `usecase`, `manager`, atau `processor`
-- Indirection yang pintar di permukaan tapi menyembunyikan aturan bisnis sederhana
+Kalau sebuah struktur membantu tim bergerak lebih cepat tanpa membuat codebase berantakan tiga bulan kemudian, itu jenis "clean" yang saya cari.
 
-Kalau sebuah pola tidak membuat engineer berikutnya lebih cepat, besar kemungkinan itu cuma dekorasi.
+Dan itu juga alasan saya membangun `go-kickstart`.
 
-## Patokan saya sekarang
+Saya ingin punya cara untuk memulai dari codebase yang sudah menghormati boundary, siap mendukung pekerjaan produk yang nyata, dan tetap enak dibaca saat tekanan datang.
 
-Go tidak membutuhkan desain yang lebih sedikit. Go membutuhkan desain yang lebih jujur.
-
-Saya tetap peduli pada batas yang jelas, testing, dan maintainability. Saya hanya tidak lagi menganggap banyaknya abstraksi sebagai tanda kedewasaan. Kalau kode mudah dibaca, dirakit dengan jelas, dan cukup lentur saat berubah, biasanya itu sudah lebih dari cukup.
-
-Banyak proyek Go membaik begitu kita berhenti berusaha membuatnya tampak penting, lalu mulai berusaha membuatnya tampak jelas.
+Bagi saya, di situlah bedanya antara sekadar bicara soal clean Go architecture dan benar-benar memakainya.

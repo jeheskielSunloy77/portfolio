@@ -90,7 +90,15 @@ const promptSuggestions: LocalizedString[] = [
 ]
 
 export function ChatPage({ t, lang }: ChatPageProps) {
-	const { messages, setMessages, error, status, sendMessage } = useChat()
+	const {
+		messages,
+		setMessages,
+		error,
+		status,
+		sendMessage,
+		regenerate,
+		clearError,
+	} = useChat()
 	const [input, setInput] = useState('')
 	const [voicePreview, setVoicePreview] = useState('')
 	const [isListening, setIsListening] = useState(false)
@@ -99,7 +107,7 @@ export function ChatPage({ t, lang }: ChatPageProps) {
 	const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
 	const scrollRef = useRef<HTMLDivElement>(null)
 
-	const isReady = status === 'ready'
+	const isReady = status !== 'streaming' && status !== 'submitted'
 	const sayHelloText = t['Say hello to {BOT_NAME}.'].replace('{BOT_NAME}', BOT_NAME)
 
 	useEffect(() => {
@@ -202,6 +210,7 @@ export function ChatPage({ t, lang }: ChatPageProps) {
 
 	function handleClearChat() {
 		setMessages([])
+		clearError()
 	}
 
 	function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -283,9 +292,28 @@ export function ChatPage({ t, lang }: ChatPageProps) {
 					<TypingIndicator status={status} t={t} />
 
 					{error && (
-						<p className='mt-4 text-center text-sm text-destructive'>
-							{t['Something went wrong. Please try again!']}
-						</p>
+						<div className='mt-4 rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-2.5 text-left'>
+							<div className='flex items-center justify-between gap-3'>
+								<div className='min-w-0'>
+									<p className='text-xs font-medium text-destructive'>
+										{t['Busy right now']}
+									</p>
+									<p className='truncate text-[11px] text-muted-foreground'>
+										{t['Please retry.']}
+									</p>
+								</div>
+								<Button
+									type='button'
+									variant='outline'
+									size='sm'
+									onClick={() => void regenerate()}
+									disabled={status === 'streaming' || status === 'submitted'}
+									className='h-7 px-2.5 text-xs'
+								>
+									{t['Retry']}
+								</Button>
+							</div>
+						</div>
 					)}
 				</div>
 

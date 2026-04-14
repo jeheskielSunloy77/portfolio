@@ -12,14 +12,11 @@ const t: any = new Proxy(
 
 // Mock the AI chat hook with controllable values
 const sendMessageMock = vi.fn()
+const regenerateMock = vi.fn()
+const clearErrorMock = vi.fn()
+let chatState: any
 vi.mock('@ai-sdk/react', () => ({
-	useChat: () => ({
-		messages: [],
-		setMessages: () => {},
-		error: undefined,
-		status: 'ready',
-		sendMessage: sendMessageMock,
-	}),
+	useChat: () => chatState,
 }))
 
 import { ChatBot } from './chat-bot'
@@ -27,6 +24,17 @@ import { ChatBot } from './chat-bot'
 describe('ChatBot', () => {
 	beforeEach(() => {
 		sendMessageMock.mockReset()
+		regenerateMock.mockReset()
+		clearErrorMock.mockReset()
+		chatState = {
+			messages: [],
+			setMessages: vi.fn(),
+			error: undefined,
+			status: 'ready',
+			sendMessage: sendMessageMock,
+			regenerate: regenerateMock,
+			clearError: clearErrorMock,
+		}
 		;(window as any).matchMedia = vi.fn().mockImplementation((query: string) => ({
 			matches: false,
 			media: query,
@@ -43,11 +51,12 @@ describe('ChatBot', () => {
 
 		// Placeholder lines from component text keys should be present
 		expect(
-			await screen.findByText('Beep boop! Systems online — fire away, human!'),
+			await screen.findByText('Beep boop! Systems online'),
 		).toBeInTheDocument()
+		expect(screen.getByText('fire away, human!')).toBeInTheDocument()
 		expect(
 			screen.getByText(
-				"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).",
+				'Ask about Jay.',
 			),
 		).toBeInTheDocument()
 	})
@@ -72,6 +81,70 @@ describe('ChatBot', () => {
 		expect(calledWith.parts?.[0]?.text).toContain('hello')
 	})
 
+	test('shows a retryable error and keeps the composer enabled', async () => {
+		chatState.status = 'error'
+		chatState.error = new Error(
+			'RetryError [AI_RetryError]: Failed after 3 attempts. Last error: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.',
+		)
+
+		render(<ChatBot t={t} lang='en' />)
+
+		await userEvent.click(screen.getByRole('button', { name: /jassist/i }))
+
+		expect(
+			await screen.findByText('Busy right now'),
+		).toBeInTheDocument()
+
+		const input = screen.getByPlaceholderText('Ask something...')
+		expect(input).toBeEnabled()
+
+		await userEvent.type(input, 'retry please{Enter}')
+
+		expect(sendMessageMock).toHaveBeenCalledTimes(1)
+
+		await userEvent.click(screen.getByRole('button', { name: 'Retry' }))
+		expect(regenerateMock).toHaveBeenCalledTimes(1)
+	})
+
+	test('clear chat also clears the error state', async () => {
+		chatState.status = 'error'
+		chatState.error = new Error('RetryError [AI_RetryError]: Failed after 3 attempts.')
+		chatState.messages = [
+			{
+				id: 'user-1',
+				role: 'user',
+				parts: [{ type: 'text', text: 'hello' }],
+			},
+		]
+
+		render(<ChatBot t={t} lang='en' />)
+
+		await userEvent.click(screen.getByRole('button', { name: /jassist/i }))
+		expect(await screen.findByText('Busy right now')).toBeInTheDocument()
+
+		await userEvent.click(screen.getByRole('button', { name: 'Clear chat' }))
+
+		expect(clearErrorMock).toHaveBeenCalledTimes(1)
+		expect(chatState.setMessages).toHaveBeenCalledWith([])
+	})
+
+	test('shows an assistant thinking bubble while a response is pending', async () => {
+		chatState.status = 'submitted'
+		chatState.messages = [
+			{
+				id: 'user-1',
+				role: 'user',
+				parts: [{ type: 'text', text: 'hello' }],
+			},
+		]
+
+		render(<ChatBot t={t} lang='en' />)
+
+		await userEvent.click(screen.getByRole('button', { name: /jassist/i }))
+
+		expect(await screen.findByLabelText('Thinking...')).toBeInTheDocument()
+	})
+
 	test('clicking outside closes the open chat', async () => {
 		render(
 			<div>
@@ -82,15 +155,17 @@ describe('ChatBot', () => {
 
 		await userEvent.click(screen.getByRole('button', { name: /jassist/i }))
 		expect(
-			screen.getByText('Beep boop! Systems online — fire away, human!'),
+			screen.getByText('Beep boop! Systems online'),
 		).toBeInTheDocument()
+		expect(screen.getByText('fire away, human!')).toBeInTheDocument()
 
 		await userEvent.click(screen.getByRole('button', { name: 'Outside' }))
 
 		await waitFor(() => {
 			expect(
-				screen.queryByText('Beep boop! Systems online — fire away, human!'),
+				screen.queryByText('Beep boop! Systems online'),
 			).not.toBeInTheDocument()
+			expect(screen.queryByText('fire away, human!')).not.toBeInTheDocument()
 		})
 	})
 
@@ -108,8 +183,9 @@ describe('ChatBot', () => {
 		)
 
 		expect(
-			screen.queryByText('Beep boop! Systems online — fire away, human!'),
+			screen.queryByText('Beep boop! Systems online'),
 		).not.toBeInTheDocument()
+		expect(screen.queryByText('fire away, human!')).not.toBeInTheDocument()
 
 		rerender(
 			<ChatBot
@@ -122,8 +198,9 @@ describe('ChatBot', () => {
 		)
 
 		expect(
-			await screen.findByText('Beep boop! Systems online — fire away, human!'),
+			await screen.findByText('Beep boop! Systems online'),
 		).toBeInTheDocument()
+		expect(screen.getByText('fire away, human!')).toBeInTheDocument()
 
 		await userEvent.click(screen.getByRole('button', { name: 'Close chat' }))
 

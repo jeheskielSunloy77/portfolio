@@ -4,7 +4,7 @@ import type { Dictionary } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { useChat, type UIMessage } from '@ai-sdk/react'
 import { type ChatStatus, type UIDataTypes, type UITools } from 'ai'
-import { Bot, Loader2, SendHorizontal, Trash, X } from 'lucide-react'
+import { Bot, RotateCcw, SendHorizontal, Trash, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useRef, useState, type HTMLAttributes } from 'react'
 import Markdown from 'react-markdown'
@@ -90,7 +90,15 @@ function Chat({
 	isOpen?: boolean
 	onOpenChange?: (isOpen: boolean) => void
 }) {
-	const { messages, setMessages, error, status, sendMessage } = useChat()
+	const {
+		messages,
+		setMessages,
+		error,
+		status,
+		sendMessage,
+		regenerate,
+		clearError,
+	} = useChat()
 	const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(false)
 	const containerRef = useRef<HTMLElement>(null)
 	const sectionId = 'chat-bot-panel'
@@ -150,6 +158,8 @@ function Chat({
 							error={error}
 							panelClassName='h-full'
 							showPanelHeader={true}
+							clearError={clearError}
+							regenerate={regenerate}
 							sendMessage={sendMessage}
 							setIsOpen={setIsOpen}
 							setMessages={setMessages}
@@ -207,6 +217,8 @@ function Chat({
 				messages={messages}
 				error={error}
 				panelClassName='h-[calc(100%-72px)]'
+				clearError={clearError}
+				regenerate={regenerate}
 				sendMessage={sendMessage}
 				setIsOpen={setIsOpen}
 				setMessages={setMessages}
@@ -225,6 +237,8 @@ interface ChatPanelProps {
 	error: Error | undefined
 	panelClassName?: string
 	showPanelHeader?: boolean
+	clearError: ReturnType<typeof useChat>['clearError']
+	regenerate: ReturnType<typeof useChat>['regenerate']
 	sendMessage: ReturnType<typeof useChat>['sendMessage']
 	setIsOpen: (value: boolean | ((value: boolean) => boolean)) => void
 	setMessages: (
@@ -242,6 +256,8 @@ function ChatPanel({
 	error,
 	panelClassName,
 	showPanelHeader = false,
+	clearError,
+	regenerate,
 	sendMessage,
 	setIsOpen,
 	setMessages,
@@ -287,9 +303,16 @@ function ChatPanel({
 							</a>
 						</div>
 					</div>
-					<ChatMessages messages={messages} error={error} status={status} t={t} />
+					<ChatMessages
+						messages={messages}
+						error={error}
+						regenerate={regenerate}
+						status={status}
+						t={t}
+					/>
 					<ChatInput
 						sendMessage={sendMessage}
+						clearError={clearError}
 						setMessages={setMessages}
 						status={status}
 						isClearable={messages.length > 0}
@@ -330,6 +353,7 @@ type Message = UIMessage<unknown, UIDataTypes, UITools>
 
 interface ChatInputProps extends HTMLAttributes<HTMLFormElement> {
 	sendMessage: ReturnType<typeof useChat>['sendMessage']
+	clearError: ReturnType<typeof useChat>['clearError']
 	setMessages: (
 		messages: Message[] | ((messages: Message[]) => Message[]),
 	) => void
@@ -340,6 +364,7 @@ interface ChatInputProps extends HTMLAttributes<HTMLFormElement> {
 
 function ChatInput({
 	sendMessage,
+	clearError,
 	setMessages,
 	status,
 	isClearable,
@@ -347,7 +372,7 @@ function ChatInput({
 }: ChatInputProps) {
 	const [input, setInput] = useState('')
 
-	const isReady = status === 'ready'
+	const isReady = status !== 'streaming' && status !== 'submitted'
 
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault()
@@ -369,7 +394,10 @@ function ChatInput({
 				<Button
 					title={t['Clear chat']}
 					variant='outline'
-					onClick={() => setMessages([])}
+					onClick={() => {
+						setMessages([])
+						clearError()
+					}}
 					className='px-3 py-2'
 					disabled={!isReady}
 					type='button'
@@ -405,58 +433,79 @@ function ChatInput({
 interface ChatMessagesProps {
 	messages: Message[]
 	error: Error | undefined
+	regenerate: ReturnType<typeof useChat>['regenerate']
 	status: ChatStatus
 	t: Dictionary
 }
 
-function ChatMessages({ messages, error, status, t }: ChatMessagesProps) {
+function ChatMessages({
+	messages,
+	error,
+	regenerate,
+	status,
+	t,
+}: ChatMessagesProps) {
 	const scrollRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		if (scrollRef.current) {
 			scrollRef.current.scrollTop = scrollRef.current.scrollHeight
 		}
-	}, [messages])
+	}, [messages, status])
 
 	return (
 		<div className='scrollbar-page flex-1 overflow-y-auto p-3' ref={scrollRef}>
 			<ul>
 				{messages.map((msg) => (
 					<li key={msg.id}>
-						<ChatMessage message={msg} t={t} />
+						<ChatMessage message={msg} />
 					</li>
 				))}
+
+				{(status === 'submitted' || status === 'streaming') && (
+					<li aria-label={t['Thinking...']}>
+						<ThinkingMessage />
+					</li>
+				)}
 			</ul>
 
 			{!error && messages.length === 0 && (
-				<div className='flex h-full flex-col items-center justify-center gap-2'>
+				<div className='flex h-full flex-col items-center justify-center gap-1.5 text-center'>
 					<Bot />
-					<p className='font-medium text-center text-sm'>
-						{t['Beep boop! Systems online — fire away, human!']}
+					<p className='text-sm font-medium'>
+						{t['Beep boop! Systems online']}
 					</p>
-					<p className='text-center text-xs text-muted-foreground'>
-						{
-							t[
-								"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps)."
-							]
-						}
+					<p className='text-sm font-medium'>
+						{t['fire away, human!']}
 					</p>
-				</div>
-			)}
-
-			{status === 'streaming' && (
-				<div className='flex items-center justify-center'>
-					<Loader2 className='mr-1.5 size-3 animate-spin text-muted-foreground' />
-					<p className='text-center text-xs text-muted-foreground'>
-						{t['Thinking...']}
+					<p className='text-xs text-muted-foreground'>
+						{t['Ask about Jay.']}
 					</p>
 				</div>
 			)}
 
 			{error && (
-				<p className='text-center text-xs text-rose-500'>
-					{t['Something went wrong. Please try again!']}
-				</p>
+				<div className='mt-3'>
+					<div className='mb-2 flex items-center justify-start'>
+						<Bot className='mr-2' />
+						<div className='max-w-64 rounded border bg-background px-3 py-2 text-xs'>
+							<p>{t['Busy right now']}</p>
+						</div>
+					</div>
+					<div className='flex justify-start pl-7'>
+						<Button
+							type='button'
+							variant='outline'
+							size='sm'
+							onClick={() => void regenerate()}
+							disabled={status === 'streaming' || status === 'submitted'}
+							className='h-7 gap-1.5 px-2.5 text-xs'
+						>
+							<RotateCcw className='size-3.5' />
+							{t['Retry']}
+						</Button>
+					</div>
+				</div>
 			)}
 		</div>
 	)
@@ -464,10 +513,63 @@ function ChatMessages({ messages, error, status, t }: ChatMessagesProps) {
 
 interface ChatMessageProps {
 	message: Message
-	t: Dictionary
 }
 
-function ChatMessage({ message, t }: ChatMessageProps) {
+const THINKING_LINES = [
+	'One tiny sec',
+	'Waking up the brain',
+	'Digging for the good stuff',
+	'Connecting the dots',
+	'Polishing the reply',
+	'Doing the smart robot thing',
+	'Picking the juicy bits',
+	'Almost there',
+] as const
+
+function ThinkingMessage() {
+	const [lineIndex, setLineIndex] = useState(0)
+
+	useEffect(() => {
+		const intervalId = window.setInterval(() => {
+			setLineIndex((current) => {
+				if (THINKING_LINES.length <= 1) return current
+
+				let nextIndex = current
+				while (nextIndex === current) {
+					nextIndex = Math.floor(Math.random() * THINKING_LINES.length)
+				}
+
+				return nextIndex
+			})
+		}, 1200)
+
+		return () => window.clearInterval(intervalId)
+	}, [])
+
+	return (
+		<div className='mb-3 flex items-center justify-start'>
+			<Bot className='mr-2' />
+			<div className='rounded border bg-background px-3 py-2 text-xs text-muted-foreground'>
+				<div className='relative min-w-28'>
+					<AnimatePresence mode='wait' initial={false}>
+						<motion.span
+							key={THINKING_LINES[lineIndex]}
+							initial={{ opacity: 0, y: 4 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: -4 }}
+							transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+							className='block whitespace-nowrap'
+						>
+							{THINKING_LINES[lineIndex]}...
+						</motion.span>
+					</AnimatePresence>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+function ChatMessage({ message }: ChatMessageProps) {
 	const isBot = message.role === 'assistant'
 
 	function messageToText(message: Message): string {

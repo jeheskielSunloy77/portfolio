@@ -165,6 +165,10 @@ export const dictionary = {
 		'You can ask the bot anything about me and it will help to find the relevant information!':
 			'You can ask the bot anything about me and it will help to find the relevant information!',
 		'Thinking...': 'Thinking...',
+		Retry: 'Retry',
+		'Busy right now': 'Busy right now',
+		'Please retry.': 'Please retry.',
+		'Ask about Jay.': 'Ask about Jay.',
 		'Something went wrong. Please try again!':
 			'Something went wrong. Please try again!',
 		home: 'home',
@@ -303,8 +307,8 @@ export const dictionary = {
 		'Failed to save sketch': 'Failed to save sketch',
 		'An error occurred while saving your sketch. Please try again later.':
 			'An error occurred while saving your sketch. Please try again later.',
-		'Beep boop! Systems online — fire away, human!':
-			'Beep boop! Systems online — fire away, human!',
+		'Beep boop! Systems online': 'Beep boop! Systems online',
+		'fire away, human!': 'fire away, human!',
 		"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).":
 			"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).",
 	},
@@ -317,8 +321,8 @@ export const dictionary = {
 		'failed to load sketches. please try again later.':
 			'gagal memuat sketsa. silakan coba lagi nanti.',
 		'toggle chat': 'ganti chat',
-		'Beep boop! Systems online — fire away, human!':
-			'Beep boop! Sistem online — silakan tanya, manusia!',
+		'Beep boop! Systems online': 'Beep boop! Sistem online',
+		'fire away, human!': 'silakan tanya, manusia!',
 		"I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).":
 			'Saya adalah robot kecil yang membantu dan mengetahui tentang Jay — tanyakan apa saja dan saya akan mengambil bagian terbaik (dengan tambahan beep).',
 		visitors: 'pengunjung',
@@ -498,6 +502,10 @@ export const dictionary = {
 		'You can ask the bot anything about me and it will help to find the relevant information!':
 			'Anda bisa bertanya apa saja tentang saya kepada bot dan bot akan membantu menemukan informasi yang relevan!',
 		'Thinking...': 'Berpikir...',
+		Retry: 'Coba lagi',
+		'Busy right now': 'Sedang sibuk',
+		'Please retry.': 'Silakan coba lagi.',
+		'Ask about Jay.': 'Tanya tentang Jay.',
 		'Something went wrong. Please try again!':
 			'Terjadi kesalahan. Silakan coba lagi!',
 		home: 'beranda',

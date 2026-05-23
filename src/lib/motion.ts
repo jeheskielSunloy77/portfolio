@@ -7,7 +7,7 @@ function setRevealDelay(element: HTMLElement) {
 	element.style.setProperty('--reveal-delay', `${delay}ms`)
 }
 
-function prepareRevealGroups(root: ParentNode = document) {
+export function prepareRevealGroups(root: ParentNode = document) {
 	root.querySelectorAll<HTMLElement>(GROUP_SELECTOR).forEach((group) => {
 		const stagger = Number(group.dataset.revealStagger ?? DEFAULT_STAGGER_MS)
 		const items = Array.from(group.querySelectorAll<HTMLElement>(REVEAL_SELECTOR))
@@ -23,7 +23,7 @@ function prepareRevealGroups(root: ParentNode = document) {
 	root.querySelectorAll<HTMLElement>(REVEAL_SELECTOR).forEach(setRevealDelay)
 }
 
-function revealAll(root: ParentNode = document) {
+export function revealAll(root: ParentNode = document) {
 	root.querySelectorAll<HTMLElement>(REVEAL_SELECTOR).forEach((element) => {
 		element.dataset.revealVisible = 'true'
 	})

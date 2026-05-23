@@ -31,7 +31,7 @@ const {
 const t = dictionary[lang]
 ---
 
-<html lang={lang} class='scroll-smooth'>
+<html lang={lang}>
 	<head>
 		<script is:inline data-astro-rerun>
 			;(() => {
@@ -80,9 +80,9 @@ const t = dictionary[lang]
 		{chatBot && <ChatBot client:idle t={t} lang={lang} />}
 		<Footer lang={lang} />
 		<script>
-			import { initRevealObserver } from '@/lib/motion'
+			import { initSmoothScroll } from '@/lib/lenis'
 
-			initRevealObserver()
+			initSmoothScroll()
 		</script>
 	</body>
 </html>

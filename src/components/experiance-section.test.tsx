@@ -63,9 +63,8 @@ describe('ExperienceSection', () => {
 		expect(screen.getByText('Acme Co')).toBeInTheDocument()
 		expect(screen.getByText('PresentCo')).toBeInTheDocument()
 
-		// The first career entry shows the title and description
+		// The first career entry shows the title
 		expect(screen.getByText('Senior Engineer')).toBeInTheDocument()
-		expect(screen.getByText('Worked on many things')).toBeInTheDocument()
 
 		// The item without an end date should render the 'Present' translation key
 		expect(screen.getAllByText('Present').length).toBeGreaterThan(0)

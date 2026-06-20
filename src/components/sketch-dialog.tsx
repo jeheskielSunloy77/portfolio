@@ -371,7 +371,7 @@ export function SketchDialog({
 			`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">`,
 		)
 		// background rectangle (mimic original canvas fill)
-		lines.push(`<rect width="100%" height="100%"  fill-opacity="0"/>`)
+		lines.push(`<rect width="100%" height="100%" fill="${BG_COLOR}" fill-opacity="${BG_OPACITY}"/>`)
 
 		// use a mask so eraser strokes actually cut out pixels
 		const maskId =
@@ -430,7 +430,7 @@ export function SketchDialog({
 			}
 			if (!strokePolygon || strokePolygon.length === 0) continue
 			const pathD = pointsToSvgPath(strokePolygon)
-			lines.push(`<path d="${pathD}"  stroke="none" />`)
+			lines.push(`<path d="${pathD}" fill="${s.color}" stroke="none" />`)
 		}
 		lines.push(`</g>`)
 		lines.push(`</svg>`)
@@ -707,6 +707,7 @@ export function SketchDialog({
 							style={{ minHeight: 256 }}
 						>
 							<div
+								data-testid="drawing-surface"
 								className='rounded-lg shadow-sm cursor-crosshair bg-[#c5c5c5] w-full aspect-square overflow-hidden'
 								style={{ touchAction: 'none' }}
 								onPointerDown={onPointerDown}

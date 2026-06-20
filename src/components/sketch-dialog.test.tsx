@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi } from 'vitest'
 
@@ -45,6 +45,10 @@ Element.prototype.getBoundingClientRect = function (): DOMRect {
 		toJSON: () => ({} as any),
 	} as DOMRect
 }
+
+// jsdom lacks pointer capture methods used by the drawing code
+Element.prototype.setPointerCapture = Element.prototype.setPointerCapture || (() => {})
+Element.prototype.releasePointerCapture = Element.prototype.releasePointerCapture || (() => {})
 
 import { SketchDialog } from './sketch-dialog'
 
@@ -99,6 +103,23 @@ describe('SketchDialog', () => {
 		await user.type(nameInput, 'Tester')
 		await user.type(messageInput, 'This is a test sketch message.')
 
+		// pick a non-black color via the native color input
+		const colorInput = document.querySelector('input[type="color"]') as HTMLInputElement
+		if (colorInput) {
+			colorInput.value = '#ef4444'
+			fireEvent.input(colorInput, { target: { value: '#ef4444' } })
+			fireEvent.change(colorInput, { target: { value: '#ef4444' } })
+		}
+
+		// simulate drawing a stroke using fireEvent (more reliable in jsdom)
+		const surface = screen.getByTestId('drawing-surface')
+		// first point (down)
+		fireEvent.pointerDown(surface, { clientX: 60, clientY: 60, pointerId: 1, pressure: 0.5, buttons: 1 })
+		// second point (move)
+		fireEvent.pointerMove(surface, { clientX: 160, clientY: 160, pointerId: 1, pressure: 0.5, buttons: 1 })
+		// up
+		fireEvent.pointerUp(surface, { clientX: 160, clientY: 160, pointerId: 1, buttons: 0 })
+
 		await user.click(saveBtn)
 
 		// mutate called once with payload containing name, message and svg
@@ -108,6 +129,9 @@ describe('SketchDialog', () => {
 		expect(payload).toHaveProperty('message', 'This is a test sketch message.')
 		expect(typeof payload.svg).toBe('string')
 		expect(payload.svg).toContain('<svg')
+		// verify colors are serialized correctly (the bug was missing `fill` attr on paths -> all black)
+		expect(payload.svg).toContain('fill="#c5c5c5"') // background rect now has color
+		expect(payload.svg).toMatch(/<path[^>]*fill="#[^"]+"/) // stroke path now includes its color (was omitted before)
 
 		// dialog closed via onOpenChange(false)
 		expect(onOpenChange).toHaveBeenCalledWith(false)

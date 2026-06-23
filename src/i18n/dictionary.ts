@@ -120,6 +120,9 @@ export const dictionary = {
     "I turn bugs into features and coffee into code. AI wrote this tagline. I just hit enter.":
       "I turn bugs into features and coffee into code. AI wrote this tagline. I just hit enter.",
     "For Q&A, raise a ticket with": "For Q&A, raise a ticket with",
+    "this site is 100% open source,": "this site is 100% open source,",
+    "source code": "source code",
+    "Source Code URL": "Source Code URL",
     Work: "Work",
     Education: "Education",
     Present: "Present",
@@ -454,7 +457,10 @@ export const dictionary = {
       "software engineer dari Indonesia 🇮🇩",
     "I turn bugs into features and coffee into code. AI wrote this tagline. I just hit enter.":
       "Aku ubah bug jadi fitur dan kopi jadi kode. AI yang nulis tagline ini, aku cuma pencet enter.",
-    "For Q&A, raise a ticket with": "Untuk tanya jawab, ajukan tiket ke",
+    "For Q&A, raise a ticket with": "Butuh info? Tanyakan ke",
+    "this site is 100% open source,": "situs ini 100% open source,",
+    "source code": "kode sumber",
+    "Source Code URL": "URL Kode Sumber",
     Work: "Pekerjaan",
     Education: "Pendidikan",
     Present: "Saat Ini",

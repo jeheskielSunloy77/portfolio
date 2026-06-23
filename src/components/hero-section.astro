@@ -62,14 +62,14 @@ const { t }: Props = Astro.props
 		</div>
 
 		<p class='mt-1 text-xs font-light text-muted-foreground' data-reveal='fade-up'>
-this site is 100% opensource,
+			{t['this site is 100% open source,']}
 			<a
 				href={SOURCE_CODE_URL}
 				target='_blank'
 				class='motion-link text-foreground hover:underline font-semibold'
-				title='Source Code URL'
+				title={t['Source Code URL']}
 			>
-			source code
+				{t['source code']}
 			</a>
 		</p>
 

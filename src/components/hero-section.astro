@@ -1,5 +1,5 @@
 ---
-import { BOT_NAME, NICK_NAME, X_URL } from '@/lib/constants'
+import { BOT_NAME, NICK_NAME, SOURCE_CODE_URL } from '@/lib/constants'
 import type { Dictionary } from '@/lib/types'
 import { ArrowDown, ArrowDownRight, Bot } from 'lucide-react'
 import { HeroRobot } from './hero-robot'
@@ -61,17 +61,16 @@ const { t }: Props = Astro.props
 			/>
 		</div>
 
-		<p class='mt-1 text-xs font-light' data-reveal='fade-up'>
-			{t['For escalations, please find my']}
+		<p class='mt-1 text-xs font-light text-muted-foreground' data-reveal='fade-up'>
+this site is 100% opensource,
 			<a
-				href={X_URL}
+				href={SOURCE_CODE_URL}
 				target='_blank'
-				class='motion-link hover:text-foreground hover:underline font-semibold'
-				title='X (Twitter)'
+				class='motion-link text-foreground hover:underline font-semibold'
+				title='Source Code URL'
 			>
-				&nbsp;@{NICK_NAME}&nbsp;
+			source code
 			</a>
-			{t['instead.']}
 		</p>
 
 		<section class='mt-6 flex flex-wrap items-center gap-6' data-reveal='fade-up'>

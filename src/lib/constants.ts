@@ -33,7 +33,7 @@ export const NICK_NAME = 'jay'
 export const FULL_NAME = 'Jeheskiel Sunloy'
 export const BOT_NAME = 'jassist'
 export const EMAIL = 'me@jeheskielsunloy.com'
-export const X_URL = 'https://x.com/jeheskielsunloy'
+export const SOURCE_CODE_URL = 'https://github.com/jeheskielSunloy77/portfolio'
 export const FEATURED_PROJECTS_LIMIT = 2
 export const FEATURED_POSTS_LIMIT = 3
 export const APP_NAME = 'jeheskielsunloy.com'
@@ -78,7 +78,7 @@ export const SOCIALS = [
 	},
 	{
 		name: 'X',
-		href: X_URL,
+		href: 'https://x.com/jeheskielsunloy',
 		icon: XTwitterIcon,
 	},
 	{

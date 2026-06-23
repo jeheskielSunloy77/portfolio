@@ -25,6 +25,7 @@ import skillReact from '@/assets/skills/react.svg'
 import skillRedis from '@/assets/skills/redis.svg'
 import skillTailwind from '@/assets/skills/tailwind.svg'
 import skillTypescript from '@/assets/skills/typescript.svg'
+import { XTwitterIcon } from '@/components/icons/x-twitter-icon'
 import type { Experience, Project, Skill } from '@/lib/types'
 import { BookOpen, Download, Github, Globe, Linkedin, Mail } from 'lucide-react'
 
@@ -32,6 +33,7 @@ export const NICK_NAME = 'jay'
 export const FULL_NAME = 'Jeheskiel Sunloy'
 export const BOT_NAME = 'jassist'
 export const EMAIL = 'me@jeheskielsunloy.com'
+export const X_URL = 'https://x.com/jeheskielsunloy'
 export const FEATURED_PROJECTS_LIMIT = 2
 export const FEATURED_POSTS_LIMIT = 3
 export const APP_NAME = 'jeheskielsunloy.com'
@@ -73,6 +75,11 @@ export const SOCIALS = [
 		name: 'GitHub',
 		href: 'https://github.com/jeheskielSunloy77',
 		icon: Github,
+	},
+	{
+		name: 'X',
+		href: X_URL,
+		icon: XTwitterIcon,
 	},
 	{
 		name: 'Email',

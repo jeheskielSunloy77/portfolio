@@ -1,5 +1,5 @@
 ---
-import { BOT_NAME, NICK_NAME } from '@/lib/constants'
+import { BOT_NAME, NICK_NAME, X_URL } from '@/lib/constants'
 import type { Dictionary } from '@/lib/types'
 import { ArrowDown, ArrowDownRight, Bot } from 'lucide-react'
 import { HeroRobot } from './hero-robot'
@@ -64,10 +64,10 @@ const { t }: Props = Astro.props
 		<p class='mt-1 text-xs font-light' data-reveal='fade-up'>
 			{t['For escalations, please find my']}
 			<a
-				href='https://x.com/jeheskielsunloy'
+				href={X_URL}
 				target='_blank'
 				class='motion-link hover:text-foreground hover:underline font-semibold'
-				title='x (twitter)'
+				title='X (Twitter)'
 			>
 				&nbsp;@{NICK_NAME}&nbsp;
 			</a>

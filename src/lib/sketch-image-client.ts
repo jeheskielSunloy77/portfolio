@@ -1,10 +1,18 @@
 import {
+	SKETCH_IMAGE_MIME_TYPE,
 	SKETCH_IMAGE_SIZE,
 	SKETCH_IMAGE_WEBP_QUALITY,
 } from '@/lib/sketch-constants'
 
 export function sketchImageUrl(id: string) {
 	return `/api/sketches/${id}/image`
+}
+
+export function sketchImageSrc(sketch: { _id: string; imageWebp?: string }) {
+	if (sketch._id.startsWith('temp-') && sketch.imageWebp) {
+		return `data:${SKETCH_IMAGE_MIME_TYPE};base64,${sketch.imageWebp}`
+	}
+	return sketchImageUrl(sketch._id)
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {

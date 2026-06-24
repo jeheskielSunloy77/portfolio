@@ -1,6 +1,6 @@
 import { SketchDialog } from '@/components/sketch-dialog'
 import { SKETCHES_PAGE_SIZE } from '@/lib/sketch-constants'
-import { sketchImageUrl } from '@/lib/sketch-image-client'
+import { sketchImageSrc } from '@/lib/sketch-image-client'
 import type { APIResponsePaginated, Dictionary, Sketch } from '@/lib/types'
 import {
 	QueryClient,
@@ -248,7 +248,7 @@ function SketchCard({ sketch }: { sketch: Sketch }) {
 		<article className='rounded-lg border bg-background p-2'>
 			<div className='aspect-square bg-muted-foreground/25 mb-2 dark:bg-secondary-foreground/75 rounded-lg overflow-hidden'>
 				<img
-					src={sketchImageUrl(sketch._id)}
+					src={sketchImageSrc(sketch)}
 					alt={sketch.message}
 					loading='lazy'
 					decoding='async'

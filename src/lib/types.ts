@@ -71,4 +71,6 @@ export interface Sketch {
 	message: string
 	createdAt: Date
 	ip?: string
+	/** Present on optimistic cards before the server assigns a real id */
+	imageWebp?: string
 }

@@ -236,7 +236,7 @@ export function HeroRobot() {
         <img
           src="/bot.webp"
           alt="bot placeholder"
-          className="h-full w-full object-contain object-bottom pointer-events-none"
+          className="h-full w-full object-contain object-bottom pointer-events-none blur-[3px]"
         />
       </div>
     </div>

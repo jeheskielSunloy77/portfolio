@@ -24,7 +24,7 @@ if [ "$IS_BRANCH_CHECKOUT" = "1" ]; then
 
 	if [ -f "package.json" ] && [ ! -d "node_modules" ]; then
 		echo "Installing dependencies..."
-		bun install --frozen-lockfile
+		pnpm install --frozen-lockfile
 	fi
 
 	echo "Worktree setup complete."

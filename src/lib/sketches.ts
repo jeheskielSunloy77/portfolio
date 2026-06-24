@@ -16,7 +16,7 @@ export async function getSketches(
 	const docs = await col
 		.find(
 			{},
-			{ projection: { svg: 1, name: 1, message: 1, createdAt: 1 } },
+			{ projection: { name: 1, message: 1, createdAt: 1 } },
 		)
 		.sort({ createdAt: -1 })
 		.skip(page * pageSize)

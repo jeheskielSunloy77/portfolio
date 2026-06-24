@@ -11,6 +11,10 @@ const t: any = new Proxy(
 )
 
 // Mock perfect-freehand so polygon generation is deterministic
+vi.mock('@/lib/sketch-image-client', () => ({
+	svgStringToWebpBase64: vi.fn(async () => 'd2ViYXNkNjQ='),
+}))
+
 vi.mock('perfect-freehand', () => {
 	return {
 		getStroke: (points: number[][]) => {
@@ -122,16 +126,12 @@ describe('SketchDialog', () => {
 
 		await user.click(saveBtn)
 
-		// mutate called once with payload containing name, message and svg
+		// mutate called once with payload containing name, message and webp base64
 		expect(mutate).toHaveBeenCalledTimes(1)
 		const payload = mutate.mock.calls[0][0]
 		expect(payload).toHaveProperty('name', 'Tester')
 		expect(payload).toHaveProperty('message', 'This is a test sketch message.')
-		expect(typeof payload.svg).toBe('string')
-		expect(payload.svg).toContain('<svg')
-		// verify colors are serialized correctly (the bug was missing `fill` attr on paths -> all black)
-		expect(payload.svg).toContain('fill="#c5c5c5"') // background rect now has color
-		expect(payload.svg).toMatch(/<path[^>]*fill="#[^"]+"/) // stroke path now includes its color (was omitted before)
+		expect(payload).toHaveProperty('imageWebp', 'd2ViYXNkNjQ=')
 
 		// dialog closed via onOpenChange(false)
 		expect(onOpenChange).toHaveBeenCalledWith(false)

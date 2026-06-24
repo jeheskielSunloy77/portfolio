@@ -44,7 +44,6 @@ describe('Sketch component', () => {
 			name: 'Artwork A',
 			message: 'A lovely SVG',
 			createdAt: new Date(),
-			svg: '<svg></svg>',
 			ip: '127.0.0.1',
 		}
 
@@ -69,6 +68,7 @@ describe('Sketch component', () => {
 
 		expect(await screen.findByText('Artwork A')).toBeInTheDocument()
 		expect(screen.getByText('A lovely SVG')).toBeInTheDocument()
+		expect(screen.getByRole('img')).toHaveAttribute('src', '/api/sketches/sk1/image')
 		expect(fetchMock).not.toHaveBeenCalled()
 	})
 
@@ -78,7 +78,6 @@ describe('Sketch component', () => {
 			name: 'Artwork A',
 			message: 'A lovely SVG',
 			createdAt: new Date(),
-			svg: '<svg></svg>',
 			ip: '127.0.0.1',
 		}
 

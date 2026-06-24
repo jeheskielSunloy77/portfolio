@@ -1,4 +1,6 @@
-import { getSketches, SKETCHES_PAGE_SIZE } from '@/lib/sketches'
+import { SKETCHES_PAGE_SIZE } from '@/lib/sketch-constants'
+import { webpBase64ToBinary } from '@/lib/sketch-image.server'
+import { getSketches } from '@/lib/sketches'
 import { getDb } from '@/lib/mongodb'
 import { log } from '@/lib/utils'
 import z from 'zod'
@@ -20,16 +22,6 @@ function jsonResponse(
 function errResponse(tag: string, message: string, status = 500) {
 	log('error', tag, message)
 	return jsonResponse({ error: message }, status)
-}
-
-function sanitizeSvg(svg: string) {
-	try {
-		return svg
-			.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
-			.replace(/\son\w+=(?:'[^']*'|"[^"]*")/gi, '')
-	} catch {
-		return svg
-	}
 }
 
 const COLLECTION = 'sketches'
@@ -85,17 +77,22 @@ export async function POST({ request }: { request: Request }) {
 		const doc = {
 			name: parsed.data.name,
 			message: parsed.data.message,
-			svg: sanitizeSvg(parsed.data.svg),
+			image: webpBase64ToBinary(parsed.data.imageWebp),
 			createdAt: new Date(),
 			ip,
 		}
 
+		const insertedId = (await col.insertOne(doc)).insertedId.toString()
+
 		const result = {
-			_id: (await col.insertOne(doc)).insertedId.toString(),
-			...doc,
+			_id: insertedId,
+			name: doc.name,
+			message: doc.message,
+			createdAt: doc.createdAt,
+			ip: doc.ip,
 		}
 
-		log('info', TAG, `New sketch submitted from IP ${ip} with id ${result._id}`)
+		log('info', TAG, `New sketch submitted from IP ${ip} with id ${insertedId}`)
 		return jsonResponse(result, 201)
 	} catch (e: any) {
 		return errResponse(TAG, 'Failed to save sketch')
@@ -105,5 +102,5 @@ export async function POST({ request }: { request: Request }) {
 const sketchInsertSchema = z.object({
 	name: z.string(),
 	message: z.string(),
-	svg: z.string(),
+	imageWebp: z.string().min(1),
 })

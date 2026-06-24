@@ -3,6 +3,7 @@ import {
 	SKETCHES_PAGE_SIZE,
 	SKETCHES_STALE_TIME_MS,
 } from '@/lib/sketch-constants'
+import { sketchImageUrl } from '@/lib/sketch-image-client'
 import type { APIResponsePaginated, Dictionary, Sketch } from '@/lib/types'
 import {
 	QueryClient,
@@ -90,13 +91,16 @@ function SketchContent({
 	const qc = useQueryClient()
 	const queryKey = ['sketches'] as const
 
-	type CreateSketchPayload = { name: string; message: string; svg: string }
+	type CreateSketchPayload = {
+		name: string
+		message: string
+		imageWebp: string
+	}
 	type CreatedSketch = {
 		_id: string
 		name: string
 		message: string
 		createdAt: string | Date
-		svg: string
 		ip?: string
 	}
 
@@ -254,10 +258,15 @@ function SketchContent({
 function SketchCard({ sketch }: { sketch: Sketch }) {
 	return (
 		<article className='rounded-lg border bg-background p-2'>
-			<div
-				dangerouslySetInnerHTML={{ __html: sketch.svg }}
-				className='aspect-square bg-muted-foreground/25 mb-2 dark:bg-secondary-foreground/75 rounded-lg overflow-hidden'
-			></div>
+			<div className='aspect-square bg-muted-foreground/25 mb-2 dark:bg-secondary-foreground/75 rounded-lg overflow-hidden'>
+				<img
+					src={sketchImageUrl(sketch._id)}
+					alt={sketch.message}
+					loading='lazy'
+					decoding='async'
+					className='h-full w-full object-cover'
+				/>
+			</div>
 			<p className='text-xs text-muted-foreground line-clamp-2'>{sketch.name}</p>
 			<h3 className='font-medium text-foreground text-sm line-clamp-2'>
 				{sketch.message}

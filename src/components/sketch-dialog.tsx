@@ -9,6 +9,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Slider } from '@/components/ui/slider'
 import { Textarea } from '@/components/ui/textarea'
+import { svgStringToWebpBase64 } from '@/lib/sketch-image-client'
 import type { Dictionary } from '@/lib/types'
 import type { UseMutationResult } from '@tanstack/react-query'
 import {
@@ -437,21 +438,31 @@ export function SketchDialog({
 		return lines.join('')
 	}
 
-	const saveSketch = () => {
+	const saveSketch = async () => {
 		if (createSketchMutation?.status === 'pending') return
 		setError(null)
-		handleClose(false)
 
-		// build payload (can throw if svg build fails)
-		const width = sizePx.width
-		const height = sizePx.height
-		const payload = {
-			name: newSketchName,
-			message: newSketchMessage,
-			svg: buildSvgString(width, height, strokes),
+		try {
+			const width = sizePx.width
+			const height = sizePx.height
+			const svg = buildSvgString(width, height, strokes)
+			const imageWebp = await svgStringToWebpBase64(svg, width, height)
+
+			handleClose(false)
+			createSketchMutation?.mutate({
+				name: newSketchName,
+				message: newSketchMessage,
+				imageWebp,
+			})
+		} catch {
+			setError({
+				title: t['Failed to save sketch'],
+				description:
+					t[
+						'An error occurred while saving your sketch. Please try again later.'
+					],
+			})
 		}
-
-		createSketchMutation?.mutate(payload)
 	}
 
 	const handleClose = (open: boolean) => {

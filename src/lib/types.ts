@@ -70,6 +70,5 @@ export interface Sketch {
 	name: string
 	message: string
 	createdAt: Date
-	svg: string
-	ip: string
+	ip?: string
 }

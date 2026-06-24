@@ -3,7 +3,13 @@ import { GET, POST } from './sketches'
 
 vi.mock('@/lib/sketches', () => ({
 	getSketches: vi.fn(),
-	SKETCHES_PAGE_SIZE: 6,
+}))
+
+vi.mock('@/lib/sketch-image.server', () => ({
+	webpBase64ToBinary: vi.fn((base64: string) => ({
+		type: 'webp',
+		base64,
+	})),
 }))
 
 vi.mock('@/lib/mongodb', () => ({
@@ -22,7 +28,6 @@ describe('Sketches API', () => {
 				data: [
 					{
 						_id: 'id1',
-						svg: '<svg></svg>',
 						name: 'a',
 						message: 'm',
 						createdAt: new Date(),
@@ -102,7 +107,11 @@ describe('Sketches API', () => {
 			})
 
 			const req = {
-				json: async () => ({ name: 'a', message: 'm', svg: '<svg></svg>' }),
+				json: async () => ({
+					name: 'a',
+					message: 'm',
+					imageWebp: 'd2ViYXNkNjQ=',
+				}),
 				headers: new Headers([['x-forwarded-for', '1.2.3.4']]),
 			} as unknown as Request
 
@@ -113,7 +122,7 @@ describe('Sketches API', () => {
 			expect(mockCol.insertOne).not.toHaveBeenCalled()
 		})
 
-		it('sanitizes svg and saves document, returning 201 with inserted id', async () => {
+		it('stores webp binary and returns metadata, without image bytes', async () => {
 			const insertedId = { toString: () => 'newid' }
 			const mockCol = {
 				countDocuments: vi.fn().mockResolvedValue(0),
@@ -123,20 +132,30 @@ describe('Sketches API', () => {
 			;(getDb as ReturnType<typeof vi.fn>).mockResolvedValue({
 				collection: () => mockCol,
 			})
+			const { webpBase64ToBinary } = await import('@/lib/sketch-image.server')
 
-			const maliciousSvg = `<svg onload="steal()" ><script>alert(1)</script><rect /></svg>`
 			const req = {
-				json: async () => ({ name: 'user', message: 'hi', svg: maliciousSvg }),
+				json: async () => ({
+					name: 'user',
+					message: 'hi',
+					imageWebp: 'd2ViYXNkNjQ=',
+				}),
 				headers: new Headers([['x-forwarded-for', '9.9.9.9']]),
 			} as unknown as Request
 
 			const res = await POST({ request: req })
 			expect(res.status).toBe(201)
 			const body = await res.json()
-			expect(body).toHaveProperty('_id', 'newid')
-			expect(body).toHaveProperty('name', 'user')
-			expect(body.svg).not.toContain('<script')
-			expect(body.svg).not.toContain('onload=')
+			expect(body).toEqual({
+				_id: 'newid',
+				name: 'user',
+				message: 'hi',
+				createdAt: expect.any(String),
+				ip: '9.9.9.9',
+			})
+			expect(body).not.toHaveProperty('imageWebp')
+			expect(body).not.toHaveProperty('image')
+			expect(webpBase64ToBinary).toHaveBeenCalledWith('d2ViYXNkNjQ=')
 			expect(mockCol.insertOne).toHaveBeenCalled()
 		})
 
@@ -151,7 +170,11 @@ describe('Sketches API', () => {
 			})
 
 			const req = {
-				json: async () => ({ name: 'user', message: 'hi', svg: '<svg></svg>' }),
+				json: async () => ({
+					name: 'user',
+					message: 'hi',
+					imageWebp: 'd2ViYXNkNjQ=',
+				}),
 				headers: new Headers(),
 			} as unknown as Request
 

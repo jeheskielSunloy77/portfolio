@@ -40,7 +40,7 @@ export async function GET(request: Request) {
 		const result = await getSketches(page, pageSize)
 
 		return jsonResponse(result, 200, {
-			'Cache-Control': 's-maxage=60, stale-while-revalidate=300',
+			'Cache-Control': 'private, no-store',
 		})
 	} catch (e: any) {
 		return errResponse(TAG, 'Failed to fetch sketches')

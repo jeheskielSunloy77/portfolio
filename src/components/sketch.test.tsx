@@ -38,7 +38,7 @@ describe('Sketch component', () => {
 		vi.restoreAllMocks()
 	})
 
-	test('renders prefetched sketches without refetching on mount', async () => {
+	test('renders prefetched sketches immediately on mount', async () => {
 		const mockSketch = {
 			_id: 'sk1',
 			name: 'Artwork A',
@@ -47,7 +47,14 @@ describe('Sketch component', () => {
 			ip: '127.0.0.1',
 		}
 
-		const fetchMock = vi.spyOn(global, 'fetch')
+		vi.spyOn(global, 'fetch').mockResolvedValue({
+			ok: true,
+			json: async () => ({
+				data: [mockSketch],
+				page: 0,
+				pageSize: 6,
+			}),
+		} as any)
 
 		render(
 			<Sketch
@@ -69,7 +76,6 @@ describe('Sketch component', () => {
 		expect(await screen.findByText('Artwork A')).toBeInTheDocument()
 		expect(screen.getByText('A lovely SVG')).toBeInTheDocument()
 		expect(screen.getByRole('img')).toHaveAttribute('src', '/api/sketches/sk1/image')
-		expect(fetchMock).not.toHaveBeenCalled()
 	})
 
 	test('fetches sketches and renders SketchCard items and header text', async () => {
@@ -103,7 +109,9 @@ describe('Sketch component', () => {
 
 		// ensure fetch called with expected initial page params
 		await waitFor(() => {
-			expect(fetchMock).toHaveBeenCalledWith('/api/sketches?page=0&pageSize=6')
+			expect(fetchMock).toHaveBeenCalledWith('/api/sketches?page=0&pageSize=6', {
+				cache: 'no-store',
+			})
 		})
 	})
 

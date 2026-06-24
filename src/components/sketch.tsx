@@ -1,8 +1,5 @@
 import { SketchDialog } from '@/components/sketch-dialog'
-import {
-	SKETCHES_PAGE_SIZE,
-	SKETCHES_STALE_TIME_MS,
-} from '@/lib/sketch-constants'
+import { SKETCHES_PAGE_SIZE } from '@/lib/sketch-constants'
 import { sketchImageUrl } from '@/lib/sketch-image-client'
 import type { APIResponsePaginated, Dictionary, Sketch } from '@/lib/types'
 import {
@@ -18,13 +15,7 @@ import { useEffect, useRef, useState } from 'react'
 import { RainbowButton } from './magicui/rainbow-button'
 
 function createSketchQueryClient() {
-	return new QueryClient({
-		defaultOptions: {
-			queries: {
-				staleTime: SKETCHES_STALE_TIME_MS,
-			},
-		},
-	})
+	return new QueryClient()
 }
 
 export function Sketch(props: {
@@ -55,6 +46,7 @@ function SketchContent({
 			const pageNum = Number(pageParam ?? 0)
 			const res = await fetch(
 				`/api/sketches?page=${pageNum}&pageSize=${SKETCHES_PAGE_SIZE}`,
+				{ cache: 'no-store' },
 			)
 			if (!res.ok) throw new Error('Failed to fetch sketches')
 			return (await res.json()) as APIResponsePaginated<Sketch>
@@ -196,10 +188,6 @@ function SketchContent({
 
 			// close the dialog (dialog clears its inputs when closed)
 			setIsDialogOpen(false)
-		},
-
-		onSettled: () => {
-			qc.invalidateQueries({ queryKey })
 		},
 	})
 

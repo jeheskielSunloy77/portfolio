@@ -22,7 +22,7 @@ describe('Sketches API', () => {
 	})
 
 	describe('GET /api/sketches', () => {
-		it('returns paginated sketches with cache headers', async () => {
+		it('returns paginated sketches without shared caching', async () => {
 			const { getSketches } = await import('@/lib/sketches')
 			;(getSketches as ReturnType<typeof vi.fn>).mockResolvedValue({
 				data: [
@@ -42,9 +42,7 @@ describe('Sketches API', () => {
 			const res = await GET(req)
 
 			expect(res.status).toBe(200)
-			expect(res.headers.get('Cache-Control')).toBe(
-				's-maxage=60, stale-while-revalidate=300',
-			)
+			expect(res.headers.get('Cache-Control')).toBe('private, no-store')
 			const body = await res.json()
 			expect(body.data).toHaveLength(1)
 			expect(body.nextPage).toBe(1)

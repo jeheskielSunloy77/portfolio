@@ -24,9 +24,9 @@ describe('getSketches', () => {
 
 	it('returns a page and nextPage when more results exist', async () => {
 		const mockDocs = [
-			{ _id: { toString: () => 'id1' }, svg: '<svg></svg>', name: 'a', message: 'm' },
-			{ _id: { toString: () => 'id2' }, svg: '<svg></svg>', name: 'b', message: 'm2' },
-			{ _id: { toString: () => 'id3' }, svg: '<svg></svg>', name: 'c', message: 'm3' },
+			{ _id: { toString: () => 'id1' }, name: 'a', message: 'm' },
+			{ _id: { toString: () => 'id2' }, name: 'b', message: 'm2' },
+			{ _id: { toString: () => 'id3' }, name: 'c', message: 'm3' },
 		]
 		const mockCol = { find: vi.fn(() => createFindChain(mockDocs)) }
 		const { getDb } = await import('@/lib/mongodb')
@@ -44,9 +44,7 @@ describe('getSketches', () => {
 	})
 
 	it('omits nextPage when the result set is exhausted', async () => {
-		const mockDocs = [
-			{ _id: { toString: () => 'id1' }, svg: '<svg></svg>', name: 'a', message: 'm' },
-		]
+		const mockDocs = [{ _id: { toString: () => 'id1' }, name: 'a', message: 'm' }]
 		const mockCol = { find: vi.fn(() => createFindChain(mockDocs)) }
 		const { getDb } = await import('@/lib/mongodb')
 		;(getDb as ReturnType<typeof vi.fn>).mockResolvedValue({

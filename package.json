@@ -12,7 +12,6 @@
 		"build": "astro check && astro build",
 		"preview": "astro preview",
 		"astro": "astro",
-		"migrate:sketches": "bun run scripts/migrate-sketches-to-webp.ts",
 		"test": "vitest --run",
 		"test:watch": "vitest",
 		"coverage": "vitest --coverage --run"

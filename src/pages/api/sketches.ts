@@ -1,11 +1,19 @@
+import { getSketches, SKETCHES_PAGE_SIZE } from '@/lib/sketches'
 import { getDb } from '@/lib/mongodb'
 import { log } from '@/lib/utils'
 import z from 'zod'
 
-function jsonResponse(data: unknown, status = 200) {
+function jsonResponse(
+	data: unknown,
+	status = 200,
+	extraHeaders?: Record<string, string>,
+) {
 	return new Response(JSON.stringify(data), {
 		status,
-		headers: { 'Content-Type': 'application/json' },
+		headers: {
+			'Content-Type': 'application/json',
+			...extraHeaders,
+		},
 	})
 }
 
@@ -29,38 +37,18 @@ const COLLECTION = 'sketches'
 export async function GET(request: Request) {
 	const TAG = 'SketchesApiGet'
 
-		try {
-			const url = new URL(request.url)
-			const page = Math.max(0, Number(url.searchParams.get('page') ?? '0'))
-			const pageSize = Math.max(1, Number(url.searchParams.get('pageSize') ?? '6'))
+	try {
+		const url = new URL(request.url)
+		const page = Math.max(0, Number(url.searchParams.get('page') ?? '0'))
+		const pageSize = Math.max(
+			1,
+			Number(url.searchParams.get('pageSize') ?? String(SKETCHES_PAGE_SIZE)),
+		)
 
-		const db = await getDb()
-		const col = db.collection(COLLECTION)
+		const result = await getSketches(page, pageSize)
 
-		const total = await col.countDocuments()
-
-		const docs = await col
-			.find(
-				{},
-				{ projection: { svg: 1, dataUrl: 1, name: 1, message: 1, createdAt: 1 } }
-			)
-			.sort({ createdAt: -1 })
-			.skip(page * pageSize)
-			.limit(pageSize)
-			.toArray()
-
-		const mapped = docs.map((d: any) => ({
-			_id: d._id.toString(),
-			...d,
-		}))
-
-		const hasMore = (page + 1) * pageSize < total
-
-		return jsonResponse({
-			data: mapped,
-			page,
-			pageSize,
-			nextPage: hasMore ? page + 1 : undefined,
+		return jsonResponse(result, 200, {
+			'Cache-Control': 's-maxage=60, stale-while-revalidate=300',
 		})
 	} catch (e: any) {
 		return errResponse(TAG, 'Failed to fetch sketches')

@@ -61,7 +61,7 @@ export interface APIResponsePaginated<T> {
 	data: T[]
 	page: number
 	pageSize: number
-	total: number
+	total?: number
 	nextPage?: number
 }
 

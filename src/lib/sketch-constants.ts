@@ -1,0 +1,2 @@
+export const SKETCHES_PAGE_SIZE = 6
+export const SKETCHES_STALE_TIME_MS = 60_000

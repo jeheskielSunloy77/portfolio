@@ -38,12 +38,46 @@ describe('Sketch component', () => {
 		vi.restoreAllMocks()
 	})
 
+	test('renders prefetched sketches without refetching on mount', async () => {
+		const mockSketch = {
+			_id: 'sk1',
+			name: 'Artwork A',
+			message: 'A lovely SVG',
+			createdAt: new Date(),
+			svg: '<svg></svg>',
+			ip: '127.0.0.1',
+		}
+
+		const fetchMock = vi.spyOn(global, 'fetch')
+
+		render(
+			<Sketch
+				t={t}
+				initialData={{
+					pages: [
+						{
+							data: [mockSketch],
+							page: 0,
+							pageSize: 6,
+							total: 1,
+						},
+					],
+					pageParams: [0],
+				}}
+			/>,
+		)
+
+		expect(await screen.findByText('Artwork A')).toBeInTheDocument()
+		expect(screen.getByText('A lovely SVG')).toBeInTheDocument()
+		expect(fetchMock).not.toHaveBeenCalled()
+	})
+
 	test('fetches sketches and renders SketchCard items and header text', async () => {
 		const mockSketch = {
 			_id: 'sk1',
 			name: 'Artwork A',
 			message: 'A lovely SVG',
-			createdAt: new Date().toISOString(),
+			createdAt: new Date(),
 			svg: '<svg></svg>',
 			ip: '127.0.0.1',
 		}

@@ -3,6 +3,7 @@ import { Sketch } from '@/components/sketch'
 import { dictionary } from '@/i18n/dictionary'
 import type { Language } from '@/i18n/i18n'
 import MainLayout from '@/layouts/main.astro'
+import { getSketches, SKETCHES_PAGE_SIZE } from '@/lib/sketches'
 
 export interface Props {
 	lang: Language
@@ -10,6 +11,12 @@ export interface Props {
 
 const lang = Astro.props.lang
 const t = dictionary[lang]
+
+const firstPage = await getSketches(0, SKETCHES_PAGE_SIZE)
+const initialData = {
+	pages: [firstPage],
+	pageParams: [0],
+}
 ---
 
 <MainLayout
@@ -28,6 +35,6 @@ const t = dictionary[lang]
 		>
 			{t['visitors marks']}
 		</h1>
-		<Sketch client:idle t={t} />
+		<Sketch client:idle t={t} initialData={initialData} />
 	</article>
 </MainLayout>

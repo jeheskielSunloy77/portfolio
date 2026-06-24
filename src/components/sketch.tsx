@@ -1,4 +1,8 @@
 import { SketchDialog } from '@/components/sketch-dialog'
+import {
+	SKETCHES_PAGE_SIZE,
+	SKETCHES_STALE_TIME_MS,
+} from '@/lib/sketch-constants'
 import type { APIResponsePaginated, Dictionary, Sketch } from '@/lib/types'
 import {
 	QueryClient,
@@ -12,13 +16,22 @@ import { Plus } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { RainbowButton } from './magicui/rainbow-button'
 
-const queryClient = new QueryClient()
-const PAGE_SIZE = 6
+function createSketchQueryClient() {
+	return new QueryClient({
+		defaultOptions: {
+			queries: {
+				staleTime: SKETCHES_STALE_TIME_MS,
+			},
+		},
+	})
+}
 
 export function Sketch(props: {
 	t: Dictionary
 	initialData?: InfiniteData<APIResponsePaginated<Sketch>>
 }) {
+	const [queryClient] = useState(createSketchQueryClient)
+
 	return (
 		<QueryClientProvider client={queryClient}>
 			<SketchContent t={props.t} initialData={props.initialData} />
@@ -39,7 +52,9 @@ function SketchContent({
 		initialData,
 		queryFn: async ({ pageParam = 0 }) => {
 			const pageNum = Number(pageParam ?? 0)
-			const res = await fetch(`/api/sketches?page=${pageNum}&pageSize=${PAGE_SIZE}`)
+			const res = await fetch(
+				`/api/sketches?page=${pageNum}&pageSize=${SKETCHES_PAGE_SIZE}`,
+			)
 			if (!res.ok) throw new Error('Failed to fetch sketches')
 			return (await res.json()) as APIResponsePaginated<Sketch>
 		},
@@ -196,7 +211,9 @@ function SketchContent({
 					<>
 							<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 								{q.isLoading ? (
-									Array.from({ length: PAGE_SIZE }).map((_, i) => <SketchSkeleton key={i} />)
+									Array.from({ length: SKETCHES_PAGE_SIZE }).map((_, i) => (
+										<SketchSkeleton key={i} />
+									))
 								) : (
 								<>
 									{sketches.map((sketch) => (

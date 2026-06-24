@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { GET, POST } from './sketches'
 
+vi.mock('@/lib/sketches', () => ({
+	getSketches: vi.fn(),
+	SKETCHES_PAGE_SIZE: 6,
+}))
+
 vi.mock('@/lib/mongodb', () => ({
 	getDb: vi.fn(),
 }))
@@ -11,92 +16,62 @@ describe('Sketches API', () => {
 	})
 
 	describe('GET /api/sketches', () => {
-		it('returns paginated sketches with nextPage when there are more results', async () => {
-			const mockDocs = [
-				{
-					_id: { toString: () => 'id1' },
-					svg: '<svg></svg>',
-					dataUrl: 'data:1',
-					name: 'a',
-					message: 'm',
-					createdAt: new Date(),
-				},
-				{
-					_id: { toString: () => 'id2' },
-					svg: '<svg></svg>',
-					dataUrl: 'data:2',
-					name: 'b',
-					message: 'm2',
-					createdAt: new Date(),
-				},
-			]
-			const mockCol = {
-				countDocuments: vi.fn().mockResolvedValue(10),
-				find: vi.fn(() => ({
-					sort: vi.fn(() => ({
-						skip: vi.fn(() => ({
-							limit: vi.fn(() => ({
-								toArray: vi.fn().mockResolvedValue(mockDocs),
-							})),
-						})),
-					})),
-				})),
-			}
-			const { getDb } = await import('@/lib/mongodb')
-			;(getDb as ReturnType<typeof vi.fn>).mockResolvedValue({
-				collection: () => mockCol,
+		it('returns paginated sketches with cache headers', async () => {
+			const { getSketches } = await import('@/lib/sketches')
+			;(getSketches as ReturnType<typeof vi.fn>).mockResolvedValue({
+				data: [
+					{
+						_id: 'id1',
+						svg: '<svg></svg>',
+						name: 'a',
+						message: 'm',
+						createdAt: new Date(),
+					},
+				],
+				page: 0,
+				pageSize: 6,
+				nextPage: 1,
 			})
 
-			const req = new Request('https://example.com/api/sketches?page=1&pageSize=2')
+			const req = new Request('https://example.com/api/sketches?page=0&pageSize=6')
 			const res = await GET(req)
-			expect(res).toBeInstanceOf(Response)
+
 			expect(res.status).toBe(200)
+			expect(res.headers.get('Cache-Control')).toBe(
+				's-maxage=60, stale-while-revalidate=300',
+			)
 			const body = await res.json()
-			expect(body).toHaveProperty('data')
-			expect(Array.isArray(body.data)).toBe(true)
-			expect(body.page).toBe(1)
-			expect(body.pageSize).toBe(2)
-			expect(body.nextPage).toBe(2) // because total 10 and (1+1)*2 < 10
-			expect(mockCol.countDocuments).toHaveBeenCalled()
-			expect(mockCol.find).toHaveBeenCalled()
+			expect(body.data).toHaveLength(1)
+			expect(body.nextPage).toBe(1)
+			expect(getSketches).toHaveBeenCalledWith(0, 6)
 		})
 
 		it('handles invalid query params (negative page/pageSize) by normalizing them', async () => {
-			const mockDocs: any[] = []
-			const mockCol = {
-				countDocuments: vi.fn().mockResolvedValue(0),
-				find: vi.fn(() => ({
-					sort: vi.fn(() => ({
-						skip: vi.fn(() => ({
-							limit: vi.fn(() => ({
-								toArray: vi.fn().mockResolvedValue(mockDocs),
-							})),
-						})),
-					})),
-				})),
-			}
-			const { getDb } = await import('@/lib/mongodb')
-			;(getDb as ReturnType<typeof vi.fn>).mockResolvedValue({
-				collection: () => mockCol,
+			const { getSketches } = await import('@/lib/sketches')
+			;(getSketches as ReturnType<typeof vi.fn>).mockResolvedValue({
+				data: [],
+				page: 0,
+				pageSize: 1,
 			})
 
 			const req = new Request(
-				'https://example.com/api/sketches?page=-5&pageSize=0'
+				'https://example.com/api/sketches?page=-5&pageSize=0',
 			)
 			const res = await GET(req)
+
 			expect(res.status).toBe(200)
-			const body = await res.json()
-			expect(body.page).toBe(0)
-			expect(body.pageSize).toBe(1) // pageSize normalized to at least 1
-			expect(body.data).toEqual([])
+			expect(getSketches).toHaveBeenCalledWith(0, 1)
 		})
 
-		it('returns error response when DB throws', async () => {
-			const { getDb } = await import('@/lib/mongodb')
-			;(getDb as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('db fail'))
+		it('returns error response when getSketches throws', async () => {
+			const { getSketches } = await import('@/lib/sketches')
+			;(getSketches as ReturnType<typeof vi.fn>).mockRejectedValue(
+				new Error('db fail'),
+			)
 
 			const req = new Request('https://example.com/api/sketches')
 			const res = await GET(req)
+
 			expect(res.status).toBe(500)
 			const body = await res.json()
 			expect(body).toHaveProperty('error')
@@ -106,7 +81,7 @@ describe('Sketches API', () => {
 	describe('POST /api/sketches', () => {
 		it('returns 400 for invalid request body', async () => {
 			const badReq = {
-				json: async () => ({ name: 'a', message: 'm' }), // missing svg
+				json: async () => ({ name: 'a', message: 'm' }),
 				headers: new Headers(),
 			} as unknown as Request
 
@@ -160,7 +135,6 @@ describe('Sketches API', () => {
 			const body = await res.json()
 			expect(body).toHaveProperty('_id', 'newid')
 			expect(body).toHaveProperty('name', 'user')
-			// inserted svg should have script removed and onload attribute removed
 			expect(body.svg).not.toContain('<script')
 			expect(body.svg).not.toContain('onload=')
 			expect(mockCol.insertOne).toHaveBeenCalled()

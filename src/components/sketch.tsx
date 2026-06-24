@@ -1,4 +1,5 @@
 import { SketchDialog } from '@/components/sketch-dialog'
+import { markSketchAdded } from '@/lib/exit-intent'
 import { SKETCHES_PAGE_SIZE } from '@/lib/sketch-constants'
 import { sketchImageSrc } from '@/lib/sketch-image-client'
 import type { APIResponsePaginated, Dictionary, Sketch } from '@/lib/types'
@@ -173,6 +174,8 @@ function SketchContent({
 			_variables: CreateSketchPayload,
 			context: any,
 		) => {
+			markSketchAdded()
+
 			// replace optimistic item with server response
 			qc.setQueryData(queryKey, (old: any) => {
 				if (!old) return old

@@ -312,6 +312,11 @@ export const dictionary = {
     "fire away, human!": "fire away, human!",
     "I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).":
       "I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).",
+    "Leave a mark": "Leave a mark",
+    "Hundreds of visitors have scribbled on the wall. Your turn — draw, write, or just leave a weird little mark.":
+      "Hundreds of visitors have scribbled on the wall. Your turn — draw, write, or just leave a weird little mark.",
+    "add yours": "add yours",
+    "Sad cat waiting for your doodle": "Sad cat waiting for your doodle",
   },
   id: {
     "such end. very empty. much art. wow. 🐶":
@@ -326,6 +331,11 @@ export const dictionary = {
     "fire away, human!": "silakan tanya, manusia!",
     "I'm a helpful little robot who knows about Jay — ask me anything and I'll fetch the best bits (with extra beeps).":
       "Saya adalah robot kecil yang membantu dan mengetahui tentang Jay — tanyakan apa saja dan saya akan mengambil bagian terbaik (dengan tambahan beep).",
+    "Leave a mark": "Tinggalkan jejak",
+    "Hundreds of visitors have scribbled on the wall. Your turn — draw, write, or just leave a weird little mark.":
+      "Ratusan pengunjung sudah coret-coret di dinding. Giliranmu — gambar, tulis, atau tinggalkan jejak anehmu.",
+    "add yours": "tinggalkan jejakmu",
+    "Sad cat waiting for your doodle": "Kucing sedih menunggu doodlemu",
     visitors: "pengunjung",
     "Visitors Wall": "Jejak Pengunjung",
     "visitors marks": "jejak pengunjung",

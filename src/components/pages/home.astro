@@ -1,6 +1,5 @@
 ---
 import profileImage from '@/assets/me/me.webp'
-import { ExitIntent } from '@/components/exit-intent'
 import HomeSchema from '@/components/home-schema.astro'
 import { ExperienceSection } from '@/components/experiance-section'
 import HeroSection from '@/components/hero-section.astro'
@@ -48,5 +47,4 @@ const t = dictionary[lang]
 		<ProjectsSection lang={lang} t={t} />
 		<PostsSection lang={lang} t={t} />
 	</article>
-	<ExitIntent client:idle lang={lang} t={t} />
 </MainLayout>

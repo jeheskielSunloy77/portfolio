@@ -51,7 +51,7 @@ export function SearchablePostList({ posts, placeholder }: Props) {
 			</div>
 
 			<Card
-				className='motion-card border border-border/80 bg-card/90 py-4'
+				className='motion-card'
 				data-reveal='fade-up'
 			>
 				<ul className='flex flex-col' data-reveal-group>

@@ -251,7 +251,8 @@ export const PROJECTS: Project[] = [
 		name: 'Caspr, tired of recruiter ghosting? start ghosting the grind',
 		description:
 		'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.',
-		tags: ['AI', 'typescript', 'automation', 'scraping', 'saas'],
+    tags: ['AI', 'typescript', 'automation', 'scraping', 'saas'],
+    href: 'https://casprgo.com',
 		image: projectCaspr,
 		links: [
 			{

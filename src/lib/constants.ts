@@ -9,8 +9,7 @@ import projectGoKickstart from '@/assets/projects/goKickstart.png'
 import projectIaknKupang from '@/assets/projects/iaknKupang.webp'
 import projectJobScout from '@/assets/projects/job-scout.png'
 import projectKern from '@/assets/projects/kern.png'
-import projectPromptu from '@/assets/projects/promptu.png'
-import projectVettor from '@/assets/projects/vettor.png'
+import projectCaspr from '@/assets/projects/caspr.webp'
 import projectVolatile from '@/assets/projects/volatile.png'
 import skillAwsDark from '@/assets/skills/aws-dark.svg'
 import skillAws from '@/assets/skills/aws.svg'
@@ -249,37 +248,45 @@ export const SKILLS: Skill[] = [
 export const PROJECTS: Project[] = [
 	{
 		isFeatured: true,
-		name: 'Vettor, End-to-End Automated Job Hunting Suite',
+		name: 'Caspr, the job hunt where you ghost the grind, not the other way around',
 		description:
 		'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.',
 		tags: ['AI', 'typescript', 'automation', 'scraping', 'saas'],
-		image: projectVettor,
+		image: projectCaspr,
 		links: [
 			{
 				label: 'Visit',
-				href: 'https://vettor.cloud/',
+				href: 'https://gocaspr.com',
 				icon: Globe,
 				isExternal: true,
 			},
 		],
-	},
-				{
-				isFeatured: true,
-				name: 'Promptu, AI Data Concierge for Organizations',
-				href: 'https://promptuapp.vercel.app/',
-				description:
-					'An industrial scale RAG system that collects, compile and store any kind of digital data and then make it searchable with natural language using a LLM.',
-				tags: ['RAG', 'typescript','go', 'saas'],
-				image: projectPromptu,
-				links: [
-					{
-						label: 'Visit',
-						href: 'https://promptuapp.vercel.app/',
-						icon: Globe,
-						isExternal: true,
-					},
-				],
+  },
+  {
+    isFeatured:true,
+		name: 'Go Kickstart, Launch Full-Stack Go with Structure',
+		href: 'https://github.com/jeheskielSunloy77/go-kickstart',
+			description:
+				'An interactive and scriptable scaffolder that creates a clean architecture codebase with auth, PostgreSQL, Redis jobs, email templating, and optional frontend support in one guided flow.',
+			tags: ['go', 'cli', 'dev-tools', 'turborepo','clean-architecture'],
+			image: projectGoKickstart,
+			links: [
+			{
+				label: 'Source',
+				href: 'https://github.com/jeheskielSunloy77/go-kickstart',
+				icon: Github,
+				variation: 'default',
+				isExternal: true,
 			},
+			{
+				label: 'Blog',
+				href: '/en/blog/how-i-keep-my-go-code-clean-without-going-crazy',
+				icon: BookOpen,
+				variation: 'secondary',
+				isExternal: false,
+			},
+		],
+	},
 	{
 		name: 'Job Scout, Developer-First Engine for Job Board Aggregation',
 		href: 'https://github.com/jeheskielSunloy77/job-scout',
@@ -316,30 +323,6 @@ export const PROJECTS: Project[] = [
 				href: 'https://nextjs-iakn-kupang.vercel.app/',
 				icon: Globe,
 				isExternal: true,
-			},
-		],
-	},
-	{
-		name: 'Go Kickstart, Launch Full-Stack Go with Structure',
-		href: 'https://github.com/jeheskielSunloy77/go-kickstart',
-			description:
-				'An interactive and scriptable scaffolder that creates a clean architecture codebase with auth, PostgreSQL, Redis jobs, email templating, and optional frontend support in one guided flow.',
-			tags: ['go', 'cli', 'dev-tools', 'turborepo','clean-architecture'],
-			image: projectGoKickstart,
-			links: [
-			{
-				label: 'Source',
-				href: 'https://github.com/jeheskielSunloy77/go-kickstart',
-				icon: Github,
-				variation: 'default',
-				isExternal: true,
-			},
-			{
-				label: 'Blog',
-				href: '/en/blog/how-i-keep-my-go-code-clean-without-going-crazy',
-				icon: BookOpen,
-				variation: 'secondary',
-				isExternal: false,
 			},
 		],
 	},

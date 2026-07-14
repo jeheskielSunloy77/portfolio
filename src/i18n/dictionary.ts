@@ -285,8 +285,8 @@ export const dictionary = {
       "Volatile, The Ops Studio for Stateful Caching Systems",
     "Promptu, AI Data Concierge for Organizations":
       "Promptu, AI Data Concierge for Organizations",
-    "Caspr, the job hunt where you ghost the grind, not the other way around":
-      "Caspr, the job hunt where you ghost the grind, not the other way around",
+    "Caspr, tired of recruiter ghosting? start ghosting the grind":
+      "Caspr, tired of recruiter ghosting? start ghosting the grind",
     "related posts": "related posts",
     visitors: "visitors",
     "Visitors Wall": "Visitors Wall",
@@ -635,8 +635,8 @@ export const dictionary = {
       "Volatile, Ops Studio untuk Sistem Caching Stateful",
     "Promptu, AI Data Concierge for Organizations":
       "Promptu, AI Data Concierge for Organizations",
-    "Caspr, the job hunt where you ghost the grind, not the other way around":
-      "Caspr, the job hunt where you ghost the grind, not the other way around",
+    "Caspr, tired of recruiter ghosting? start ghosting the grind":
+      "Caspr, capek di-ghosting rekruter? saatnya ghosting prosesnya",
     "related posts": "postingan terkait",
   },
 } as const;

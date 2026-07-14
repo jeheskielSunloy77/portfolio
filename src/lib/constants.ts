@@ -248,7 +248,7 @@ export const SKILLS: Skill[] = [
 export const PROJECTS: Project[] = [
 	{
 		isFeatured: true,
-		name: 'Caspr, the job hunt where you ghost the grind, not the other way around',
+		name: 'Caspr, tired of recruiter ghosting? start ghosting the grind',
 		description:
 		'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.',
 		tags: ['AI', 'typescript', 'automation', 'scraping', 'saas'],
@@ -256,7 +256,7 @@ export const PROJECTS: Project[] = [
 		links: [
 			{
 				label: 'Visit',
-				href: 'https://gocaspr.com',
+				href: 'https://casprgo.com',
 				icon: Globe,
 				isExternal: true,
 			},

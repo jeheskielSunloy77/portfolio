@@ -252,12 +252,12 @@ export const PROJECTS: Project[] = [
 		description:
 		'AI-powered job hunting platform that discovers and ranks relevant roles, auto-generates tailored resumes and automatic job application whilst collecting and analyzing job seeking insights for the user.',
     tags: ['AI', 'typescript', 'automation', 'scraping', 'saas'],
-    href: 'https://casprgo.com',
+    href: 'https://gocaspr.com',
 		image: projectCaspr,
 		links: [
 			{
 				label: 'Visit',
-				href: 'https://casprgo.com',
+				href: 'https://gocaspr.com',
 				icon: Globe,
 				isExternal: true,
 			},

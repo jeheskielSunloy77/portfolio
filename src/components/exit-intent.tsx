@@ -6,7 +6,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useTheme } from "@/hooks/use-theme";
 import type { Language } from "@/i18n/i18n";
 import {
   EXIT_INTENT_DISMISSED_KEY,
@@ -24,7 +23,6 @@ interface ExitIntentProps {
 
 export function ExitIntent({ lang, t }: ExitIntentProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { theme } = useTheme();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -61,21 +59,34 @@ export function ExitIntent({ lang, t }: ExitIntentProps) {
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <div className="hidden" aria-hidden="true">
         <img
-          src={`/exit-cat-${theme}.webp`}
+        src="/exit-cat-light.webp"
           alt=""
           width={300}
           height={300}
-          fetchPriority="high"
+        />
+
+        <img
+        src="/exit-cat-dark.webp"
+          alt=""
+          width={300}
+          height={300}
         />
       </div>
       <DialogContent className="sm:max-w-[25rem]">
         <div className="pointer-events-none absolute top-0 -left-26 z-10 flex size-28 items-center justify-center">
           <img
-            src={`/exit-cat-${theme}.webp`}
+            src="/exit-cat-light.webp"
             alt={t["Sad cat waiting for your doodle"]}
             width={300}
             height={300}
-            className="h-full w-full object-contain drop-shadow-2xl"
+            className="h-full w-full dark:hidden object-contain drop-shadow-2xl"
+          />
+          <img
+            src="/exit-cat-dark.webp"
+            alt={t["Sad cat waiting for your doodle"]}
+            width={300}
+            height={300}
+            className="h-full w-full dark:block hidden object-contain drop-shadow-2xl"
           />
         </div>
 

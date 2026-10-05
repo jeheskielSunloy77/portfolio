@@ -40,19 +40,10 @@ vi.mock('@ai-sdk/anthropic', () => ({
 }))
 
 vi.mock('astro:env/server', () => ({
-	AI_PROVIDER: undefined,
-	AI_API_KEY: undefined,
-	AI_MODEL: undefined,
+	AI_PROVIDER: 'google',
+	AI_API_KEY: 'test-ai-api-key',
+	AI_MODEL: 'gemini-2.5-flash',
 	AI_BASE_URL: undefined,
-	GEMINI_API_KEY: 'test-gemini-api-key',
-	GEMINI_MODEL: 'test-gemini-model',
-	GEMINI_BASE_URL: undefined,
-	OPENAI_API_KEY: undefined,
-	OPENAI_MODEL: undefined,
-	OPENAI_BASE_URL: undefined,
-	ANTHROPIC_API_KEY: undefined,
-	ANTHROPIC_MODEL: undefined,
-	ANTHROPIC_BASE_URL: undefined,
 }))
 
 vi.mock('ai', () => ({

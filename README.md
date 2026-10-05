@@ -101,7 +101,6 @@ All external services are **optional** during local development. When ready to g
 | `MONGODB_URI` | MongoDB connection string for Visitor Sketch wall | *Optional (wall shows empty state if omitted)* |
 | `MONGODB_DB` | Database name | `portfolio` |
 | `SMTP_URL` | Single connection string (e.g. `smtps://user%40gmail.com:pass@smtp.gmail.com:465`) | *Optional (contact form logs to console if omitted)* |
-| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` | Individual SMTP fields | *Optional fallback if `SMTP_URL` not used* |
 
 ---
 

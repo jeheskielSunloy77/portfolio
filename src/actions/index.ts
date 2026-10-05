@@ -1,34 +1,16 @@
 import { EMAIL } from '@/site.config'
 import { log } from '@/lib/utils'
 import { defineAction } from 'astro:actions'
-import {
-	SMTP_HOST,
-	SMTP_PASS,
-	SMTP_PORT,
-	SMTP_URL,
-	SMTP_USER,
-} from 'astro:env/server'
+import { SMTP_URL } from 'astro:env/server'
 import nodemailer from 'nodemailer'
 import { z } from 'zod'
 
 function getTransporter() {
-	if (SMTP_URL) {
-		return nodemailer.createTransport(SMTP_URL)
+	if (SMTP_URL?.trim()) {
+		return nodemailer.createTransport(SMTP_URL.trim())
 	}
 
-	if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
-		return null
-	}
-
-	return nodemailer.createTransport({
-		host: SMTP_HOST,
-		port: +(SMTP_PORT || 587),
-		secure: +(SMTP_PORT || 587) === 465,
-		auth: {
-			user: SMTP_USER,
-			pass: SMTP_PASS,
-		},
-	})
+	return null
 }
 
 export const server = {

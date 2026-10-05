@@ -10,14 +10,12 @@ permissions:
 
 env:
  APP_URL: ${{ secrets.APP_URL != '' && secrets.APP_URL || 'https://example.com' }}
- GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY != '' && secrets.GEMINI_API_KEY || 'placeholder-gemini-key' }}
- GEMINI_MODEL: ${{ secrets.GEMINI_MODEL != '' && secrets.GEMINI_MODEL || 'placeholder-gemini-model' }}
+ AI_PROVIDER: ${{ secrets.AI_PROVIDER != '' && secrets.AI_PROVIDER || 'google' }}
+ AI_API_KEY: ${{ secrets.AI_API_KEY != '' && secrets.AI_API_KEY || 'placeholder-ai-key' }}
+ AI_MODEL: ${{ secrets.AI_MODEL != '' && secrets.AI_MODEL || 'gemini-2.5-flash' }}
  MONGODB_URI: ${{ secrets.MONGODB_URI != '' && secrets.MONGODB_URI || 'mongodb://localhost:27017/test' }}
  MONGODB_DB: ${{ secrets.MONGODB_DB != '' && secrets.MONGODB_DB || 'portfolio_ci' }}
- SMTP_HOST: ${{ secrets.SMTP_HOST != '' && secrets.SMTP_HOST || 'smtp.example.com' }}
- SMTP_PORT: ${{ secrets.SMTP_PORT != '' && secrets.SMTP_PORT || '587' }}
- SMTP_USER: ${{ secrets.SMTP_USER != '' && secrets.SMTP_USER || 'ci@example.com' }}
- SMTP_PASS: ${{ secrets.SMTP_PASS != '' && secrets.SMTP_PASS || 'placeholder-smtp-pass' }}
+ SMTP_URL: ${{ secrets.SMTP_URL != '' && secrets.SMTP_URL || '' }}
 
 concurrency:
  group: ${{ github.workflow }}-${{ github.ref }}

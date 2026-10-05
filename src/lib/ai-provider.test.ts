@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const { googleFactoryMock, openaiFactoryMock, anthropicFactoryMock } = vi.hoisted(() => ({
 	googleFactoryMock: vi.fn(),
@@ -43,47 +43,49 @@ vi.mock('astro:env/server', () => ({
 	get AI_BASE_URL() {
 		return mockEnv.AI_BASE_URL
 	},
-	get GEMINI_API_KEY() {
-		return mockEnv.GEMINI_API_KEY
-	},
-	get GEMINI_MODEL() {
-		return mockEnv.GEMINI_MODEL
-	},
-	get GEMINI_BASE_URL() {
-		return mockEnv.GEMINI_BASE_URL
-	},
-	get OPENAI_API_KEY() {
-		return mockEnv.OPENAI_API_KEY
-	},
-	get OPENAI_MODEL() {
-		return mockEnv.OPENAI_MODEL
-	},
-	get OPENAI_BASE_URL() {
-		return mockEnv.OPENAI_BASE_URL
-	},
-	get ANTHROPIC_API_KEY() {
-		return mockEnv.ANTHROPIC_API_KEY
-	},
-	get ANTHROPIC_MODEL() {
-		return mockEnv.ANTHROPIC_MODEL
-	},
-	get ANTHROPIC_BASE_URL() {
-		return mockEnv.ANTHROPIC_BASE_URL
-	},
 }))
 
 import { getChatModel, resolveAiProvider } from './ai-provider'
 
 describe('ai-provider', () => {
-	it('resolves null when no keys or providers configured', () => {
+	beforeEach(() => {
 		mockEnv = {}
-		expect(resolveAiProvider()).toBeNull()
-		const res = getChatModel()
-		expect(res.model).toBeNull()
-		expect(res.error).toContain('offline')
+		vi.clearAllMocks()
 	})
 
-	it('works with unified AI_* variables defaulting to google', () => {
+	it('returns offline error when AI_API_KEY is not set', () => {
+		mockEnv = { AI_PROVIDER: 'google' }
+		const res = getChatModel()
+		expect(res.provider).toBeNull()
+		expect(res.model).toBeNull()
+		expect(res.error).toContain('AI_API_KEY is not configured')
+	})
+
+	it('returns null and error for invalid AI_PROVIDER', () => {
+		mockEnv = {
+			AI_PROVIDER: 'unsupported-provider',
+			AI_API_KEY: 'test-key',
+		}
+		expect(resolveAiProvider()).toBeNull()
+		const res = getChatModel()
+		expect(res.provider).toBeNull()
+		expect(res.model).toBeNull()
+		expect(res.error).toContain('Invalid AI_PROVIDER')
+	})
+
+	it('rejects legacy "gemini" as AI_PROVIDER', () => {
+		mockEnv = {
+			AI_PROVIDER: 'gemini',
+			AI_API_KEY: 'test-key',
+		}
+		expect(resolveAiProvider()).toBeNull()
+		const res = getChatModel()
+		expect(res.provider).toBeNull()
+		expect(res.model).toBeNull()
+		expect(res.error).toContain('Invalid AI_PROVIDER')
+	})
+
+	it('defaults to google when AI_PROVIDER is omitted', () => {
 		mockEnv = {
 			AI_API_KEY: 'test-google-key',
 		}
@@ -97,7 +99,39 @@ describe('ai-provider', () => {
 		})
 	})
 
-	it('supports AI_PROVIDER="openai" with unified AI_API_KEY and custom AI_BASE_URL', () => {
+	it('supports google with custom model and custom AI_BASE_URL', () => {
+		mockEnv = {
+			AI_PROVIDER: 'google',
+			AI_API_KEY: 'test-google-key',
+			AI_MODEL: 'gemini-1.5-pro',
+			AI_BASE_URL: 'https://my-google-proxy.example.com',
+		}
+		expect(resolveAiProvider()).toBe('google')
+		const res = getChatModel()
+		expect(res.provider).toBe('google')
+		expect(res.model).toBe('google:gemini-1.5-pro')
+		expect(googleFactoryMock).toHaveBeenCalledWith({
+			apiKey: 'test-google-key',
+			baseURL: 'https://my-google-proxy.example.com',
+		})
+	})
+
+	it('supports AI_PROVIDER="openai" with default model', () => {
+		mockEnv = {
+			AI_PROVIDER: 'openai',
+			AI_API_KEY: 'sk-test',
+		}
+		expect(resolveAiProvider()).toBe('openai')
+		const res = getChatModel()
+		expect(res.provider).toBe('openai')
+		expect(res.model).toBe('openai:gpt-4o-mini')
+		expect(openaiFactoryMock).toHaveBeenCalledWith({
+			apiKey: 'sk-test',
+			baseURL: undefined,
+		})
+	})
+
+	it('supports AI_PROVIDER="openai" with custom model and custom AI_BASE_URL', () => {
 		mockEnv = {
 			AI_PROVIDER: 'openai',
 			AI_API_KEY: 'sk-test',
@@ -114,7 +148,7 @@ describe('ai-provider', () => {
 		})
 	})
 
-	it('supports AI_PROVIDER="anthropic" with unified AI_API_KEY', () => {
+	it('supports AI_PROVIDER="anthropic" with default and custom settings', () => {
 		mockEnv = {
 			AI_PROVIDER: 'anthropic',
 			AI_API_KEY: 'claude-key',
@@ -127,25 +161,5 @@ describe('ai-provider', () => {
 			apiKey: 'claude-key',
 			baseURL: undefined,
 		})
-	})
-
-	it('maps legacy AI_PROVIDER="gemini" to "google"', () => {
-		mockEnv = {
-			AI_PROVIDER: 'gemini',
-			AI_API_KEY: 'gem-key',
-		}
-		expect(resolveAiProvider()).toBe('google')
-		const res = getChatModel()
-		expect(res.provider).toBe('google')
-	})
-
-	it('falls back to legacy OPENAI_API_KEY when AI_API_KEY is not set', () => {
-		mockEnv = {
-			OPENAI_API_KEY: 'legacy-key',
-		}
-		expect(resolveAiProvider()).toBe('openai')
-		const res = getChatModel()
-		expect(res.provider).toBe('openai')
-		expect(res.model).toBe('openai:gpt-4o-mini')
 	})
 })

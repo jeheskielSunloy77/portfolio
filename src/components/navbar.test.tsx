@@ -64,7 +64,7 @@ function mockMatchMedia(matches: boolean) {
 	}
 }
 
-import { BOT_NAME } from '@/lib/constants'
+import { BOT_NAME } from '@/site.config'
 import { Navbar } from './navbar'
 
 describe('Navbar', () => {

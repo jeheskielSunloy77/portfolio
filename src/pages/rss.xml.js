@@ -1,5 +1,5 @@
 import { LANGUAGE_MAP } from '@/i18n/i18n';
-import { FULL_NAME } from '@/lib/constants';
+import { FULL_NAME } from '@/site.config';
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 

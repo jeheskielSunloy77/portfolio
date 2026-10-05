@@ -11,7 +11,7 @@ const t: any = new Proxy(
 )
 
 // Mock constants used by the component with small predictable datasets
-vi.mock('@/lib/constants', () => {
+vi.mock('@/site.config', () => {
 	return {
 		CAREERS: [
 			{

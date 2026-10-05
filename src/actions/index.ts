@@ -1,4 +1,4 @@
-import { EMAIL } from '@/lib/constants'
+import { EMAIL } from '@/site.config'
 import { log } from '@/lib/utils'
 import { defineAction } from 'astro:actions'
 import {

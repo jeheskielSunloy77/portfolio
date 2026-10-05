@@ -1,4 +1,4 @@
-import { CAREERS, EDUCATIONS } from '@/lib/constants'
+import { CAREERS, EDUCATIONS } from '@/site.config'
 import type { Dictionary, Experience } from '@/lib/types'
 import { BriefcaseBusiness, GraduationCap } from 'lucide-react'
 import { motion } from 'motion/react'

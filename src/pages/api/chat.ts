@@ -1,5 +1,5 @@
 import { buildPortfolioAssistantContext } from '@/lib/ai-context'
-import { BOT_NAME, NICK_NAME } from '@/lib/constants'
+import { BOT_NAME, NICK_NAME } from '@/site.config'
 import { log, tryPromise } from '@/lib/utils'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { convertToModelMessages, streamText } from 'ai'

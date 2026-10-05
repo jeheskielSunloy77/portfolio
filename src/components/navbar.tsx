@@ -38,7 +38,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { BOT_NAME } from '@/lib/constants'
+import { BOT_NAME } from '@/site.config'
 import type { Dictionary, LocalizedString } from '@/lib/types'
 import { cn } from '@/lib/utils'
 

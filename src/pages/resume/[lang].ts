@@ -1,4 +1,4 @@
-import { RESUME_URLS } from '@/lib/constants'
+import { RESUME_URLS } from '@/site.config'
 import type { APIRoute } from 'astro'
 
 export const prerender = false

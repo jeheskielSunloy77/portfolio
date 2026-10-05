@@ -1,5 +1,5 @@
 import type { Language } from '@/i18n/i18n'
-import { BOT_NAME, NICK_NAME } from '@/lib/constants'
+import { BOT_NAME, NICK_NAME } from '@/site.config'
 import type { Dictionary } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { useChat, type UIMessage } from '@ai-sdk/react'

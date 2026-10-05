@@ -14,7 +14,7 @@ import {
 	PROJECTS,
 	SKILLS,
 	WEBSITE_URL,
-} from '@/lib/constants'
+} from '@/site.config'
 import type { Experience, Project } from '@/lib/types'
 import { getBlogPostsSummaryForAssistant } from '@/posts/posts'
 const RESUME_LINKS = {

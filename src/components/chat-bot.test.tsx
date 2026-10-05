@@ -19,7 +19,7 @@ vi.mock('@ai-sdk/react', () => ({
 	useChat: () => chatState,
 }))
 
-import { NICK_NAME } from '@/lib/constants'
+import { NICK_NAME } from '@/site.config'
 import { ChatBot } from './chat-bot'
 
 describe('ChatBot', () => {

@@ -481,7 +481,6 @@ function ChatMessages({
 					<p className='text-xs text-muted-foreground'>
 						{(
 							t['Ask about {NICK_NAME}.'] ||
-							t['Ask about Jay.'] ||
 							'Ask about {NICK_NAME}.'
 						).replace('{NICK_NAME}', NICK_NAME)}
 					</p>

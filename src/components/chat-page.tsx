@@ -266,9 +266,6 @@ export function ChatPage({ t, lang }: ChatPageProps) {
 										t[
 											'Ask anything about {NICK_NAME}, I can pull projects, experience, and links.'
 										] ||
-										t[
-											'Ask anything about Jay, I can pull projects, experience, and links.'
-										] ||
 										'Ask anything about {NICK_NAME}, I can pull projects, experience, and links.'
 									).replace('{NICK_NAME}', NICK_NAME)}
 								</p>

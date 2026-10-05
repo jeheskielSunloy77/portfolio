@@ -43,7 +43,7 @@ import { BOT_NAME } from '@/site.config'
 import type { Dictionary, LocalizedString } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
-function ThemeToggle() {
+function ThemeToggle({ t }: { t?: Dictionary }) {
 	const { theme, toggle, buttonRef } = useTheme()
 
 	return (
@@ -53,7 +53,7 @@ function ThemeToggle() {
 			) : (
 				<Moon className='size-4 text-indigo-500' />
 			)}
-			<span className='sr-only'>Theme Toggle</span>
+			<span className='sr-only'>{t ? t['toggle theme'] : 'toggle theme'}</span>
 		</Button>
 	)
 }
@@ -317,7 +317,7 @@ export function Navbar(props: {
 								</ul>
 								<div className='flex gap-2'>
 									<LanguageDropdown
-										label='languages'
+										label={t['languages']}
 										lang={lang}
 										pathname={getPathnameWithoutLang(pathname, lang)}
 										languageSwitchUrls={languageSwitchUrls}
@@ -327,7 +327,7 @@ export function Navbar(props: {
 											<span className='sr-only'>{t['toggle language']}</span>
 										</Button>
 									</LanguageDropdown>
-									<ThemeToggle />
+									<ThemeToggle t={t} />
 								</div>
 							</div>
 						</nav>

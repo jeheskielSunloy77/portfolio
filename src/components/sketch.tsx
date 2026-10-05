@@ -221,7 +221,7 @@ function SketchContent({
 							<div ref={loadMoreRef} className='h-2' />
 							{!q.hasNextPage && !q.isPending && (
 								<div className='text-sm text-muted-foreground mt-2'>
-									such end. very empty. much art. wow. 🐶
+									{t['such end. very empty. much art. wow. 🐶']}
 								</div>
 							)}
 						</div>

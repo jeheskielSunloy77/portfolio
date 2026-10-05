@@ -5,12 +5,17 @@ import {
 	SMTP_HOST,
 	SMTP_PASS,
 	SMTP_PORT,
+	SMTP_URL,
 	SMTP_USER,
 } from 'astro:env/server'
 import nodemailer from 'nodemailer'
 import { z } from 'zod'
 
 function getTransporter() {
+	if (SMTP_URL) {
+		return nodemailer.createTransport(SMTP_URL)
+	}
+
 	if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
 		return null
 	}

@@ -94,14 +94,14 @@ All external services are **optional** during local development. When ready to g
 | Variable | Description | Default / Required |
 | :--- | :--- | :--- |
 | `APP_URL` | Canonical URL of your live site | `http://localhost:4321` |
-| `GEMINI_API_KEY` | Google AI Studio API key for AI Chatbot | *Optional (chatbot shows offline note if omitted)* |
-| `GEMINI_MODEL` | Gemini model name | `gemini-2.5-flash` |
+| `AI_PROVIDER` | AI provider (`google`, `openai`, `anthropic`) | `google` |
+| `AI_API_KEY` | API key for your chosen provider | *Optional (chatbot shows offline note if omitted)* |
+| `AI_MODEL` | Custom model name | *Optional (defaults to `gemini-2.5-flash` / `gpt-4o-mini` / `claude-3-5-haiku-latest`)* |
+| `AI_BASE_URL` | Custom endpoint URL (e.g. `http://localhost:11434/v1` for Ollama or proxy) | *Optional (defaults to official API endpoint)* |
 | `MONGODB_URI` | MongoDB connection string for Visitor Sketch wall | *Optional (wall shows empty state if omitted)* |
 | `MONGODB_DB` | Database name | `portfolio` |
-| `SMTP_HOST` | SMTP server host (e.g. `smtp.gmail.com`) | *Optional (contact form logs to console if omitted)* |
-| `SMTP_PORT` | SMTP port | `587` |
-| `SMTP_USER` | SMTP username or email | *Optional* |
-| `SMTP_PASS` | SMTP password or app password | *Optional* |
+| `SMTP_URL` | Single connection string (e.g. `smtps://user%40gmail.com:pass@smtp.gmail.com:465`) | *Optional (contact form logs to console if omitted)* |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` | Individual SMTP fields | *Optional fallback if `SMTP_URL` not used* |
 
 ---
 

@@ -5,11 +5,15 @@ const {
 	streamMock,
 	convertToModelMessagesMock,
 	googleMock,
+	openaiMock,
+	anthropicMock,
 	toUIMessageStreamResponseMock,
 } = vi.hoisted(() => ({
 	streamMock: vi.fn(),
 	convertToModelMessagesMock: vi.fn(),
 	googleMock: vi.fn(),
+	openaiMock: vi.fn(),
+	anthropicMock: vi.fn(),
 	toUIMessageStreamResponseMock: vi
 		.fn()
 		.mockImplementation(() => new Response(null, { status: 200 })),
@@ -27,9 +31,28 @@ vi.mock('@ai-sdk/google', () => ({
 	createGoogleGenerativeAI: vi.fn().mockImplementation(() => googleMock),
 }))
 
+vi.mock('@ai-sdk/openai', () => ({
+	createOpenAI: vi.fn().mockImplementation(() => openaiMock),
+}))
+
+vi.mock('@ai-sdk/anthropic', () => ({
+	createAnthropic: vi.fn().mockImplementation(() => anthropicMock),
+}))
+
 vi.mock('astro:env/server', () => ({
+	AI_PROVIDER: undefined,
+	AI_API_KEY: undefined,
+	AI_MODEL: undefined,
+	AI_BASE_URL: undefined,
 	GEMINI_API_KEY: 'test-gemini-api-key',
 	GEMINI_MODEL: 'test-gemini-model',
+	GEMINI_BASE_URL: undefined,
+	OPENAI_API_KEY: undefined,
+	OPENAI_MODEL: undefined,
+	OPENAI_BASE_URL: undefined,
+	ANTHROPIC_API_KEY: undefined,
+	ANTHROPIC_MODEL: undefined,
+	ANTHROPIC_BASE_URL: undefined,
 }))
 
 vi.mock('ai', () => ({

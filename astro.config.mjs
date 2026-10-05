@@ -54,6 +54,27 @@ export default defineConfig({
         optional: true,
         default: 'http://localhost:4321',
       }),
+      AI_PROVIDER: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+        default: 'google',
+      }),
+      AI_API_KEY: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+      }),
+      AI_MODEL: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+      }),
+      AI_BASE_URL: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+      }),
       GEMINI_API_KEY: envField.string({
         access: 'secret',
         context: 'server',
@@ -65,6 +86,43 @@ export default defineConfig({
         optional: true,
         default: 'gemini-2.5-flash',
       }),
+      GEMINI_BASE_URL: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+      }),
+      OPENAI_API_KEY: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+      }),
+      OPENAI_MODEL: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+        default: 'gpt-4o-mini',
+      }),
+      OPENAI_BASE_URL: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+      }),
+      ANTHROPIC_API_KEY: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+      }),
+      ANTHROPIC_MODEL: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+        default: 'claude-3-5-haiku-latest',
+      }),
+      ANTHROPIC_BASE_URL: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+      }),
       MONGODB_URI: envField.string({
         access: 'secret',
         context: 'server',
@@ -75,6 +133,11 @@ export default defineConfig({
         context: 'server',
         optional: true,
         default: 'portfolio',
+      }),
+      SMTP_URL: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
       }),
       SMTP_HOST: envField.string({
         access: 'secret',

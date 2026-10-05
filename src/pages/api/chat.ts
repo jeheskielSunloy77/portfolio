@@ -1,12 +1,10 @@
 import { buildPortfolioAssistantContext } from '@/lib/ai-context'
+import { getChatModel } from '@/lib/ai-provider'
 import { BOT_NAME, NICK_NAME } from '@/site.config'
 import { log, tryPromise } from '@/lib/utils'
-import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { convertToModelMessages, streamText } from 'ai'
-import { GEMINI_API_KEY, GEMINI_MODEL } from 'astro:env/server'
 
 const TAG = 'ChatBotApi'
-const google = createGoogleGenerativeAI({ apiKey: GEMINI_API_KEY || 'dummy-key' })
 
 function errResponse(error: Error, message: string, status = 500) {
 	log(
@@ -31,10 +29,13 @@ interface ChatRequest {
 
 export async function POST({ request }: { request: Request }) {
 	try {
-		if (!GEMINI_API_KEY) {
+		const aiConfig = getChatModel()
+		if (!aiConfig.model) {
 			return new Response(
 				JSON.stringify({
-					error: 'The AI chatbot is currently offline because GEMINI_API_KEY is not configured in .env',
+					error:
+						aiConfig.error ||
+						'The AI chatbot is currently offline because no AI provider is configured in .env',
 				}),
 				{ status: 503, headers: { 'Content-Type': 'application/json' } }
 			)
@@ -57,7 +58,7 @@ export async function POST({ request }: { request: Request }) {
 		const resultStream = await tryPromise(
 			Promise.resolve().then(() =>
 				streamText({
-					model: google(GEMINI_MODEL),
+					model: aiConfig.model!,
 					system: prompt,
 					messages: convertToModelMessages(messages as any),
 					temperature: 0,

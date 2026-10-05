@@ -1,5 +1,5 @@
 ---
-import { BOT_NAME, NICK_NAME, SOURCE_CODE_URL } from '@/lib/constants'
+import { BOT_NAME, HEADLINE, NICK_NAME, SOURCE_CODE_URL, TAGLINE } from '@/lib/constants'
 import type { Dictionary } from '@/lib/types'
 import { ArrowDown, ArrowDownRight, Bot } from 'lucide-react'
 import { HeroRobot } from './hero-robot'
@@ -31,18 +31,14 @@ const { t }: Props = Astro.props
 			class='mt-2 whitespace-nowrap text-sm font-medium sm:text-base'
 			data-reveal='fade-up'
 		>
-			{t['software engineer hailing from Indonesia 🇮🇩']}
+			{(t as any)[HEADLINE] ?? HEADLINE}
 		</p>
 
 		<p
 			class='mt-4 max-w-sm text-balance text-sm sm:text-base'
 			data-reveal='fade-up'
 		>
-			{
-				t[
-					'I turn bugs into features and coffee into code. AI wrote this tagline. I just hit enter.'
-				]
-			}
+			{(t as any)[TAGLINE] ?? TAGLINE}
 		</p>
 
 		<div class='mt-6 flex items-center gap-1' data-reveal='fade-up'>

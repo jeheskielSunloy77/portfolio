@@ -59,8 +59,6 @@ function SketchContent({
 
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-	const [reachedBottom, setReachedBottom] = useState(false)
-
 	const loadMoreRef = useRef<HTMLDivElement | null>(null)
 
 	useEffect(() => {
@@ -69,7 +67,6 @@ function SketchContent({
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
-					setReachedBottom(entry.isIntersecting)
 					if (entry.isIntersecting && q.hasNextPage && !q.isFetchingNextPage) {
 						q.fetchNextPage()
 					}
@@ -164,7 +161,7 @@ function SketchContent({
 			return { previous, optimisticSketch }
 		},
 
-		onError: (err: unknown, _variables: CreateSketchPayload, context: any) => {
+		onError: (_err: unknown, _variables: CreateSketchPayload, context: any) => {
 			// rollback
 			qc.setQueryData(queryKey, context?.previous)
 		},

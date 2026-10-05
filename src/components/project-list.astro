@@ -33,7 +33,7 @@ const projects = limit ? filteredProjects.slice(0, limit) : filteredProjects
 						<a href={project.href || project.image?.src} target='_blank'>
 							<Image
 								src={project.image}
-								alt={t[project.name]}
+								alt={t[project.name] ?? project.name}
 								width={500}
 								height={300}
 								class='h-40 w-full rounded-lg object-cover object-top hover:opacity-80 transition-opacity'
@@ -42,9 +42,9 @@ const projects = limit ? filteredProjects.slice(0, limit) : filteredProjects
 					)}
 				</CardHeader>
 				<CardContent className='flex flex-col gap-2'>
-					<CardTitle>{t[project.name]}</CardTitle>
+					<CardTitle>{t[project.name] ?? project.name}</CardTitle>
 					<div class='max-w-full text-pretty font-sans text-xs text-muted-foreground'>
-						{t[project.description]}
+						{t[project.description] ?? project.description}
 					</div>
 				</CardContent>
 				<CardFooter className='flex h-full flex-col items-start justify-between gap-4'>
@@ -76,7 +76,7 @@ const projects = limit ? filteredProjects.slice(0, limit) : filteredProjects
 										variant={link.variation}
 									>
 										<link.icon className='size-3' />
-										{t[link.label]}
+										{t[link.label] ?? link.label}
 									</Button>
 								</a>
 							))}

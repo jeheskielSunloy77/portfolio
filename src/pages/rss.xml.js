@@ -8,7 +8,7 @@ export async function GET(context) {
 
     return rss({
         title: `${FULL_NAME} - Blog`,
-        description: 'Latest posts from my blog, covering web & mobile development, software achitecture, and tech insights.',
+        description: `Latest posts from ${FULL_NAME}'s blog, covering software development, architecture, and tech insights.`,
         site: context.site,
         items: posts.map((post) => {
             const [lang, slug] = post.id.split('/');

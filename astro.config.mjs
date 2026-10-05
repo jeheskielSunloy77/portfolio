@@ -10,12 +10,11 @@ import { loadEnv } from 'vite';
 // import "./src/env";
 
 const env = loadEnv(process.env.NODE_ENV ?? 'development', process.cwd(), "");
-const configuredSiteUrl = new URL(
-  env.APP_URL,
-);
+const appUrlString = env.APP_URL || process.env.APP_URL || 'http://localhost:4321';
+const configuredSiteUrl = new URL(appUrlString);
 
 if (configuredSiteUrl.hostname.startsWith('www.')) {
-  configuredSiteUrl.hostname = 'jeheskielsunloy.com';
+  configuredSiteUrl.hostname = configuredSiteUrl.hostname.replace(/^www\./, '');
 }
 
 // https://astro.build/config
@@ -52,48 +51,51 @@ export default defineConfig({
       APP_URL: envField.string({
         access: 'public',
         context: 'client',
-        optional: false,
-        url: true,
+        optional: true,
+        default: 'http://localhost:4321',
       }),
       GEMINI_API_KEY: envField.string({
         access: 'secret',
         context: 'server',
-        optional: false,
+        optional: true,
       }),
       GEMINI_MODEL: envField.string({
         access: 'secret',
         context: 'server',
-        optional: false,
+        optional: true,
+        default: 'gemini-2.5-flash',
       }),
       MONGODB_URI: envField.string({
         access: 'secret',
         context: 'server',
-        optional: false,
+        optional: true,
       }),
       MONGODB_DB: envField.string({
         access: 'secret',
         context: 'server',
-        optional: false,
+        optional: true,
+        default: 'portfolio',
       }),
       SMTP_HOST: envField.string({
         access: 'secret',
         context: 'server',
-        optional: false,
+        optional: true,
       }),
       SMTP_PORT: envField.number({
         access: 'secret',
         context: 'server',
-        optional: false,
+        optional: true,
+        default: 587,
       }),
       SMTP_USER: envField.string({
         access: 'secret',
         context: 'server',
-        optional: false,
+        optional: true,
       }),
       SMTP_PASS: envField.string({
         access: 'secret',
         context: 'server',
-        optional: false,
+        optional: true,
       }),
     },
     validateSecrets: true,
@@ -112,9 +114,5 @@ export default defineConfig({
       },
     }),
   ],
-  redirects: {
-    "resume/en": "https://drive.google.com/uc?export=download&id=17wnmxr6lTSdWMYS4YtYdU9i_w23IEqf7",
-    "resume/id": "https://drive.google.com/uc?export=download&id=1KGXAMT65Ir0-i_PFdlHJIlap5mcjlJnP",
-  },
   adapter: vercel(),
 });

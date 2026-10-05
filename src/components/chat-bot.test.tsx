@@ -19,6 +19,7 @@ vi.mock('@ai-sdk/react', () => ({
 	useChat: () => chatState,
 }))
 
+import { NICK_NAME } from '@/lib/constants'
 import { ChatBot } from './chat-bot'
 
 describe('ChatBot', () => {
@@ -55,9 +56,7 @@ describe('ChatBot', () => {
 		).toBeInTheDocument()
 		expect(screen.getByText('fire away, human!')).toBeInTheDocument()
 		expect(
-			screen.getByText(
-				'Ask about Jay.',
-			),
+			screen.getByText(new RegExp(`Ask about ${NICK_NAME}\\.`, 'i')),
 		).toBeInTheDocument()
 	})
 

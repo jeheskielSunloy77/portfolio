@@ -19,6 +19,8 @@ export async function getSketchImageBuffer(id: string): Promise<Buffer | null> {
 	if (!ObjectId.isValid(id)) return null
 
 	const db = await getDb()
+	if (!db) return null
+
 	const doc = await db.collection(COLLECTION).findOne(
 		{ _id: new ObjectId(id) },
 		{ projection: { image: 1 } },

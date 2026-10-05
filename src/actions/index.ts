@@ -10,15 +10,21 @@ import {
 import nodemailer from 'nodemailer'
 import { z } from 'zod'
 
-const transporter = nodemailer.createTransport({
-	host: SMTP_HOST,
-	port: +SMTP_PORT,
-	secure: true,
-	auth: {
-		user: SMTP_USER,
-		pass: SMTP_PASS,
-	},
-})
+function getTransporter() {
+	if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
+		return null
+	}
+
+	return nodemailer.createTransport({
+		host: SMTP_HOST,
+		port: +(SMTP_PORT || 587),
+		secure: +(SMTP_PORT || 587) === 465,
+		auth: {
+			user: SMTP_USER,
+			pass: SMTP_PASS,
+		},
+	})
+}
 
 export const server = {
 	sendEmail: defineAction({
@@ -31,6 +37,17 @@ export const server = {
 		handler: async ({ name, email, message }) => {
 			const TAG = 'SendEmailAction'
 			try {
+				const transporter = getTransporter()
+
+				if (!transporter) {
+					log(
+						'info',
+						TAG,
+						`[SIMULATION] SMTP not configured. Contact submission from ${name} <${email}>:\n${message}`,
+					)
+					return { success: true }
+				}
+
 				const payload = {
 					from: `"${name}" <${email}>`,
 					to: EMAIL,

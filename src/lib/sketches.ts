@@ -2,7 +2,7 @@ import { SKETCHES_PAGE_SIZE } from '@/lib/sketch-constants'
 import { getDb } from '@/lib/mongodb'
 import type { APIResponsePaginated, Sketch } from '@/lib/types'
 
-export { SKETCHES_PAGE_SIZE } from '@/lib/sketch-constants'
+export { SKETCHES_PAGE_SIZE }
 
 const COLLECTION = 'sketches'
 
@@ -10,31 +10,47 @@ export async function getSketches(
 	page: number,
 	pageSize: number,
 ): Promise<APIResponsePaginated<Sketch>> {
-	const db = await getDb()
-	const col = db.collection(COLLECTION)
+	try {
+		const db = await getDb()
+		if (!db) {
+			return {
+				data: [],
+				page,
+				pageSize,
+			}
+		}
 
-	const docs = await col
-		.find(
-			{},
-			{ projection: { name: 1, message: 1, createdAt: 1 } },
-		)
-		.sort({ createdAt: -1 })
-		.skip(page * pageSize)
-		.limit(pageSize + 1)
-		.toArray()
+		const col = db.collection(COLLECTION)
 
-	const hasMore = docs.length > pageSize
-	const pageDocs = hasMore ? docs.slice(0, pageSize) : docs
+		const docs = await col
+			.find(
+				{},
+				{ projection: { name: 1, message: 1, createdAt: 1 } },
+			)
+			.sort({ createdAt: -1 })
+			.skip(page * pageSize)
+			.limit(pageSize + 1)
+			.toArray()
 
-	const mapped = pageDocs.map((d) => ({
-		...d,
-		_id: d._id.toString(),
-	})) as Sketch[]
+		const hasMore = docs.length > pageSize
+		const pageDocs = hasMore ? docs.slice(0, pageSize) : docs
 
-	return {
-		data: mapped,
-		page,
-		pageSize,
-		nextPage: hasMore ? page + 1 : undefined,
+		const mapped = pageDocs.map((d) => ({
+			...d,
+			_id: d._id.toString(),
+		})) as Sketch[]
+
+		return {
+			data: mapped,
+			page,
+			pageSize,
+			nextPage: hasMore ? page + 1 : undefined,
+		}
+	} catch {
+		return {
+			data: [],
+			page,
+			pageSize,
+		}
 	}
 }

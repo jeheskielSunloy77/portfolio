@@ -1,33 +1,25 @@
-import { BLOG_POSTS, CAREERS, EDUCATIONS, EMAIL, FULL_NAME, NICK_NAME, PROJECTS, SKILLS, WEBSITE_URL } from '@/lib/constants'
+import {
+	CAREERS,
+	EDUCATIONS,
+	EMAIL,
+	FULL_NAME,
+	INTERESTS,
+	LANGUAGES_SPOKEN,
+	LOCATION,
+	NICK_NAME,
+	OPEN_SOURCE,
+	ORIGIN,
+	OTHER_STRENGTHS,
+	PROFESSIONAL_SUMMARY,
+	PROJECTS,
+	SKILLS,
+	WEBSITE_URL,
+} from '@/lib/constants'
 import type { Experience, Project } from '@/lib/types'
-
-const LOCATION = 'Sleman, Yogyakarta, Indonesia'
-const ORIGIN = 'Ambon, Maluku, Indonesia'
-const LANGUAGES = ['English (fluent)', 'Indonesian (native)'] as const
-const PROFESSIONAL_SUMMARY =
-	'Jay is a software engineer focused on web and mobile development. His core stack includes TypeScript, Go, React, Next.js, Node.js, Kotlin Multiplatform, Laravel, Tailwind CSS, PostgreSQL, MongoDB, Redis, AWS, and Docker. He builds full-stack products across frontend, backend, and mobile, and regularly shares what he learns through his blog.'
-const OTHER_STRENGTHS = [
-	'Clean Architecture',
-	'Design Patterns',
-	'Agile Methodologies',
-	'Git and GitHub',
-] as const
-const OPEN_SOURCE = [
-	{
-		name: 'LangChain JS contributor',
-		href: 'https://github.com/langchain-ai/langchainjs',
-		summary: 'Fixed bugs discovered while using the library.',
-	},
-] as const
-const INTERESTS = [
-	'Reading technical blogs, articles, and books',
-	'Contributing to open source',
-	'Building side projects',
-	'Badminton and running',
-] as const
+import { getBlogPostsSummaryForAssistant } from '@/posts/posts'
 const RESUME_LINKS = {
-	english: `${WEBSITE_URL}/resume-en.pdf`,
-	indonesian: `${WEBSITE_URL}/resume-id.pdf`,
+	english: `${WEBSITE_URL}/resume/en`,
+	indonesian: `${WEBSITE_URL}/resume/id`,
 } as const
 const IMPORTANT_ROUTES = {
 	home: WEBSITE_URL,
@@ -93,20 +85,11 @@ function formatProjectsSection(projects: Project[]) {
 	return `## Projects\n\n${body}`
 }
 
-function formatBlogPostsSection() {
-	return `## Blog Posts\n\n${BLOG_POSTS.map((post) => {
-		return [
-			`### ${post.title}`,
-			`- Summary: ${post.summary}`,
-			`- English: ${post.english}`,
-			`- Indonesian: ${post.indonesian}`,
-		].join('\n')
-	}).join('\n\n')}`
-}
+export async function buildPortfolioAssistantContext() {
+	const blogPostsSection = await getBlogPostsSummaryForAssistant(WEBSITE_URL)
 
-export function buildPortfolioAssistantContext() {
 	return [
-		'# Jay Portfolio Assistant Context',
+		`# ${FULL_NAME} Portfolio Assistant Context`,
 		'',
 		'## Identity',
 		'',
@@ -116,7 +99,7 @@ export function buildPortfolioAssistantContext() {
 		`- Location: ${LOCATION}`,
 		`- Origin: ${ORIGIN}`,
 		`- Email: ${EMAIL}`,
-		`- Languages: ${LANGUAGES.join(', ')}`,
+		`- Languages: ${LANGUAGES_SPOKEN.join(', ')}`,
 		'',
 		'## Professional Summary',
 		'',
@@ -160,7 +143,7 @@ export function buildPortfolioAssistantContext() {
 		'',
 		formatList(HOME_PAGE_SECTIONS),
 		'',
-		formatBlogPostsSection(),
+		blogPostsSection,
 		'',
 		'## Open Source',
 		'',

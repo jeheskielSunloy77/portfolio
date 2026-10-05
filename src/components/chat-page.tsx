@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import type { Language } from '@/i18n/i18n'
 import type { Dictionary, LocalizedString } from '@/lib/types'
-import { BOT_NAME } from '@/lib/constants'
+import { BOT_NAME, NICK_NAME } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { useChat, type UIMessage } from '@ai-sdk/react'
 import { type ChatStatus, type UIDataTypes, type UITools } from 'ai'
@@ -83,10 +83,10 @@ interface WindowWithSpeechRecognition extends Window {
 }
 
 const promptSuggestions: LocalizedString[] = [
-	"What are Jay's strongest skills?",
+	"What are {NICK_NAME}'s strongest skills?",
 	'Show me a couple of standout projects.',
-	"Summarize Jay's tech stack.",
-	'Is Jay open to freelance or remote roles?',
+	"Summarize {NICK_NAME}'s tech stack.",
+	'Is {NICK_NAME} open to freelance or remote roles?',
 ]
 
 export function ChatPage({ t, lang }: ChatPageProps) {
@@ -103,7 +103,6 @@ export function ChatPage({ t, lang }: ChatPageProps) {
 	const [voicePreview, setVoicePreview] = useState('')
 	const [isListening, setIsListening] = useState(false)
 	const [speechSupported, setSpeechSupported] = useState(true)
-	const [speechError, setSpeechError] = useState<string | null>(null)
 	const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
 	const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -126,7 +125,6 @@ export function ChatPage({ t, lang }: ChatPageProps) {
 		recognition.lang = lang === 'id' ? 'id-ID' : 'en-US'
 
 		recognition.onstart = () => {
-			setSpeechError(null)
 			setIsListening(true)
 		}
 
@@ -135,8 +133,7 @@ export function ChatPage({ t, lang }: ChatPageProps) {
 			setVoicePreview('')
 		}
 
-		recognition.onerror = (event) => {
-			setSpeechError(event.error || 'speech-error')
+		recognition.onerror = () => {
 			setIsListening(false)
 		}
 
@@ -204,8 +201,8 @@ export function ChatPage({ t, lang }: ChatPageProps) {
 		setVoicePreview('')
 	}
 
-	function handlePromptClick(prompt: LocalizedString) {
-		setInput(t[prompt])
+	function handlePromptClick(prompt: string) {
+		setInput(prompt)
 	}
 
 	function handleClearChat() {
@@ -227,7 +224,6 @@ export function ChatPage({ t, lang }: ChatPageProps) {
 
 	function handleMicToggle() {
 		if (!speechSupported || !recognitionRef.current) return
-		setSpeechError(null)
 
 		if (isListening) {
 			recognitionRef.current.stop()
@@ -236,8 +232,7 @@ export function ChatPage({ t, lang }: ChatPageProps) {
 
 		try {
 			recognitionRef.current.start()
-		} catch (error) {
-			setSpeechError('speech-error')
+		} catch {
 			setIsListening(false)
 		}
 	}
@@ -267,24 +262,32 @@ export function ChatPage({ t, lang }: ChatPageProps) {
 							<div>
 								<p className='text-lg font-semibold'>{sayHelloText}</p>
 								<p className='text-sm text-muted-foreground'>
-									{
+									{(
+										t[
+											'Ask anything about {NICK_NAME}, I can pull projects, experience, and links.'
+										] ||
 										t[
 											'Ask anything about Jay, I can pull projects, experience, and links.'
-										]
-									}
+										] ||
+										'Ask anything about {NICK_NAME}, I can pull projects, experience, and links.'
+									).replace('{NICK_NAME}', NICK_NAME)}
 								</p>
 							</div>
 							<div className='flex items-center flex-wrap gap-2 justify-center'>
-								{promptSuggestions.map((prompt) => (
-									<button
-										key={prompt}
-										className='rounded-full border border-border/80 bg-background/60 px-3 py-1.5 text-xs text-foreground/80 transition hover:border-foreground/40 hover:text-foreground'
-										onClick={() => handlePromptClick(prompt)}
-										type='button'
-									>
-										{t[prompt]}
-									</button>
-								))}
+								{promptSuggestions.map((prompt) => {
+									const raw = (t as any)[prompt] ?? prompt
+									const label = raw.replace('{NICK_NAME}', NICK_NAME)
+									return (
+										<button
+											key={prompt}
+											className='rounded-full border border-border/80 bg-background/60 px-3 py-1.5 text-xs text-foreground/80 transition hover:border-foreground/40 hover:text-foreground'
+											onClick={() => handlePromptClick(label)}
+											type='button'
+										>
+											{label}
+										</button>
+									)
+								})}
 							</div>
 						</div>
 					)}

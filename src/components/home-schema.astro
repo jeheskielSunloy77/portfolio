@@ -1,6 +1,6 @@
 ---
 import { FULL_NAME, SOCIALS } from '@/lib/constants'
-import { DEFAULT_LANGUAGE, type Language } from '@/i18n/i18n'
+import { DEFAULT_LANGUAGE, LANGUAGES, type Language } from '@/i18n/i18n'
 
 export interface Props {
 	description: string
@@ -31,7 +31,7 @@ const schema = {
 			url: defaultHomeUrl,
 			name: FULL_NAME,
 			description,
-			inLanguage: [DEFAULT_LANGUAGE, 'id'],
+			inLanguage: LANGUAGES,
 		},
 		{
 			'@type': 'WebPage',

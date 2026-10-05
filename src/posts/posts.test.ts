@@ -5,6 +5,8 @@ vi.mock('astro:content', () => {
 		{
 			id: 'en/how-i-keep-my-go-code-clean-without-going-crazy',
 			data: {
+				title: 'How I Keep My Go Code Clean',
+				description: 'Clean Architecture in Go',
 				lang: 'en',
 				key: 'go-clean-code',
 				publishedAt: new Date('2023-01-01'),
@@ -13,6 +15,8 @@ vi.mock('astro:content', () => {
 		{
 			id: 'en/redesigning-my-portfolio-making-space-for-what-matters',
 			data: {
+				title: 'Redesigning My Portfolio',
+				description: 'Simplifying portfolio design',
 				lang: 'en',
 				key: 'portfolio-redesign',
 				publishedAt: new Date('2025-01-01'),
@@ -21,6 +25,8 @@ vi.mock('astro:content', () => {
 		{
 			id: 'id/mendesain-ulang-portofolio-memberi-ruang-untuk-hal-yang-penting',
 			data: {
+				title: 'Mendesain Ulang Portofolio',
+				description: 'Menyederhanakan desain portofolio',
 				lang: 'id',
 				key: 'portfolio-redesign',
 				publishedAt: new Date('2024-06-01'),
@@ -29,6 +35,8 @@ vi.mock('astro:content', () => {
 		{
 			id: 'id/kotlin-multiplatform-vs-react-native',
 			data: {
+				title: 'KMP vs React Native',
+				description: 'Comparison of frameworks',
 				lang: 'id',
 				key: 'kotlin-multiplatform-vs-react-native',
 				publishedAt: new Date('2025-01-01'),
@@ -37,6 +45,8 @@ vi.mock('astro:content', () => {
 		{
 			id: 'en/orphaned-english-post',
 			data: {
+				title: 'Orphaned Post',
+				description: 'English only post',
 				lang: 'en',
 				key: 'orphaned-post',
 				publishedAt: new Date('2025-02-01'),
@@ -52,9 +62,20 @@ vi.mock('astro:content', () => {
 	}
 })
 
-import { getLocalizedBlogPaths, getPosts } from './posts'
+import {
+	getBlogPostsSummaryForAssistant,
+	getLocalizedBlogPaths,
+	getPosts,
+} from './posts'
 
 describe('src/posts/posts.ts', () => {
+	it('formats blog posts summary for AI assistant', async () => {
+		const summary = await getBlogPostsSummaryForAssistant('https://example.com')
+		expect(summary).toContain('## Blog Posts')
+		expect(summary).toContain('How I Keep My Go Code Clean')
+		expect(summary).toContain('https://example.com/en/blog/how-i-keep-my-go-code-clean-without-going-crazy')
+	})
+
 	it('filters posts by language and sorts by publishedAt descending', async () => {
 		const posts = await getPosts({ lang: 'en' })
 		expect(posts).toBeInstanceOf(Array)

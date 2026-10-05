@@ -1,7 +1,7 @@
 import type { dictionary } from '@/i18n/dictionary'
 import type { LucideIcon } from 'lucide-react'
 
-export type LocalizedString = keyof typeof dictionary.en
+export type LocalizedString = (keyof typeof dictionary.en) | (string & {})
 
 interface Link {
 	icon: LucideIcon
@@ -36,14 +36,6 @@ export interface Project {
 	links?: Link[]
 }
 
-export type PostMetadata = {
-	title?: string
-	summary?: string
-	image?: string
-	publishedAt?: string
-	slug: string
-}
-
 export interface Skill {
 	name: string
 	description: LocalizedString
@@ -55,7 +47,8 @@ export interface Skill {
 
 export type Theme = 'dark' | 'light'
 
-export type Dictionary = (typeof dictionary)[keyof typeof dictionary]
+export type Dictionary = (typeof dictionary)[keyof typeof dictionary] &
+	Record<string, string | undefined>
 
 export interface APIResponsePaginated<T> {
 	data: T[]

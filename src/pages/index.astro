@@ -1,3 +1,5 @@
 ---
-return Astro.redirect('/en/', 308)
+import { DEFAULT_LANGUAGE } from '@/i18n/i18n'
+
+return Astro.redirect(`/${DEFAULT_LANGUAGE}/`, 308)
 ---

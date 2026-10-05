@@ -57,6 +57,9 @@ export async function POST({ request }: { request: Request }) {
 		if (!parsed.success) return errResponse(TAG, 'Invalid request body', 400)
 
 		const db = await getDb()
+		if (!db) {
+			return errResponse(TAG, 'Visitor wall is currently disabled (database unconfigured).', 503)
+		}
 		const col = db.collection(COLLECTION)
 
 		const ip =

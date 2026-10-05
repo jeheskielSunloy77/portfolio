@@ -51,7 +51,7 @@ const { t }: Props = Astro.props
 					</div>
 					<div>
 						<h3 class='font-semibold text-sm'>{skill.name}</h3>
-						<p class='text-muted-foreground text-xs'>{t[skill.description]}</p>
+						<p class='text-muted-foreground text-xs'>{t[skill.description] ?? skill.description}</p>
 					</div>
 				</div>
 			))

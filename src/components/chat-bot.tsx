@@ -1,5 +1,5 @@
 import type { Language } from '@/i18n/i18n'
-import { BOT_NAME } from '@/lib/constants'
+import { BOT_NAME, NICK_NAME } from '@/lib/constants'
 import type { Dictionary } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { useChat, type UIMessage } from '@ai-sdk/react'
@@ -479,7 +479,11 @@ function ChatMessages({
 						{t['fire away, human!']}
 					</p>
 					<p className='text-xs text-muted-foreground'>
-						{t['Ask about Jay.']}
+						{(
+							t['Ask about {NICK_NAME}.'] ||
+							t['Ask about Jay.'] ||
+							'Ask about {NICK_NAME}.'
+						).replace('{NICK_NAME}', NICK_NAME)}
 					</p>
 				</div>
 			)}

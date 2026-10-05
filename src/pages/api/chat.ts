@@ -6,7 +6,7 @@ import { convertToModelMessages, streamText } from 'ai'
 import { GEMINI_API_KEY, GEMINI_MODEL } from 'astro:env/server'
 
 const TAG = 'ChatBotApi'
-const google = createGoogleGenerativeAI({ apiKey: GEMINI_API_KEY })
+const google = createGoogleGenerativeAI({ apiKey: GEMINI_API_KEY || 'dummy-key' })
 
 function errResponse(error: Error, message: string, status = 500) {
 	log(
@@ -31,11 +31,20 @@ interface ChatRequest {
 
 export async function POST({ request }: { request: Request }) {
 	try {
+		if (!GEMINI_API_KEY) {
+			return new Response(
+				JSON.stringify({
+					error: 'The AI chatbot is currently offline because GEMINI_API_KEY is not configured in .env',
+				}),
+				{ status: 503, headers: { 'Content-Type': 'application/json' } }
+			)
+		}
+
 		const body = await tryPromise<ChatRequest>(request.json())
 		if (body.error) return errResponse(body.error, 'Invalid request body', 400)
 
 		const messages = body.data.messages
-		const assistantContext = buildPortfolioAssistantContext()
+		const assistantContext = await buildPortfolioAssistantContext()
 		const prompt =
 			`You are ${BOT_NAME}, a friendly chatbot for ${NICK_NAME}'s personal developer portfolio website. ` +
 			`You are trying to convince potential employers to hire ${NICK_NAME} as a software engineer. ` +

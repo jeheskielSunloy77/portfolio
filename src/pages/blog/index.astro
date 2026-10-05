@@ -1,0 +1,10 @@
+---
+import BlogPage from '@/components/pages/blog.astro'
+import { getPosts } from '@/posts/posts'
+
+export const prerender = true
+
+const posts = await getPosts({ lang: 'en' })
+---
+
+<BlogPage lang='en' posts={posts} />

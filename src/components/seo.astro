@@ -52,8 +52,12 @@ const normalizedPath =
 	pathnameWithoutLang === '/'
 		? ''
 		: pathnameWithoutLang.replace(/^\/+/, '').replace(/\/+$/, '')
-const getLocalizedPath = (targetLang: Language) =>
-	normalizedPath ? `/${targetLang}/${normalizedPath}/` : `/${targetLang}/`
+const getLocalizedPathForSeo = (targetLang: Language) => {
+	if (targetLang === DEFAULT_LANGUAGE) {
+		return normalizedPath ? `/${normalizedPath}/` : '/'
+	}
+	return normalizedPath ? `/${targetLang}/${normalizedPath}/` : `/${targetLang}/`
+}
 ---
 
 <!-- Primary Meta Tags -->
@@ -75,14 +79,14 @@ const getLocalizedPath = (targetLang: Language) =>
 		<link
 			rel='alternate'
 			hreflang={targetLang}
-			href={new URL(getLocalizedPath(targetLang), Astro.site)}
+			href={new URL(getLocalizedPathForSeo(targetLang), Astro.site)}
 		/>
 	))
 }
 <link
 	rel='alternate'
 	hreflang='x-default'
-	href={new URL(getLocalizedPath(DEFAULT_LANGUAGE), Astro.site)}
+	href={new URL(getLocalizedPathForSeo(DEFAULT_LANGUAGE), Astro.site)}
 />
 
 <!-- Open Graph / Facebook -->

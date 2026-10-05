@@ -1,9 +1,9 @@
 ---
 import ProjectsPage from '@/components/pages/projects.astro'
-import { getLangPaths } from '@/i18n/i18n'
+import { getNonDefaultLangPaths } from '@/i18n/i18n'
 
 export const prerender = true
-export const getStaticPaths = getLangPaths
+export const getStaticPaths = getNonDefaultLangPaths
 ---
 
 <ProjectsPage lang={Astro.params.lang} />

@@ -1,4 +1,4 @@
-import { LANGUAGES, type Language } from '@/i18n/i18n'
+import { getLocalizedPath, LANGUAGES, type Language } from '@/i18n/i18n'
 import { getCollection, type CollectionEntry } from 'astro:content'
 
 export async function getPosts(params: {
@@ -32,12 +32,12 @@ export async function getLocalizedBlogPaths(key: string) {
 	)
 
 	const paths = Object.fromEntries(
-		LANGUAGES.map((lang) => [lang, `/${lang}/blog`])
+		LANGUAGES.map((lang) => [lang, getLocalizedPath('/blog', lang)])
 	) as Record<Language, string>
 
 	for (const post of posts) {
 		const [lang, slug] = post.id.split('/') as [Language, string]
-		paths[lang] = `/${lang}/blog/${slug}`
+		paths[lang] = getLocalizedPath(`/blog/${slug}`, lang)
 	}
 
 	return paths
@@ -66,7 +66,7 @@ export async function getBlogPostsSummaryForAssistant(
 			}
 
 			if (lang === 'en') {
-				entry.enUrl = `${websiteUrl}/en/blog/${slug}`
+				entry.enUrl = `${websiteUrl}/blog/${slug}`
 				entry.title = post.data.title
 				entry.summary = post.data.description
 			} else if (lang === 'id') {

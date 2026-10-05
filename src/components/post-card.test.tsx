@@ -19,9 +19,26 @@ describe('PostCard', () => {
 		expect(screen.getByText('My Title')).toBeInTheDocument()
 		expect(screen.getByText('A short description')).toBeInTheDocument()
 
-		// link uses id split to form href -> /en/blog/my-slug
+		// link uses id split to form href -> /blog/my-slug for English
 		const link = document.querySelector('a') as HTMLAnchorElement
 		expect(link).toBeInTheDocument()
-		expect(link.getAttribute('href')).toBe('/en/blog/my-slug')
+		expect(link.getAttribute('href')).toBe('/blog/my-slug')
+	})
+
+	test('renders links to post with locale prefix for non-English post', () => {
+		const post: any = {
+			id: 'id/my-id-slug',
+			title: 'Judul Saya',
+			description: 'Deskripsi singkat',
+			publishedAt: new Date('2020-01-01'),
+		}
+
+		const wrapped = { ...post, id: post.id }
+
+		render(<PostCard post={wrapped} useSeparator={false} />)
+
+		const link = document.querySelector('a') as HTMLAnchorElement
+		expect(link).toBeInTheDocument()
+		expect(link.getAttribute('href')).toBe('/id/blog/my-id-slug')
 	})
 })

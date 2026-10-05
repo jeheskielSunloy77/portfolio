@@ -76,10 +76,16 @@ describe('Navbar', () => {
 		el.id = 'headerNavbar'
 		document.body.appendChild(el)
 
-		render(<Navbar t={t} lang={'en'} pathname={'/en'} />)
+		render(<Navbar t={t} lang={'en'} pathname={'/'} />)
 
-		// header should render a link with text 'home' (translated key)
-		expect(screen.getByText('home')).toBeInTheDocument()
+		// header should render a link with text 'home' (translated key) with clean href '/'
+		const homeLink = screen.getByText('home')
+		expect(homeLink).toBeInTheDocument()
+		expect(homeLink.closest('a')).toHaveAttribute('href', '/')
+
+		// projects link should have clean href '/projects'
+		const projectsLink = screen.getByText('projects')
+		expect(projectsLink.closest('a')).toHaveAttribute('href', '/projects')
 
 		// cleanup
 		document.body.removeChild(el)
@@ -88,12 +94,13 @@ describe('Navbar', () => {
 	test('renders dock (mobile) when matchMedia returns true', () => {
 		;(window as any).matchMedia = mockMatchMedia(true)
 
-		render(<Navbar t={t} lang={'en'} pathname={'/en'} />)
+		render(<Navbar t={t} lang={'en'} pathname={'/'} />)
 
 		// DockNavbar renders navigation icons with aria-label equal to item.label (the translation key)
 		// Expect at least the projects button (label 'projects') to be present
 		const projectsBtn = screen.getAllByLabelText('projects')[0]
 		expect(projectsBtn).toBeInTheDocument()
+		expect(projectsBtn).toHaveAttribute('href', '/projects')
 		expect(
 			screen.getByRole('button', { name: `Chat with ${BOT_NAME}` }),
 		).toBeInTheDocument()
@@ -102,7 +109,7 @@ describe('Navbar', () => {
 	test('mobile chat dock button toggles the sheet', async () => {
 		;(window as any).matchMedia = mockMatchMedia(true)
 
-		render(<Navbar t={t} lang={'en'} pathname={'/en'} />)
+		render(<Navbar t={t} lang={'en'} pathname={'/'} />)
 
 		expect(screen.queryByTestId('mobile-chat-sheet')).not.toBeInTheDocument()
 		await userEvent.click(
@@ -121,12 +128,18 @@ describe('Navbar', () => {
 			<Navbar
 				t={t}
 				lang={'en'}
-				pathname={'/en/blog/redesigning-my-portfolio-making-space-for-what-matters'}
+				pathname={'/blog/redesigning-my-portfolio-making-space-for-what-matters'}
 				languageSwitchUrls={{
-					en: '/en/blog/redesigning-my-portfolio-making-space-for-what-matters',
+					en: '/blog/redesigning-my-portfolio-making-space-for-what-matters',
 					id: '/id/blog/mendesain-ulang-portofolio-memberi-ruang-untuk-hal-yang-penting',
 				}}
 			/>,
+		)
+
+		const englishLink = screen.getByRole('link', { name: /English/i })
+		expect(englishLink).toHaveAttribute(
+			'href',
+			'/blog/redesigning-my-portfolio-making-space-for-what-matters',
 		)
 
 		const indonesianLink = screen.getByRole('link', { name: /Bahasa Indonesia/i })
@@ -148,8 +161,14 @@ describe('Navbar', () => {
 			<Navbar
 				t={t}
 				lang={'en'}
-				pathname={'/en/blog/kotlin-multiplatform-vs-react-native'}
+				pathname={'/blog/kotlin-multiplatform-vs-react-native'}
 			/>,
+		)
+
+		const englishLink = screen.getByRole('link', { name: /English/i })
+		expect(englishLink).toHaveAttribute(
+			'href',
+			'/blog/kotlin-multiplatform-vs-react-native',
 		)
 
 		const indonesianLink = screen.getByRole('link', { name: /Bahasa Indonesia/i })

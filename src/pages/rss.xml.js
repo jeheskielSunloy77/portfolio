@@ -1,4 +1,4 @@
-import { LANGUAGE_MAP } from '@/i18n/i18n';
+import { getLocalizedPath, LANGUAGE_MAP } from '@/i18n/i18n';
 import { FULL_NAME } from '@/site.config';
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
@@ -17,7 +17,7 @@ export async function GET(context) {
                 title: post.data.title,
                 pubDate: post.data.publishedAt,
                 description: post.data.description,
-                link: `/${lang}/blog/${slug}`,
+                link: getLocalizedPath(`/blog/${slug}`, lang),
                 author: post.data.author || FULL_NAME,
                 customData: `<language>${LANGUAGE_MAP[lang].locale}</language>`,
                 categories: post.data.tags,

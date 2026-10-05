@@ -1,9 +1,9 @@
 ---
 import HomePage from '@/components/pages/home.astro'
-import { getLangPaths } from '@/i18n/i18n'
+import { getNonDefaultLangPaths } from '@/i18n/i18n'
 
 export const prerender = true
-export const getStaticPaths = getLangPaths
+export const getStaticPaths = getNonDefaultLangPaths
 ---
 
 <HomePage lang={Astro.params.lang} />

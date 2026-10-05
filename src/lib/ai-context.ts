@@ -23,11 +23,11 @@ const RESUME_LINKS = {
 } as const
 const IMPORTANT_ROUTES = {
 	home: WEBSITE_URL,
-	contact: `${WEBSITE_URL}/en/contact`,
-	privacy: `${WEBSITE_URL}/en/privacy`,
-	projects: `${WEBSITE_URL}/en/projects`,
-	visitors: `${WEBSITE_URL}/en/visitors`,
-	blog: `${WEBSITE_URL}/en/blog`,
+	contact: `${WEBSITE_URL}/contact`,
+	privacy: `${WEBSITE_URL}/privacy`,
+	projects: `${WEBSITE_URL}/projects`,
+	visitors: `${WEBSITE_URL}/visitors`,
+	blog: `${WEBSITE_URL}/blog`,
 } as const
 const HOME_PAGE_SECTIONS = ['Hero', 'Experience', 'Skills', 'Projects', 'Posts'] as const
 

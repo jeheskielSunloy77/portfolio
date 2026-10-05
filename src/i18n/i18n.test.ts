@@ -1,9 +1,13 @@
 import { describe, expect, test } from 'vitest'
 import {
 	getLangPaths,
+	getLocalizedPath,
+	getNonDefaultLangPaths,
 	getPathnameWithoutLang,
 	LANGUAGE_MAP,
 	LANGUAGES,
+	NON_DEFAULT_LANGUAGES,
+	stripLanguagePrefix,
 } from './i18n'
 
 describe('i18n helpers', () => {
@@ -47,6 +51,45 @@ describe('i18n helpers', () => {
 		test('edge case: trailing slash after language returns joined segments (documented behavior)', () => {
 			// Note: behaviour for trailing slash is to return the joined segments (e.g. '/' for '/en/')
 			expect(getPathnameWithoutLang('/en/', 'en')).toBe('/')
+		})
+	})
+
+	test('getNonDefaultLangPaths returns entries only for non-default languages', () => {
+		const paths = getNonDefaultLangPaths()
+		expect(Array.isArray(paths)).toBe(true)
+		const langs = paths.map((p) => p.params.lang)
+		expect(langs).toEqual(NON_DEFAULT_LANGUAGES)
+		expect(langs).not.toContain('en')
+	})
+
+	describe('stripLanguagePrefix', () => {
+		test('strips known language prefixes', () => {
+			expect(stripLanguagePrefix('/en')).toBe('/')
+			expect(stripLanguagePrefix('/en/')).toBe('/')
+			expect(stripLanguagePrefix('/en/blog')).toBe('/blog')
+			expect(stripLanguagePrefix('/id/projects')).toBe('/projects')
+			expect(stripLanguagePrefix('/projects')).toBe('/projects')
+			expect(stripLanguagePrefix('/')).toBe('/')
+		})
+	})
+
+	describe('getLocalizedPath', () => {
+		test('formats path without prefix for default language (en)', () => {
+			expect(getLocalizedPath('/', 'en')).toBe('/')
+			expect(getLocalizedPath('/blog', 'en')).toBe('/blog')
+			expect(getLocalizedPath('/blog/my-post', 'en')).toBe('/blog/my-post')
+			expect(getLocalizedPath('/en/blog', 'en')).toBe('/blog')
+			expect(getLocalizedPath('/id/blog', 'en')).toBe('/blog')
+			expect(getLocalizedPath('/id', 'en')).toBe('/')
+		})
+
+		test('formats path with prefix for non-default language (id)', () => {
+			expect(getLocalizedPath('/', 'id')).toBe('/id')
+			expect(getLocalizedPath('/blog', 'id')).toBe('/id/blog')
+			expect(getLocalizedPath('/blog/my-post', 'id')).toBe('/id/blog/my-post')
+			expect(getLocalizedPath('/en/blog', 'id')).toBe('/id/blog')
+			expect(getLocalizedPath('/id/blog', 'id')).toBe('/id/blog')
+			expect(getLocalizedPath('/en', 'id')).toBe('/id')
 		})
 	})
 })

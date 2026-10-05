@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useTheme } from '@/hooks/use-theme'
 import {
+	getLocalizedPath,
 	getPathnameWithoutLang,
 	LANGUAGE_MAP,
 	LANGUAGES,
@@ -75,7 +76,10 @@ function LanguageDropdown(props: {
 							key={lang}
 							render={
 								<a
-									href={props.languageSwitchUrls?.[lang] ?? `/${lang}${props.pathname}`}
+									href={
+										props.languageSwitchUrls?.[lang] ??
+										getLocalizedPath(props.pathname, lang)
+									}
 								/>
 							}
 						>
@@ -99,25 +103,25 @@ function DockNavbar(props: {
 	const { t, lang, pathname, isMobile, isChatOpen, onChatToggle } = props
 
 	const navItems = [
-		{ label: t['home'], href: `/${lang}`, icon: HomeIcon },
+		{ label: t['home'], href: getLocalizedPath('/', lang), icon: HomeIcon },
 		{
 			label: t['projects'],
-			href: `/${lang}/projects`,
+			href: getLocalizedPath('/projects', lang),
 			icon: CalendarIcon,
 		},
 		{
 			label: t['blog'],
-			href: `/${lang}/blog`,
+			href: getLocalizedPath('/blog', lang),
 			icon: PenLineIcon,
 		},
 		{
 			label: t['contact'],
-			href: `/${lang}/contact`,
+			href: getLocalizedPath('/contact', lang),
 			icon: MailIcon,
 		},
 		{
 			label: t['visitors'],
-			href: `/${lang}/visitors`,
+			href: getLocalizedPath('/visitors', lang),
 			icon: UsersIcon,
 		},
 	]
@@ -219,10 +223,10 @@ export function Navbar(props: {
 	const { t, lang, pathname, languageSwitchUrls, dockNavbar = true } = props
 
 	const navItems = [
-		{ label: t['projects'], href: `/${lang}/projects` },
-		{ label: t['blog'], href: `/${lang}/blog` },
-		{ label: t['contact'], href: `/${lang}/contact` },
-		{ label: t['visitors'], href: `/${lang}/visitors` },
+		{ label: t['projects'], href: getLocalizedPath('/projects', lang) },
+		{ label: t['blog'], href: getLocalizedPath('/blog', lang) },
+		{ label: t['contact'], href: getLocalizedPath('/contact', lang) },
+		{ label: t['visitors'], href: getLocalizedPath('/visitors', lang) },
 	]
 
 	const [isHeaderNavbarVisible, setIsHeaderNavbarVisible] =
@@ -286,7 +290,7 @@ export function Navbar(props: {
 					<div className='mx-auto max-w-3xl px-8 py-6'>
 						<nav className='flex items-center justify-between'>
 							<a
-								href={`/${lang}`}
+								href={getLocalizedPath('/', lang)}
 								className='motion-link hover:text-foreground hover:underline'
 							>
 								{t['home']}

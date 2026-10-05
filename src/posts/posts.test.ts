@@ -73,7 +73,7 @@ describe('src/posts/posts.ts', () => {
 		const summary = await getBlogPostsSummaryForAssistant('https://example.com')
 		expect(summary).toContain('## Blog Posts')
 		expect(summary).toContain('How I Keep My Go Code Clean')
-		expect(summary).toContain('https://example.com/en/blog/how-i-keep-my-go-code-clean-without-going-crazy')
+		expect(summary).toContain('https://example.com/blog/how-i-keep-my-go-code-clean-without-going-crazy')
 	})
 
 	it('filters posts by language and sorts by publishedAt descending', async () => {
@@ -105,7 +105,7 @@ describe('src/posts/posts.ts', () => {
 	it('returns localized slugs for each language when translations exist', async () => {
 		const paths = await getLocalizedBlogPaths('portfolio-redesign')
 
-		expect(paths.en).toBe('/en/blog/redesigning-my-portfolio-making-space-for-what-matters')
+		expect(paths.en).toBe('/blog/redesigning-my-portfolio-making-space-for-what-matters')
 		expect(paths.id).toBe(
 			'/id/blog/mendesain-ulang-portofolio-memberi-ruang-untuk-hal-yang-penting'
 		)
@@ -114,7 +114,7 @@ describe('src/posts/posts.ts', () => {
 	it('falls back to target language blog index when translation is missing', async () => {
 		const paths = await getLocalizedBlogPaths('orphaned-post')
 
-		expect(paths.en).toBe('/en/blog/orphaned-english-post')
+		expect(paths.en).toBe('/blog/orphaned-english-post')
 		expect(paths.id).toBe('/id/blog')
 	})
 })

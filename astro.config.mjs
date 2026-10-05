@@ -101,12 +101,17 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         try {
-          return new URL(page).pathname !== '/';
+          const pathname = new URL(page).pathname;
+          return !pathname.startsWith('/en');
         } catch {
           return true;
         }
       },
     }),
   ],
+  redirects: {
+    '/en': '/',
+    '/en/[...slug]': '/[...slug]',
+  },
   adapter: vercel(),
 });

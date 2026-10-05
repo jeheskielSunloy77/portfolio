@@ -1,4 +1,4 @@
-import type { Language } from '@/i18n/i18n'
+import { getLocalizedPath, type Language } from '@/i18n/i18n'
 import { BOT_NAME, NICK_NAME } from '@/site.config'
 import type { Dictionary } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -296,7 +296,7 @@ function ChatPanel({
 						</span>
 						<div className='flex items-center gap-3'>
 							<a
-								href={`/${lang}/chat`}
+								href={getLocalizedPath('/chat', lang)}
 								className='text-foreground/80 underline underline-offset-4 transition hover:text-foreground'
 							>
 								{t['Open full chat']}

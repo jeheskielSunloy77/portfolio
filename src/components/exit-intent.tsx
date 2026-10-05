@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Language } from "@/i18n/i18n";
+import { getLocalizedPath, type Language } from "@/i18n/i18n";
 import {
   EXIT_INTENT_DISMISSED_KEY,
   EXIT_INTENT_POPPED_KEY,
@@ -106,7 +106,7 @@ export function ExitIntent({ lang, t }: ExitIntentProps) {
         <Button
           className="group"
           nativeButton={false}
-          render={<a href={`/${lang}/visitors`} onClick={handleLinkClick} />}
+          render={<a href={getLocalizedPath('/visitors', lang)} onClick={handleLinkClick} />}
         >
           {t["add yours"]}
           <ArrowRight className="ml-1.5 size-4 transition-transform group-hover:translate-x-0.5" />

@@ -1,3 +1,4 @@
+import { getLocalizedPath, type Language } from '@/i18n/i18n'
 import type { InferEntrySchema } from 'astro:content'
 import { format } from 'date-fns'
 
@@ -17,7 +18,7 @@ export function PostCard({ post, useSeparator }: Props) {
 			data-reveal='fade-up'
 		>
 			<a
-				href={`/${lang}/blog/${slug}`}
+				href={getLocalizedPath(`/blog/${slug}`, lang as Language)}
 				className={useSeparator ? 'border-t border-border/70' : undefined}
 			>
 				<div className='flex flex-col justify-between gap-4 p-6 sm:flex-row sm:items-center'>

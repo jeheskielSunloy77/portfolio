@@ -1,6 +1,10 @@
 ---
 import { FULL_NAME, SOCIALS } from '@/site.config'
-import { DEFAULT_LANGUAGE, LANGUAGES, type Language } from '@/i18n/i18n'
+import {
+	getLocalizedPath,
+	LANGUAGES,
+	type Language,
+} from '@/i18n/i18n'
 
 export interface Props {
 	description: string
@@ -9,8 +13,9 @@ export interface Props {
 }
 
 const { description, image, lang } = Astro.props
-const homeUrl = new URL(`/${lang}/`, Astro.site)
-const defaultHomeUrl = new URL(`/${DEFAULT_LANGUAGE}/`, Astro.site)
+const homePath = getLocalizedPath('/', lang)
+const homeUrl = new URL(homePath === '/' ? '/' : `${homePath}/`, Astro.site)
+const defaultHomeUrl = new URL('/', Astro.site)
 const personId = new URL('/#person', Astro.site)
 const websiteId = new URL('/#website', Astro.site)
 

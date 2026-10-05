@@ -1,5 +1,5 @@
 ---
-import { type Language } from '@/i18n/i18n'
+import { getLocalizedPath, type Language } from '@/i18n/i18n'
 import { FEATURED_POSTS_LIMIT } from '@/site.config'
 import type { Dictionary } from '@/lib/types'
 import { getPosts } from '@/posts/posts'
@@ -28,7 +28,7 @@ const { t, lang }: Props = Astro.props
 	description={t[
 		'Read my latest articles on web development, programming, and technology.'
 	]}
-	viewMoreHref={`/${lang}/blog`}
+	viewMoreHref={getLocalizedPath('/blog', lang)}
 	viewMoreLabel={`${t['view more']}: ${t['recent posts']}`}
 >
 	<Card className='motion-card border border-border/80 bg-card/90 py-4'>

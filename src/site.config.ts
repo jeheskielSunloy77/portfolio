@@ -331,7 +331,7 @@ export const PROJECTS: Project[] = [
 			},
 			{
 				label: 'Blog',
-				href: '/en/blog/how-i-keep-my-go-code-clean-without-going-crazy',
+				href: '/blog/how-i-keep-my-go-code-clean-without-going-crazy',
 				icon: BookOpen,
 				variation: 'secondary',
 				isExternal: false,

@@ -1,6 +1,4 @@
-'use client'
-
-import type { Language } from '@/i18n/i18n'
+import { getLocalizedPath, type Language } from '@/i18n/i18n'
 import type { Dictionary } from '@/lib/types'
 import { actions } from 'astro:actions'
 import { RotateCcw, Send } from 'lucide-react'
@@ -159,7 +157,7 @@ export default function ContactForm({
 					<p className='mt-4 text-xs text-muted-foreground'>
 						{t['By submitting this form, I agree to the']}{' '}
 						<a
-							href={`/${lang}/privacy`}
+							href={getLocalizedPath('/privacy', lang)}
 							className='motion-link hover:text-foreground hover:underline font-semibold'
 						>
 							{t['privacy policy.']}

@@ -1,5 +1,5 @@
 ---
-import { type Language } from '@/i18n/i18n'
+import { getLocalizedPath, type Language } from '@/i18n/i18n'
 import { FEATURED_PROJECTS_LIMIT } from '@/site.config'
 import type { Dictionary } from '@/lib/types'
 import ProjectList from './project-list.astro'
@@ -21,7 +21,7 @@ const { t, lang }: Props = Astro.props
 	description={t[
 		'Explore some of my highlighted projects that showcase my skills and creativity in web development.'
 	]}
-	viewMoreHref={`/${lang}/projects`}
+	viewMoreHref={getLocalizedPath('/projects', lang)}
 	viewMoreLabel={`${t['view more']}: ${t['featured projects']}`}
 >
 	<ProjectList t={t} limit={FEATURED_PROJECTS_LIMIT} isFeatured />

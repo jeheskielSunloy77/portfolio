@@ -1,0 +1,91 @@
+---
+import BlogView from '@/views/blog.astro'
+import BlogPostView from '@/views/blog-post.astro'
+import ChatView from '@/views/chat.astro'
+import ContactView from '@/views/contact.astro'
+import HomeView from '@/views/home.astro'
+import PrivacyView from '@/views/privacy.astro'
+import ProjectsView from '@/views/projects.astro'
+import { NON_DEFAULT_LANGUAGES, type Language } from '@/i18n/i18n'
+import { getPosts } from '@/posts/posts'
+import { getCollection, type CollectionEntry } from 'astro:content'
+
+export const prerender = true
+
+type PageKind =
+	| { kind: 'home' }
+	| { kind: 'chat' }
+	| { kind: 'contact' }
+	| { kind: 'privacy' }
+	| { kind: 'projects' }
+	| { kind: 'blog'; posts: Awaited<ReturnType<typeof getPosts>> }
+	| { kind: 'blog-post'; post: CollectionEntry<'post'>; postSlug: string }
+
+export async function getStaticPaths() {
+	const paths = []
+
+	for (const lang of NON_DEFAULT_LANGUAGES) {
+		// Home: /id
+		paths.push({
+			params: { lang, slug: undefined },
+			props: { kind: 'home' as const },
+		})
+		// Static subpages: /id/chat, /id/contact, etc.
+		paths.push({
+			params: { lang, slug: 'chat' },
+			props: { kind: 'chat' as const },
+		})
+		paths.push({
+			params: { lang, slug: 'contact' },
+			props: { kind: 'contact' as const },
+		})
+		paths.push({
+			params: { lang, slug: 'privacy' },
+			props: { kind: 'privacy' as const },
+		})
+		paths.push({
+			params: { lang, slug: 'projects' },
+			props: { kind: 'projects' as const },
+		})
+
+		// Blog index: /id/blog
+		const posts = await getPosts({ lang })
+		paths.push({
+			params: { lang, slug: 'blog' },
+			props: { kind: 'blog' as const, posts },
+		})
+
+		// Blog post detail: /id/blog/:slug
+		const langPosts = await getCollection(
+			'post',
+			(post) => post.data.lang === lang
+		)
+		for (const post of langPosts) {
+			const [, postSlug] = post.id.split('/')
+			paths.push({
+				params: { lang, slug: `blog/${postSlug}` },
+				props: { kind: 'blog-post' as const, post, postSlug },
+			})
+		}
+	}
+
+	return paths
+}
+
+export type Props = PageKind
+
+const { lang } = Astro.params as { lang: Language }
+const props = Astro.props
+---
+
+{props.kind === 'home' && <HomeView lang={lang} />}
+{props.kind === 'chat' && <ChatView lang={lang} />}
+{props.kind === 'contact' && <ContactView lang={lang} />}
+{props.kind === 'privacy' && <PrivacyView lang={lang} />}
+{props.kind === 'projects' && <ProjectsView lang={lang} />}
+{props.kind === 'blog' && <BlogView lang={lang} posts={props.posts} />}
+{
+	props.kind === 'blog-post' && (
+		<BlogPostView lang={lang} post={props.post} slug={props.postSlug} />
+	)
+}

@@ -2,11 +2,11 @@
 import { CopyToClipboardButton } from '@/components/copy-to-clipboard-button'
 import LinkWithIcon from '@/components/link-with-icon.astro'
 import { dictionary } from '@/i18n/dictionary'
-import type { Language } from '@/i18n/i18n'
+import { getLocalizedPath, type Language } from '@/i18n/i18n'
 import MainLayout from '@/layouts/main.astro'
 import { getLocalizedBlogPaths, getPosts } from '@/posts/posts'
 import type { CollectionEntry } from 'astro:content'
-import { getCollection, render } from 'astro:content'
+import { render } from 'astro:content'
 import { formatDate } from 'date-fns'
 import {
 	ArrowLeftIcon,
@@ -15,27 +15,15 @@ import {
 	TwitterIcon,
 } from 'lucide-react'
 
-export const prerender = true
-
-export async function getStaticPaths() {
-	const posts = await getCollection('post', (post) => post.data.lang !== 'en')
-
-	return posts.map((post) => {
-		const [lang, slug] = post.id.split('/') as [Language, string]
-
-		return {
-			params: { slug, lang },
-			props: post,
-		}
-	})
+export interface Props {
+	lang: Language
+	post: CollectionEntry<'post'>
+	slug: string
 }
 
-export type Props = CollectionEntry<'post'>
-
-const post = Astro.props
+const { lang, post, slug } = Astro.props
 
 const { Content } = await render(post)
-const { lang, slug } = Astro.params
 
 const sharedData = {
 	title: post.data.title,
@@ -45,18 +33,20 @@ const sharedData = {
 	articleSection: 'Blog',
 }
 
+const canonicalUrl = new URL(getLocalizedPath(`/blog/${slug}/`, lang), Astro.site).toString()
+
 const seo = {
 	...sharedData,
 	keywords: post.data.keywords,
 	ogImage: post.data.image?.src,
 	author: post.data.author,
 	articleTags: post.data.tags,
-	canonical: new URL(`/${lang}/blog/${slug}/`, Astro.site).toString(),
+	canonical: canonicalUrl,
 	ogType: 'article',
 	twitterCard: 'summary_large_image',
 } as const
 
-const t = dictionary[Astro.params.lang]
+const t = dictionary[lang]
 const languageSwitchUrls = await getLocalizedBlogPaths(post.data.key)
 
 const relatedPosts = await getPosts({
@@ -82,7 +72,7 @@ const shareURL = {
 ---
 
 <MainLayout
-	lang={Astro.params.lang}
+	lang={lang}
 	languageSwitchUrls={languageSwitchUrls}
 	seo={seo}
 	articleSchema={{
@@ -96,7 +86,7 @@ const shareURL = {
 >
 	<article class='mx-auto mt-8 flex w-full max-w-3xl flex-col gap-8 px-4 pt-24 pb-40 sm:px-8'>
 		<LinkWithIcon
-			href={`/${Astro.params.lang}/blog`}
+			href={getLocalizedPath('/blog', lang)}
 			position='left'
 			text='back to blog'
 		>
@@ -175,7 +165,7 @@ const shareURL = {
 					<div class='grid gap-6 md:grid-cols-2'>
 						{relatedPosts.map((relatedPost) => (
 							<a
-								href={`/${Astro.params.lang}/blog/${relatedPost.id.split('/')[1]}`}
+								href={getLocalizedPath(`/blog/${relatedPost.id.split('/')[1]}`, lang)}
 								class='group flex flex-col gap-2 rounded-lg border p-4 transition-colors hover:bg-muted/50'
 							>
 								{relatedPost.data.image && (

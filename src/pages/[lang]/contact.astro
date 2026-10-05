@@ -1,9 +1,0 @@
----
-import ContactPage from '@/components/pages/contact.astro'
-import { getNonDefaultLangPaths } from '@/i18n/i18n'
-
-export const prerender = true
-export const getStaticPaths = getNonDefaultLangPaths
----
-
-<ContactPage lang={Astro.params.lang} />

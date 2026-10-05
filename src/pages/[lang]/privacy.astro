@@ -1,9 +1,0 @@
----
-import PrivacyPage from '@/components/pages/privacy.astro'
-import { getNonDefaultLangPaths } from '@/i18n/i18n'
-
-export const prerender = true
-export const getStaticPaths = getNonDefaultLangPaths
----
-
-<PrivacyPage lang={Astro.params.lang} />

@@ -1,59 +1,46 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getSketches } from './sketches'
 
-vi.mock('@/lib/mongodb', () => ({
-	getDb: vi.fn(),
-}))
+const mockGetSketches = vi.fn()
 
-function createFindChain(docs: unknown[]) {
-	return {
-		sort: vi.fn(() => ({
-			skip: vi.fn(() => ({
-				limit: vi.fn(() => ({
-					toArray: vi.fn().mockResolvedValue(docs),
-				})),
-			})),
-		})),
-	}
-}
+vi.mock('@/lib/db', () => ({
+	getDbAdapter: vi.fn(() => ({
+		getSketches: mockGetSketches,
+	})),
+}))
 
 describe('getSketches', () => {
 	beforeEach(() => {
 		vi.resetAllMocks()
 	})
 
-	it('returns a page and nextPage when more results exist', async () => {
-		const mockDocs = [
-			{ _id: { toString: () => 'id1' }, name: 'a', message: 'm' },
-			{ _id: { toString: () => 'id2' }, name: 'b', message: 'm2' },
-			{ _id: { toString: () => 'id3' }, name: 'c', message: 'm3' },
-		]
-		const mockCol = { find: vi.fn(() => createFindChain(mockDocs)) }
-		const { getDb } = await import('@/lib/mongodb')
-		;(getDb as ReturnType<typeof vi.fn>).mockResolvedValue({
-			collection: () => mockCol,
+	it('returns data and nextPage when more results exist', async () => {
+		mockGetSketches.mockResolvedValue({
+			data: [
+				{ _id: 'id1', name: 'a', message: 'm', createdAt: new Date() },
+				{ _id: 'id2', name: 'b', message: 'm2', createdAt: new Date() },
+			],
+			page: 0,
+			pageSize: 2,
+			nextPage: 1,
 		})
 
 		const result = await getSketches(0, 2)
-
 		expect(result.data).toHaveLength(2)
 		expect(result.page).toBe(0)
 		expect(result.pageSize).toBe(2)
 		expect(result.nextPage).toBe(1)
-		expect(mockCol.find).toHaveBeenCalled()
+		expect(mockGetSketches).toHaveBeenCalledWith(0, 2)
 	})
 
-	it('omits nextPage when the result set is exhausted', async () => {
-		const mockDocs = [{ _id: { toString: () => 'id1' }, name: 'a', message: 'm' }]
-		const mockCol = { find: vi.fn(() => createFindChain(mockDocs)) }
-		const { getDb } = await import('@/lib/mongodb')
-		;(getDb as ReturnType<typeof vi.fn>).mockResolvedValue({
-			collection: () => mockCol,
-		})
+	it('handles unconfigured database gracefully', async () => {
+		const { getDbAdapter } = await import('@/lib/db')
+		;(getDbAdapter as ReturnType<typeof vi.fn>).mockResolvedValueOnce(null)
 
 		const result = await getSketches(0, 2)
-
-		expect(result.data).toHaveLength(1)
+		expect(result.data).toEqual([])
+		expect(result.page).toBe(0)
+		expect(result.pageSize).toBe(2)
 		expect(result.nextPage).toBeUndefined()
 	})
 })

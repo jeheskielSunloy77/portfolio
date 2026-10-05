@@ -98,8 +98,8 @@ All external services are **optional** during local development. When ready to g
 | `AI_API_KEY` | API key for your chosen provider | *Optional (chatbot shows offline note if omitted)* |
 | `AI_MODEL` | Custom model name | *Optional (defaults to `gemini-2.5-flash` / `gpt-4o-mini` / `claude-3-5-haiku-latest`)* |
 | `AI_BASE_URL` | Custom endpoint URL (e.g. `http://localhost:11434/v1` for Ollama or proxy) | *Optional (defaults to official API endpoint)* |
-| `MONGODB_URI` | MongoDB connection string for Visitor Sketch wall | *Optional (wall shows empty state if omitted)* |
-| `MONGODB_DB` | Database name | `portfolio` |
+| `DB_PROVIDER` | Database provider (`postgres`, `sqlite`, `mysql`, `mongodb`) | *Auto-detected from URL* |
+| `DATABASE_URL` | Connection string or SQLite file path (e.g. `postgres://...`, `file:./local.db`, `libsql://...`) | *Optional (wall shows empty state if omitted)* |
 | `SMTP_URL` | Single connection string (e.g. `smtps://user%40gmail.com:pass@smtp.gmail.com:465`) | *Optional (contact form logs to console if omitted)* |
 
 ---

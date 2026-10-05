@@ -13,8 +13,8 @@ env:
  AI_PROVIDER: ${{ secrets.AI_PROVIDER != '' && secrets.AI_PROVIDER || 'google' }}
  AI_API_KEY: ${{ secrets.AI_API_KEY != '' && secrets.AI_API_KEY || 'placeholder-ai-key' }}
  AI_MODEL: ${{ secrets.AI_MODEL != '' && secrets.AI_MODEL || 'gemini-2.5-flash' }}
- MONGODB_URI: ${{ secrets.MONGODB_URI != '' && secrets.MONGODB_URI || 'mongodb://localhost:27017/test' }}
- MONGODB_DB: ${{ secrets.MONGODB_DB != '' && secrets.MONGODB_DB || 'portfolio_ci' }}
+ DB_PROVIDER: ${{ secrets.DB_PROVIDER != '' && secrets.DB_PROVIDER || 'sqlite' }}
+ DATABASE_URL: ${{ secrets.DATABASE_URL != '' && secrets.DATABASE_URL || 'file::memory:?cache=shared' }}
  SMTP_URL: ${{ secrets.SMTP_URL != '' && secrets.SMTP_URL || '' }}
 
 concurrency:

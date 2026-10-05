@@ -75,16 +75,15 @@ export default defineConfig({
         context: 'server',
         optional: true,
       }),
-      MONGODB_URI: envField.string({
+      DB_PROVIDER: envField.string({
         access: 'secret',
         context: 'server',
         optional: true,
       }),
-      MONGODB_DB: envField.string({
+      DATABASE_URL: envField.string({
         access: 'secret',
         context: 'server',
         optional: true,
-        default: 'portfolio',
       }),
       SMTP_URL: envField.string({
         access: 'secret',

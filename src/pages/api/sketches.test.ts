@@ -1,19 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { GET, POST } from './sketches'
 
+const mockCountRecentSketchesByIp = vi.fn()
+const mockCreateSketch = vi.fn()
+
 vi.mock('@/lib/sketches', () => ({
 	getSketches: vi.fn(),
 }))
 
 vi.mock('@/lib/sketch-image.server', () => ({
-	webpBase64ToBinary: vi.fn((base64: string) => ({
-		type: 'webp',
-		base64,
-	})),
+	webpBase64ToBinary: vi.fn((base64: string) => Buffer.from(base64, 'base64')),
 }))
 
-vi.mock('@/lib/mongodb', () => ({
-	getDb: vi.fn(),
+vi.mock('@/lib/db', () => ({
+	getDbAdapter: vi.fn(() => ({
+		countRecentSketchesByIp: mockCountRecentSketchesByIp,
+		createSketch: mockCreateSketch,
+	})),
 }))
 
 describe('Sketches API', () => {
@@ -94,15 +97,27 @@ describe('Sketches API', () => {
 			expect(body).toHaveProperty('error')
 		})
 
+		it('returns 503 when db adapter is unconfigured', async () => {
+			const { getDbAdapter } = await import('@/lib/db')
+			;(getDbAdapter as ReturnType<typeof vi.fn>).mockResolvedValueOnce(null)
+
+			const req = {
+				json: async () => ({
+					name: 'a',
+					message: 'm',
+					imageWebp: 'd2ViYXNkNjQ=',
+				}),
+				headers: new Headers(),
+			} as unknown as Request
+
+			const res = await POST({ request: req })
+			expect(res.status).toBe(503)
+			const body = await res.json()
+			expect(body.error).toContain('database unconfigured')
+		})
+
 		it('enforces rate limit and returns 429 when exceeded', async () => {
-			const mockCol = {
-				countDocuments: vi.fn().mockResolvedValue(5),
-				insertOne: vi.fn(),
-			}
-			const { getDb } = await import('@/lib/mongodb')
-			;(getDb as ReturnType<typeof vi.fn>).mockResolvedValue({
-				collection: () => mockCol,
-			})
+			mockCountRecentSketchesByIp.mockResolvedValue(5)
 
 			const req = {
 				json: async () => ({
@@ -117,20 +132,18 @@ describe('Sketches API', () => {
 			expect(res.status).toBe(429)
 			const body = await res.json()
 			expect(body).toHaveProperty('error', 'Rate limit exceeded')
-			expect(mockCol.insertOne).not.toHaveBeenCalled()
+			expect(mockCreateSketch).not.toHaveBeenCalled()
 		})
 
 		it('stores webp binary and returns metadata, without image bytes', async () => {
-			const insertedId = { toString: () => 'newid' }
-			const mockCol = {
-				countDocuments: vi.fn().mockResolvedValue(0),
-				insertOne: vi.fn().mockResolvedValue({ insertedId }),
-			}
-			const { getDb } = await import('@/lib/mongodb')
-			;(getDb as ReturnType<typeof vi.fn>).mockResolvedValue({
-				collection: () => mockCol,
+			mockCountRecentSketchesByIp.mockResolvedValue(0)
+			mockCreateSketch.mockResolvedValue({
+				_id: 'newid',
+				name: 'user',
+				message: 'hi',
+				createdAt: new Date('2026-01-01T00:00:00.000Z'),
+				ip: '9.9.9.9',
 			})
-			const { webpBase64ToBinary } = await import('@/lib/sketch-image.server')
 
 			const req = {
 				json: async () => ({
@@ -153,19 +166,18 @@ describe('Sketches API', () => {
 			})
 			expect(body).not.toHaveProperty('imageWebp')
 			expect(body).not.toHaveProperty('image')
-			expect(webpBase64ToBinary).toHaveBeenCalledWith('d2ViYXNkNjQ=')
-			expect(mockCol.insertOne).toHaveBeenCalled()
+			expect(mockCreateSketch).toHaveBeenCalledWith(
+				expect.objectContaining({
+					name: 'user',
+					message: 'hi',
+					ip: '9.9.9.9',
+				}),
+			)
 		})
 
 		it('returns error response when DB insert fails', async () => {
-			const mockCol = {
-				countDocuments: vi.fn().mockResolvedValue(0),
-				insertOne: vi.fn().mockRejectedValue(new Error('insert fail')),
-			}
-			const { getDb } = await import('@/lib/mongodb')
-			;(getDb as ReturnType<typeof vi.fn>).mockResolvedValue({
-				collection: () => mockCol,
-			})
+			mockCountRecentSketchesByIp.mockResolvedValue(0)
+			mockCreateSketch.mockRejectedValue(new Error('insert fail'))
 
 			const req = {
 				json: async () => ({

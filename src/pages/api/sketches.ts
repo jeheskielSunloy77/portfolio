@@ -1,7 +1,7 @@
 import { SKETCHES_PAGE_SIZE } from '@/lib/sketch-constants'
 import { webpBase64ToBinary } from '@/lib/sketch-image.server'
 import { getSketches } from '@/lib/sketches'
-import { getDb } from '@/lib/mongodb'
+import { getDbAdapter } from '@/lib/db'
 import { log } from '@/lib/utils'
 import z from 'zod'
 
@@ -23,8 +23,6 @@ function errResponse(tag: string, message: string, status = 500) {
 	log('error', tag, message)
 	return jsonResponse({ error: message }, status)
 }
-
-const COLLECTION = 'sketches'
 
 export async function GET(request: Request) {
 	const TAG = 'SketchesApiGet'
@@ -56,11 +54,14 @@ export async function POST({ request }: { request: Request }) {
 		const parsed = sketchInsertSchema.safeParse(body)
 		if (!parsed.success) return errResponse(TAG, 'Invalid request body', 400)
 
-		const db = await getDb()
-		if (!db) {
-			return errResponse(TAG, 'Visitor wall is currently disabled (database unconfigured).', 503)
+		const adapter = await getDbAdapter()
+		if (!adapter) {
+			return errResponse(
+				TAG,
+				'Visitor wall is currently disabled (database unconfigured).',
+				503,
+			)
 		}
-		const col = db.collection(COLLECTION)
 
 		const ip =
 			request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
@@ -69,33 +70,19 @@ export async function POST({ request }: { request: Request }) {
 			'unknown'
 
 		const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
-		const recentCount = await col.countDocuments({
-			ip,
-			createdAt: { $gte: oneHourAgo },
-		})
+		const recentCount = await adapter.countRecentSketchesByIp(ip, oneHourAgo)
 		if (recentCount >= 5) {
 			return jsonResponse({ error: 'Rate limit exceeded' }, 429)
 		}
 
-		const doc = {
+		const result = await adapter.createSketch({
 			name: parsed.data.name,
 			message: parsed.data.message,
 			image: webpBase64ToBinary(parsed.data.imageWebp),
-			createdAt: new Date(),
 			ip,
-		}
+		})
 
-		const insertedId = (await col.insertOne(doc)).insertedId.toString()
-
-		const result = {
-			_id: insertedId,
-			name: doc.name,
-			message: doc.message,
-			createdAt: doc.createdAt,
-			ip: doc.ip,
-		}
-
-		log('info', TAG, `New sketch submitted from IP ${ip} with id ${insertedId}`)
+		log('info', TAG, `New sketch submitted from IP ${ip} with id ${result._id}`)
 		return jsonResponse(result, 201)
 	} catch (e: any) {
 		return errResponse(TAG, 'Failed to save sketch')

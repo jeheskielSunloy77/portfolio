@@ -11,7 +11,7 @@ Designed to be clean, fast, fully responsive, and **extremely easy for developer
 - ⚡ **Astro 5 + SSR & Prerendering**: Instant page loads with optimized static generation and server-side routes.
 - 🤖 **Embedded AI Assistant**: Interactive chatbot that answers questions about your experience, projects, skills, and availability using facts from your configuration.
 - 🎨 **Interactive 3D Robot**: Smooth cursor-following and eye-tracking Spline 3D robot model on the hero section.
-- 📝 **Visitor Doodle & Sketch Wall**: Real-time canvas wall where visitors can draw and leave custom messages (backed by MongoDB).
+- 📝 **Visitor Doodle & Sketch Wall**: Real-time canvas wall where visitors can draw and leave custom messages (backed by PostgreSQL, SQLite, MySQL, or MongoDB).
 - ✍️ **Bilingual Blog (EN + ID)**: Type-safe MDX/Markdown content collections with syntax highlighting and read time estimation.
 - 📬 **Contact Form**: Email submission via Nodemailer with local development simulation mode.
 - 🌓 **Dark & Light Mode**: Accessible theme switching with local storage persistence and system preference detection.

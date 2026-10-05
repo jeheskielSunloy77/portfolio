@@ -100,7 +100,11 @@ All external services are **optional** during local development. When ready to g
 | `AI_BASE_URL` | Custom endpoint URL (e.g. `http://localhost:11434/v1` for Ollama or proxy) | *Optional (defaults to official API endpoint)* |
 | `DB_PROVIDER` | Database provider (`postgres`, `sqlite`, `mysql`, `mongodb`) | *Auto-detected from URL* |
 | `DATABASE_URL` | Connection string or SQLite file path (e.g. `postgres://...`, `file:./local.db`, `libsql://...`) | *Optional (wall shows empty state if omitted)* |
-| `SMTP_URL` | Single connection string (e.g. `smtps://user%40gmail.com:pass@smtp.gmail.com:465`) | *Optional (contact form logs to console if omitted)* |
+| `SMTP_HOST` | SMTP server host (e.g. `smtp.gmail.com`) | *Optional* |
+| `SMTP_PORT` | SMTP port (e.g. `587` for STARTTLS, `465` for SSL) | `587` |
+| `SMTP_USER` | SMTP username / email address | *Optional* |
+| `SMTP_PASS` | SMTP password / app-specific password | *Optional* |
+| `SMTP_URL` | Optional single connection string (e.g. `smtp://user:pass@smtp.example.com:587`) | *Optional alternative to individual fields* |
 
 ---
 

@@ -15,6 +15,10 @@ env:
  AI_MODEL: ${{ secrets.AI_MODEL != '' && secrets.AI_MODEL || 'gemini-2.5-flash' }}
  DB_PROVIDER: ${{ secrets.DB_PROVIDER != '' && secrets.DB_PROVIDER || 'sqlite' }}
  DATABASE_URL: ${{ secrets.DATABASE_URL != '' && secrets.DATABASE_URL || 'file::memory:?cache=shared' }}
+ SMTP_HOST: ${{ secrets.SMTP_HOST != '' && secrets.SMTP_HOST || 'smtp.example.com' }}
+ SMTP_PORT: ${{ secrets.SMTP_PORT != '' && secrets.SMTP_PORT || '587' }}
+ SMTP_USER: ${{ secrets.SMTP_USER != '' && secrets.SMTP_USER || 'ci@example.com' }}
+ SMTP_PASS: ${{ secrets.SMTP_PASS != '' && secrets.SMTP_PASS || 'placeholder-smtp-pass' }}
  SMTP_URL: ${{ secrets.SMTP_URL != '' && secrets.SMTP_URL || '' }}
 
 concurrency:

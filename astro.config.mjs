@@ -90,6 +90,27 @@ export default defineConfig({
         context: 'server',
         optional: true,
       }),
+      SMTP_HOST: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+      }),
+      SMTP_PORT: envField.number({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+        default: 587,
+      }),
+      SMTP_USER: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+      }),
+      SMTP_PASS: envField.string({
+        access: 'secret',
+        context: 'server',
+        optional: true,
+      }),
     },
     validateSecrets: true,
   },

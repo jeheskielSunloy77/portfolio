@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { CAREERS, EDUCATIONS } from '@/site.config'
 import type { Dictionary, Experience } from '@/lib/types'
 import { BriefcaseBusiness, GraduationCap } from 'lucide-react'
@@ -6,9 +7,11 @@ import Markdown from 'react-markdown'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Badge } from './ui/badge'
 import { Card, CardContent } from './ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger, TabsMotionPill } from './ui/tabs'
 
 export function ExperienceSection({ t }: { t: Dictionary }) {
+	const [activeTab, setActiveTab] = useState<'work' | 'education'>('work')
+
 	return (
 		<motion.section
 			id='experiences'
@@ -17,17 +20,29 @@ export function ExperienceSection({ t }: { t: Dictionary }) {
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
 		>
-			<Tabs defaultValue='work' className='flex flex-col gap-2'>
-				<TabsList variant='default'>
-					<TabsTrigger value='work'>
-						<BriefcaseBusiness />
-						{t['Work']}
-					</TabsTrigger>
-					<TabsTrigger value='education'>
-						<GraduationCap />
-						{t['Education']}
-					</TabsTrigger>
-				</TabsList>
+			<Tabs
+				value={activeTab}
+				onValueChange={(val) => setActiveTab(val as 'work' | 'education')}
+				className='flex flex-col gap-4 sm:gap-5'
+			>
+				<div className='flex items-center justify-start'>
+					<TabsList variant='pill'>
+						<TabsTrigger value='work'>
+							<BriefcaseBusiness className='size-3.5' />
+							<span>{t['Work']}</span>
+							{activeTab === 'work' && (
+								<TabsMotionPill layoutId='active-experience-pill' />
+							)}
+						</TabsTrigger>
+						<TabsTrigger value='education'>
+							<GraduationCap className='size-3.5' />
+							<span>{t['Education']}</span>
+							{activeTab === 'education' && (
+								<TabsMotionPill layoutId='active-experience-pill' />
+							)}
+						</TabsTrigger>
+					</TabsList>
+				</div>
 				<TabsContent value='work'>
 					<Timeline experiences={CAREERS} t={t} />
 				</TabsContent>

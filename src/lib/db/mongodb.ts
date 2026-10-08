@@ -12,14 +12,32 @@ export class MongoDatabaseAdapter implements DatabaseAdapter {
 	readonly provider = 'mongodb' as const
 	private client: MongoClient
 	private db: Db
+	private url: string
 
 	constructor(url: string) {
+		this.url = url
 		this.client = new MongoClient(url)
 		this.db = this.client.db()
 	}
 
 	async init(): Promise<void> {
-		await this.client.connect()
+		try {
+			await this.client.connect()
+		} catch (err: any) {
+			if (
+				err?.codeName === 'AuthenticationFailed' &&
+				!this.url.includes('authSource=')
+			) {
+				const separator = this.url.includes('?') ? '&' : '?'
+				const retryUrl = `${this.url}${separator}authSource=admin`
+				const retryClient = new MongoClient(retryUrl)
+				await retryClient.connect()
+				this.client = retryClient
+				this.db = this.client.db()
+				return
+			}
+			throw err
+		}
 	}
 
 	async getSketches(

@@ -23,7 +23,8 @@ export class SqliteDatabaseAdapter implements DatabaseAdapter {
 				image BLOB NOT NULL,
 				created_at TEXT NOT NULL,
 				ip TEXT NOT NULL,
-				is_sensitive INTEGER NOT NULL DEFAULT 0
+				is_sensitive INTEGER NOT NULL DEFAULT 0,
+				device_id TEXT
 			);
 		`)
 		try {
@@ -33,11 +34,21 @@ export class SqliteDatabaseAdapter implements DatabaseAdapter {
 		} catch {
 			// Column already exists or table freshly created
 		}
+		try {
+			await this.client.execute(`
+				ALTER TABLE sketches ADD COLUMN device_id TEXT;
+			`)
+		} catch {
+			// Column already exists
+		}
 		await this.client.execute(`
 			CREATE INDEX IF NOT EXISTS idx_sketches_created_at ON sketches(created_at DESC);
 		`)
 		await this.client.execute(`
 			CREATE INDEX IF NOT EXISTS idx_sketches_ip_created_at ON sketches(ip, created_at);
+		`)
+		await this.client.execute(`
+			CREATE INDEX IF NOT EXISTS idx_sketches_device_id_created_at ON sketches(device_id, created_at);
 		`)
 	}
 
@@ -99,6 +110,30 @@ export class SqliteDatabaseAdapter implements DatabaseAdapter {
 		return Number(res.rows[0]?.count ?? 0)
 	}
 
+	async countRecentSketchesByDevice(deviceId: string, since: Date): Promise<number> {
+		const res = await this.client.execute({
+			sql: 'SELECT COUNT(*) as count FROM sketches WHERE device_id = ? AND created_at >= ?',
+			args: [deviceId, since.toISOString()],
+		})
+
+		return Number(res.rows[0]?.count ?? 0)
+	}
+
+	async getLatestSensitiveSketchByDevice(
+		deviceId: string,
+		since: Date,
+	): Promise<{ createdAt: Date } | null> {
+		const res = await this.client.execute({
+			sql: `SELECT created_at FROM sketches
+				  WHERE device_id = ? AND is_sensitive = 1 AND created_at >= ?
+				  ORDER BY created_at DESC LIMIT 1`,
+			args: [deviceId, since.toISOString()],
+		})
+
+		if (res.rows.length === 0 || !res.rows[0]?.created_at) return null
+		return { createdAt: new Date(String(res.rows[0].created_at)) }
+	}
+
 	async createSketch(input: InsertSketchInput): Promise<InsertSketchResult> {
 		const id = crypto.randomUUID()
 		const createdAt = new Date()
@@ -112,9 +147,18 @@ export class SqliteDatabaseAdapter implements DatabaseAdapter {
 		const isSensitive = input.isSensitive ? 1 : 0
 
 		await this.client.execute({
-			sql: `INSERT INTO sketches (id, name, message, image, created_at, ip, is_sensitive)
-				  VALUES (?, ?, ?, ?, ?, ?, ?)`,
-			args: [id, input.name, input.message, imageBlob, createdAt.toISOString(), input.ip, isSensitive],
+			sql: `INSERT INTO sketches (id, name, message, image, created_at, ip, is_sensitive, device_id)
+				  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+			args: [
+				id,
+				input.name,
+				input.message,
+				imageBlob,
+				createdAt.toISOString(),
+				input.ip,
+				isSensitive,
+				input.deviceId ?? null,
+			],
 		})
 
 		return {
@@ -123,6 +167,7 @@ export class SqliteDatabaseAdapter implements DatabaseAdapter {
 			message: input.message,
 			createdAt,
 			ip: input.ip,
+			deviceId: input.deviceId,
 			isSensitive: Boolean(input.isSensitive),
 		}
 	}

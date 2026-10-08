@@ -103,6 +103,21 @@ function SketchContent({
 			body: JSON.stringify(payload),
 		})
 
+		if (res.status === 403) {
+			let json = null
+			try {
+				json = await res.json()
+			} catch (_) {
+				/* ignore */
+			}
+			throw {
+				type: 'cooldown',
+				status: 403,
+				cooldownUntil: json?.cooldownUntil,
+				message: json?.error ?? 'Device in cooldown',
+			}
+		}
+
 		if (res.status === 429) {
 			throw { type: 'rate', status: 429 }
 		}

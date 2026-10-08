@@ -64,6 +64,7 @@ export interface Sketch {
 	message: string
 	createdAt: Date
 	ip?: string
+	deviceId?: string
 	/** Present on optimistic cards before the server assigns a real id */
 	imageWebp?: string
 	isSensitive?: boolean

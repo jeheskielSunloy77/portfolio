@@ -100,6 +100,34 @@ export class MongoDatabaseAdapter implements DatabaseAdapter {
 		})
 	}
 
+	async countRecentSketchesByDevice(deviceId: string, since: Date): Promise<number> {
+		const col = this.db.collection(COLLECTION)
+		return await col.countDocuments({
+			deviceId,
+			createdAt: { $gte: since },
+		})
+	}
+
+	async getLatestSensitiveSketchByDevice(
+		deviceId: string,
+		since: Date,
+	): Promise<{ createdAt: Date } | null> {
+		const col = this.db.collection(COLLECTION)
+		const doc = await col.findOne(
+			{
+				deviceId,
+				isSensitive: true,
+				createdAt: { $gte: since },
+			},
+			{
+				projection: { createdAt: 1 },
+				sort: { createdAt: -1 },
+			},
+		)
+		if (!doc || !doc.createdAt) return null
+		return { createdAt: new Date(doc.createdAt) }
+	}
+
 	async createSketch(input: InsertSketchInput): Promise<InsertSketchResult> {
 		const col = this.db.collection(COLLECTION)
 		const doc = {
@@ -108,6 +136,7 @@ export class MongoDatabaseAdapter implements DatabaseAdapter {
 			image: new Binary(input.image, Binary.SUBTYPE_BYTE_ARRAY),
 			createdAt: new Date(),
 			ip: input.ip,
+			deviceId: input.deviceId,
 			isSensitive: Boolean(input.isSensitive ?? false),
 		}
 
@@ -118,6 +147,7 @@ export class MongoDatabaseAdapter implements DatabaseAdapter {
 			message: doc.message,
 			createdAt: doc.createdAt,
 			ip: doc.ip,
+			deviceId: doc.deviceId,
 			isSensitive: doc.isSensitive,
 		}
 	}

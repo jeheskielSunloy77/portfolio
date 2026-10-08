@@ -457,20 +457,53 @@ export function SketchDialog({
       const svg = buildSvgString(width, height, strokes);
       const imageWebp = await svgStringToWebpBase64(svg, width, height);
 
-      handleClose(false);
-      createSketchMutation?.mutate({
+      const payload = {
         name: newSketchName,
         message: newSketchMessage,
         imageWebp,
-      });
-    } catch {
-      setError({
-        title: t["Failed to save sketch"],
-        description:
-          t[
-            "An error occurred while saving your sketch. Please try again later."
-          ],
-      });
+      };
+
+      if (createSketchMutation?.mutateAsync) {
+        await createSketchMutation.mutateAsync(payload);
+      } else {
+        createSketchMutation?.mutate(payload);
+      }
+
+      handleClose(false);
+    } catch (err: any) {
+      if (err?.status === 403 || err?.type === "cooldown") {
+        const unlockDate = err?.cooldownUntil
+          ? new Date(err.cooldownUntil).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })
+          : "";
+        const unlockMsg = unlockDate
+          ? ` ${t["Submissions unlock on:"] ?? "Submissions unlock on:"} ${unlockDate}`
+          : "";
+        setError({
+          title: t["Cooldown active"] ?? "Cooldown active",
+          description: `${t["You cannot post new sketches due to a recent sensitive content violation."]}${unlockMsg}`,
+        });
+      } else if (err?.status === 429 || err?.type === "rate") {
+        setError({
+          title: t["Rate limit exceeded"] ?? "Rate limit exceeded",
+          description:
+            t[
+              "You have reached the submission rate limit. Please try again later."
+            ] ?? "You have reached the submission rate limit. Please try again later.",
+        });
+      } else {
+        setError({
+          title: t["Failed to save sketch"],
+          description:
+            err?.message ||
+            t[
+              "An error occurred while saving your sketch. Please try again later."
+            ],
+        });
+      }
     }
   };
 
@@ -483,6 +516,7 @@ export function SketchDialog({
       setHistoryIndex(-1);
       setStrokes([]);
       setPreview(null);
+      setError(null);
     }
   };
 

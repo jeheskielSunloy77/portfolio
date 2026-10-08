@@ -25,11 +25,14 @@ export class PostgresDatabaseAdapter implements DatabaseAdapter {
 				image BYTEA NOT NULL,
 				created_at TIMESTAMPTZ NOT NULL,
 				ip VARCHAR(64) NOT NULL,
-				is_sensitive BOOLEAN NOT NULL DEFAULT FALSE
+				is_sensitive BOOLEAN NOT NULL DEFAULT FALSE,
+				device_id VARCHAR(64)
 			);
 			ALTER TABLE sketches ADD COLUMN IF NOT EXISTS is_sensitive BOOLEAN NOT NULL DEFAULT FALSE;
+			ALTER TABLE sketches ADD COLUMN IF NOT EXISTS device_id VARCHAR(64);
 			CREATE INDEX IF NOT EXISTS idx_sketches_created_at ON sketches(created_at DESC);
 			CREATE INDEX IF NOT EXISTS idx_sketches_ip_created_at ON sketches(ip, created_at);
+			CREATE INDEX IF NOT EXISTS idx_sketches_device_id_created_at ON sketches(device_id, created_at);
 		`)
 	}
 
@@ -93,14 +96,47 @@ export class PostgresDatabaseAdapter implements DatabaseAdapter {
 		return Number(res.rows[0]?.count ?? 0)
 	}
 
+	async countRecentSketchesByDevice(deviceId: string, since: Date): Promise<number> {
+		const res = await this.pool.query<{ count: number | string }>(
+			'SELECT COUNT(*)::int as count FROM sketches WHERE device_id = $1 AND created_at >= $2',
+			[deviceId, since],
+		)
+
+		return Number(res.rows[0]?.count ?? 0)
+	}
+
+	async getLatestSensitiveSketchByDevice(
+		deviceId: string,
+		since: Date,
+	): Promise<{ createdAt: Date } | null> {
+		const res = await this.pool.query<{ created_at: Date | string }>(
+			`SELECT created_at FROM sketches
+			 WHERE device_id = $1 AND is_sensitive = TRUE AND created_at >= $2
+			 ORDER BY created_at DESC LIMIT 1`,
+			[deviceId, since],
+		)
+
+		if (res.rows.length === 0 || !res.rows[0]?.created_at) return null
+		return { createdAt: new Date(res.rows[0].created_at) }
+	}
+
 	async createSketch(input: InsertSketchInput): Promise<InsertSketchResult> {
 		const id = crypto.randomUUID()
 		const createdAt = new Date()
 
 		await this.pool.query(
-			`INSERT INTO sketches (id, name, message, image, created_at, ip, is_sensitive)
-			 VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-			[id, input.name, input.message, input.image, createdAt, input.ip, Boolean(input.isSensitive)],
+			`INSERT INTO sketches (id, name, message, image, created_at, ip, is_sensitive, device_id)
+			 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+			[
+				id,
+				input.name,
+				input.message,
+				input.image,
+				createdAt,
+				input.ip,
+				Boolean(input.isSensitive),
+				input.deviceId ?? null,
+			],
 		)
 
 		return {
@@ -109,6 +145,7 @@ export class PostgresDatabaseAdapter implements DatabaseAdapter {
 			message: input.message,
 			createdAt,
 			ip: input.ip,
+			deviceId: input.deviceId,
 			isSensitive: Boolean(input.isSensitive),
 		}
 	}

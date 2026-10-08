@@ -136,4 +136,46 @@ describe('SketchDialog', () => {
 		// dialog closed via onOpenChange(false)
 		expect(onOpenChange).toHaveBeenCalledWith(false)
 	})
+
+	test('displays cooldown alert and remains open when mutation rejects with cooldown error', async () => {
+		const user = userEvent.setup()
+		const onOpenChange = vi.fn()
+		const mutateAsync = vi.fn().mockRejectedValue({
+			type: 'cooldown',
+			status: 403,
+			cooldownUntil: '2026-12-31T00:00:00.000Z',
+		})
+		const mockMutation: any = { status: 'idle', mutateAsync }
+
+		render(
+			<SketchDialog
+				isOpen={true}
+				onOpenChange={onOpenChange}
+				createSketchMutation={mockMutation}
+				t={t}
+			/>
+		)
+
+		const nameInput = screen.getByPlaceholderText('enter your name')
+		const messageInput = screen.getByPlaceholderText(
+			'leave a message or description...'
+		)
+		const saveBtn = screen.getByRole('button', { name: /save sketch/i })
+
+		await user.type(nameInput, 'Tester')
+		await user.type(messageInput, 'Message')
+
+		const surface = screen.getByTestId('drawing-surface')
+		fireEvent.pointerDown(surface, { clientX: 60, clientY: 60, pointerId: 1, pressure: 0.5, buttons: 1 })
+		fireEvent.pointerUp(surface, { clientX: 60, clientY: 60, pointerId: 1, buttons: 0 })
+
+		await user.click(saveBtn)
+
+		expect(mutateAsync).toHaveBeenCalledTimes(1)
+		// Check that cooldown alert is rendered
+		expect(await screen.findByText('Cooldown active')).toBeInTheDocument()
+		expect(screen.getByText(/Submissions unlock on:/)).toBeInTheDocument()
+		// Dialog should remain open (onOpenChange not called with false)
+		expect(onOpenChange).not.toHaveBeenCalledWith(false)
+	})
 })

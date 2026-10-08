@@ -7,6 +7,7 @@ export interface InsertSketchInput {
 	message: string
 	image: Buffer
 	ip: string
+	deviceId?: string
 	isSensitive?: boolean
 }
 
@@ -16,6 +17,7 @@ export interface InsertSketchResult {
 	message: string
 	createdAt: Date
 	ip: string
+	deviceId?: string
 	isSensitive?: boolean
 }
 
@@ -25,6 +27,8 @@ export interface DatabaseAdapter {
 	getSketches(page: number, pageSize: number): Promise<APIResponsePaginated<Sketch>>
 	getSketchImageBuffer(id: string): Promise<Buffer | null>
 	countRecentSketchesByIp(ip: string, since: Date): Promise<number>
+	countRecentSketchesByDevice(deviceId: string, since: Date): Promise<number>
+	getLatestSensitiveSketchByDevice(deviceId: string, since: Date): Promise<{ createdAt: Date } | null>
 	createSketch(input: InsertSketchInput): Promise<InsertSketchResult>
 	close?(): Promise<void>
 }

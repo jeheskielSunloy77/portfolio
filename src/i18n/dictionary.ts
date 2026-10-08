@@ -181,6 +181,11 @@ export const dictionary = {
     "Sensitive content": "Sensitive content",
     "Click to view": "Click to view",
     "Hide": "Hide",
+    "Cooldown active": "Cooldown active",
+    "You cannot post new sketches due to a recent sensitive content violation.": "You cannot post new sketches due to a recent sensitive content violation.",
+    "Submissions unlock on:": "Submissions unlock on:",
+    "Rate limit exceeded": "Rate limit exceeded",
+    "You have reached the submission rate limit. Please try again later.": "You have reached the submission rate limit. Please try again later.",
   },
   id: {
     "such end. very empty. much art. wow. 🐶": "Waduh tamat. Kosong banget. Seni parah. Wow. 🐶",
@@ -364,5 +369,10 @@ export const dictionary = {
     "Sensitive content": "Konten sensitif",
     "Click to view": "Klik untuk melihat",
     "Hide": "Sembunyikan",
+    "Cooldown active": "Masa jeda aktif",
+    "You cannot post new sketches due to a recent sensitive content violation.": "Anda tidak dapat mengirim sketsa baru karena pelanggaran konten sensitif baru-baru ini.",
+    "Submissions unlock on:": "Pengiriman terbuka kembali pada:",
+    "Rate limit exceeded": "Batas pengiriman terlampaui",
+    "You have reached the submission rate limit. Please try again later.": "Anda telah mencapai batas pengiriman sketsa. Silakan coba lagi nanti.",
   },
 } as const;

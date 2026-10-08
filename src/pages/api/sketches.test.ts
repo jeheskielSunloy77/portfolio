@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { GET, POST } from './sketches'
 
 const mockCountRecentSketchesByIp = vi.fn()
+const mockCountRecentSketchesByDevice = vi.fn()
+const mockGetLatestSensitiveSketchByDevice = vi.fn()
 const mockCreateSketch = vi.fn()
 const mockModerateSketch = vi.fn()
 
@@ -20,6 +22,8 @@ vi.mock('@/lib/sketch-moderation.server', () => ({
 vi.mock('@/lib/db', () => ({
 	getDbAdapter: vi.fn(() => ({
 		countRecentSketchesByIp: mockCountRecentSketchesByIp,
+		countRecentSketchesByDevice: mockCountRecentSketchesByDevice,
+		getLatestSensitiveSketchByDevice: mockGetLatestSensitiveSketchByDevice,
 		createSketch: mockCreateSketch,
 	})),
 }))
@@ -28,6 +32,9 @@ describe('Sketches API', () => {
 	beforeEach(() => {
 		vi.resetAllMocks()
 		mockModerateSketch.mockResolvedValue({ isSensitive: false })
+		mockCountRecentSketchesByIp.mockResolvedValue(0)
+		mockCountRecentSketchesByDevice.mockResolvedValue(0)
+		mockGetLatestSensitiveSketchByDevice.mockResolvedValue(null)
 	})
 
 	describe('GET /api/sketches', () => {
@@ -122,8 +129,27 @@ describe('Sketches API', () => {
 			expect(body.error).toContain('database unconfigured')
 		})
 
-		it('enforces rate limit and returns 429 when exceeded', async () => {
-			mockCountRecentSketchesByIp.mockResolvedValue(5)
+		it('enforces rate limit and returns 429 when device limit exceeded', async () => {
+			mockCountRecentSketchesByDevice.mockResolvedValue(5)
+
+			const req = {
+				json: async () => ({
+					name: 'a',
+					message: 'm',
+					imageWebp: 'd2ViYXNkNjQ=',
+				}),
+				headers: new Headers([['x-forwarded-for', '1.2.3.4']]),
+			} as unknown as Request
+
+			const res = await POST({ request: req })
+			expect(res.status).toBe(429)
+			const body = await res.json()
+			expect(body).toHaveProperty('error', 'Rate limit exceeded')
+			expect(mockCreateSketch).not.toHaveBeenCalled()
+		})
+
+		it('enforces rate limit and returns 429 when IP limit exceeded', async () => {
+			mockCountRecentSketchesByIp.mockResolvedValue(25)
 
 			const req = {
 				json: async () => ({
@@ -216,6 +242,102 @@ describe('Sketches API', () => {
 					message: 'nsfw',
 					ip: '9.9.9.9',
 					isSensitive: true,
+				}),
+			)
+		})
+
+		it('rejects with 403 and cooldownUntil when device is in cooldown', async () => {
+			const sensitiveDate = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) // 10 days ago
+			mockGetLatestSensitiveSketchByDevice.mockResolvedValue({
+				createdAt: sensitiveDate,
+			})
+
+			const req = {
+				json: async () => ({
+					name: 'user',
+					message: 'hi',
+					imageWebp: 'd2ViYXNkNjQ=',
+				}),
+				headers: new Headers([
+					['cookie', 'visitor_token=dev-12345'],
+					['x-forwarded-for', '1.2.3.4'],
+				]),
+			} as unknown as Request
+
+			const res = await POST({ request: req })
+			expect(res.status).toBe(403)
+			const body = await res.json()
+			expect(body.error).toBe('Device in cooldown')
+			expect(body).toHaveProperty('cooldownUntil')
+			expect(mockCreateSketch).not.toHaveBeenCalled()
+			expect(res.headers.get('Set-Cookie')).toContain('visitor_token=dev-12345')
+		})
+
+		it('extracts visitor_token cookie and passes deviceId to createSketch', async () => {
+			mockCreateSketch.mockResolvedValue({
+				_id: 'newid',
+				name: 'user',
+				message: 'hi',
+				createdAt: new Date('2026-01-01T00:00:00.000Z'),
+				ip: '1.2.3.4',
+				deviceId: 'custom-dev-id',
+			})
+
+			const req = {
+				json: async () => ({
+					name: 'user',
+					message: 'hi',
+					imageWebp: 'd2ViYXNkNjQ=',
+				}),
+				headers: new Headers([
+					['cookie', 'other=abc; visitor_token=custom-dev-id; test=123'],
+					['x-forwarded-for', '1.2.3.4'],
+				]),
+			} as unknown as Request
+
+			const res = await POST({ request: req })
+			expect(res.status).toBe(201)
+			expect(mockGetLatestSensitiveSketchByDevice).toHaveBeenCalledWith(
+				'custom-dev-id',
+				expect.any(Date),
+			)
+			expect(mockCountRecentSketchesByDevice).toHaveBeenCalledWith(
+				'custom-dev-id',
+				expect.any(Date),
+			)
+			expect(mockCreateSketch).toHaveBeenCalledWith(
+				expect.objectContaining({
+					deviceId: 'custom-dev-id',
+				}),
+			)
+			expect(res.headers.get('Set-Cookie')).toContain('visitor_token=custom-dev-id')
+		})
+
+		it('generates new deviceId and sets visitor_token cookie when missing', async () => {
+			mockCreateSketch.mockResolvedValue({
+				_id: 'newid',
+				name: 'user',
+				message: 'hi',
+				createdAt: new Date('2026-01-01T00:00:00.000Z'),
+				ip: '1.2.3.4',
+			})
+
+			const req = {
+				json: async () => ({
+					name: 'user',
+					message: 'hi',
+					imageWebp: 'd2ViYXNkNjQ=',
+				}),
+				headers: new Headers([['x-forwarded-for', '1.2.3.4']]),
+			} as unknown as Request
+
+			const res = await POST({ request: req })
+			expect(res.status).toBe(201)
+			const setCookie = res.headers.get('Set-Cookie')
+			expect(setCookie).toMatch(/visitor_token=[a-f0-9-]+; Path=\/; Max-Age=31536000; SameSite=Lax; HttpOnly/)
+			expect(mockCreateSketch).toHaveBeenCalledWith(
+				expect.objectContaining({
+					deviceId: expect.any(String),
 				}),
 			)
 		})

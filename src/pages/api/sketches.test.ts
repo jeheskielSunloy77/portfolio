@@ -129,8 +129,8 @@ describe('Sketches API', () => {
 			expect(body.error).toContain('database unconfigured')
 		})
 
-		it('enforces rate limit and returns 429 when device limit exceeded', async () => {
-			mockCountRecentSketchesByDevice.mockResolvedValue(5)
+		it('enforces rate limit and returns 429 when device limit exceeded (>= 3 per hour)', async () => {
+			mockCountRecentSketchesByDevice.mockResolvedValue(3)
 
 			const req = {
 				json: async () => ({
@@ -148,8 +148,8 @@ describe('Sketches API', () => {
 			expect(mockCreateSketch).not.toHaveBeenCalled()
 		})
 
-		it('enforces rate limit and returns 429 when IP limit exceeded', async () => {
-			mockCountRecentSketchesByIp.mockResolvedValue(25)
+		it('enforces rate limit and returns 429 when IP limit exceeded (>= 15 per hour)', async () => {
+			mockCountRecentSketchesByIp.mockResolvedValue(15)
 
 			const req = {
 				json: async () => ({

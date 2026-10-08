@@ -63,6 +63,8 @@ function parseCookies(cookieHeader: string | null): Record<string, string> {
 }
 
 const NINETY_DAYS_MS = 90 * 24 * 60 * 60 * 1000
+const DEVICE_RATE_LIMIT_PER_HOUR = 3
+const IP_RATE_LIMIT_PER_HOUR = 15
 
 export async function POST({ request }: { request: Request }) {
 	const TAG = 'SketchesApiPOST'
@@ -120,14 +122,14 @@ export async function POST({ request }: { request: Request }) {
 			deviceId,
 			oneHourAgo,
 		)
-		if (recentDeviceCount >= 5) {
+		if (recentDeviceCount >= DEVICE_RATE_LIMIT_PER_HOUR) {
 			return jsonResponse({ error: 'Rate limit exceeded' }, 429, {
 				'Set-Cookie': setCookieHeader,
 			})
 		}
 
 		const recentIpCount = await adapter.countRecentSketchesByIp(ip, oneHourAgo)
-		if (recentIpCount >= 25) {
+		if (recentIpCount >= IP_RATE_LIMIT_PER_HOUR) {
 			return jsonResponse({ error: 'Rate limit exceeded' }, 429, {
 				'Set-Cookie': setCookieHeader,
 			})

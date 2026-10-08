@@ -11,7 +11,7 @@ import {
 	useQueryClient,
 	type InfiniteData,
 } from '@tanstack/react-query'
-import { Plus } from 'lucide-react'
+import { Eye, EyeOff, ImageOff, Plus } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { RainbowButton } from './magicui/rainbow-button'
 
@@ -209,7 +209,7 @@ function SketchContent({
 								) : (
 								<>
 									{sketches.map((sketch) => (
-										<SketchCard key={sketch._id} sketch={sketch} />
+										<SketchCard key={sketch._id} sketch={sketch} t={t} />
 									))}
 									{q.isFetchingNextPage &&
 										Array.from({ length: 3 }).map((_, i) => <SketchSkeleton key={i} />)}
@@ -243,22 +243,59 @@ function SketchContent({
 	)
 }
 
-function SketchCard({ sketch }: { sketch: Sketch }) {
+function SketchCard({ sketch, t }: { sketch: Sketch; t: Dictionary }) {
+	const [isRevealed, setIsRevealed] = useState(false)
+	const [hasImageError, setHasImageError] = useState(false)
+	const isSensitive = Boolean(sketch.isSensitive)
+
 	return (
 		<article className='rounded-lg border bg-background p-2'>
-			<div className='aspect-square bg-muted-foreground/25 mb-2 dark:bg-secondary-foreground/75 rounded-lg overflow-hidden'>
-				<img
-					src={sketchImageSrc(sketch)}
-					alt={sketch.message}
-					loading='lazy'
-					decoding='async'
-					className='h-full w-full object-cover'
-				/>
+			<div className='relative aspect-square bg-muted-foreground/25 mb-2 dark:bg-secondary-foreground/75 rounded-lg overflow-hidden group'>
+				{hasImageError ? (
+					<div className='flex flex-col items-center justify-center h-full w-full text-muted-foreground/50 p-4 text-center select-none'>
+						<ImageOff className='w-8 h-8 opacity-40' />
+					</div>
+				) : (
+					<img
+						src={sketchImageSrc(sketch)}
+						alt={isSensitive && !isRevealed ? t['Sensitive content'] : sketch.message}
+						loading='lazy'
+						decoding='async'
+						onError={() => setHasImageError(true)}
+						className={`h-full w-full object-cover transition duration-200 ${
+							isSensitive && !isRevealed ? 'filter blur-xl scale-105' : ''
+						}`}
+					/>
+				)}
+
+				{isSensitive && !isRevealed && (
+					<div className='absolute inset-0 z-10 flex flex-col items-center justify-center p-3 text-center bg-background/60 backdrop-blur-xs'>
+						<div className='inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-destructive/10 text-destructive text-xs font-medium mb-2.5 border border-destructive/20'>
+							<EyeOff className='w-3.5 h-3.5' />
+							<span>{t['Sensitive content']}</span>
+						</div>
+						<button
+							type='button'
+							onClick={() => setIsRevealed(true)}
+							className='inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-foreground text-background hover:bg-foreground/90 transition shadow-xs cursor-pointer'
+							aria-label={t['Click to view']}
+						>
+							<Eye className='w-3.5 h-3.5' />
+							<span>{t['Click to view']}</span>
+						</button>
+					</div>
+				)}
 			</div>
-			<p className='text-xs text-muted-foreground line-clamp-2'>{sketch.name}</p>
-			<h3 className='font-medium text-foreground text-sm line-clamp-2'>
-				{sketch.message}
-			</h3>
+			<div
+				className={`transition duration-200 ${
+					isSensitive && !isRevealed ? 'filter blur-xs select-none' : ''
+				}`}
+			>
+				<p className='text-xs text-muted-foreground line-clamp-2'>{sketch.name}</p>
+				<h3 className='font-medium text-foreground text-sm line-clamp-2'>
+					{sketch.message}
+				</h3>
+			</div>
 		</article>
 	)
 }

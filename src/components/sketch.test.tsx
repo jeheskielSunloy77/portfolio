@@ -132,4 +132,56 @@ describe('Sketch component', () => {
 		// is validated in sketch-dialog tests — here ensure click occurs without error)
 		await userEvent.click(btn)
 	})
+
+	test('renders sensitive sketch with blur overlay and handles reveal and hide toggle', async () => {
+		const sensitiveSketch = {
+			_id: 'sensitive-1',
+			name: 'Anonymous',
+			message: 'Sensitive doodle',
+			createdAt: new Date(),
+			isSensitive: true,
+		}
+
+		render(
+			<Sketch
+				t={t}
+				initialData={{
+					pages: [
+						{
+							data: [sensitiveSketch],
+							page: 0,
+							pageSize: 6,
+							total: 1,
+						},
+					],
+					pageParams: [0],
+				}}
+			/>,
+		)
+
+		// Check sensitive content warning badge and view button are rendered
+		expect(await screen.findByText('Sensitive content')).toBeInTheDocument()
+		const viewBtn = screen.getByRole('button', { name: 'Click to view' })
+		expect(viewBtn).toBeInTheDocument()
+
+		// Image should have blur class and masked alt text
+		const img = screen.getByRole('img')
+		expect(img.className).toContain('blur-xl')
+		expect(img).toHaveAttribute('alt', 'Sensitive content')
+
+		// Text should also be blurred
+		const messageEl = screen.getByText('Sensitive doodle')
+		expect(messageEl.parentElement?.className).toContain('blur-xs')
+
+		// Click to reveal
+		await userEvent.click(viewBtn)
+
+		// Warning badge and view button should be gone; content should be revealed
+		expect(screen.queryByText('Sensitive content')).not.toBeInTheDocument()
+		expect(screen.queryByRole('button', { name: 'Click to view' })).not.toBeInTheDocument()
+		expect(screen.queryByRole('button', { name: 'Hide' })).not.toBeInTheDocument()
+		expect(img.className).not.toContain('blur-xl')
+		expect(img).toHaveAttribute('alt', 'Sensitive doodle')
+		expect(messageEl.parentElement?.className).not.toContain('blur-xs')
+	})
 })

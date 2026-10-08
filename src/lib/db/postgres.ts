@@ -24,8 +24,10 @@ export class PostgresDatabaseAdapter implements DatabaseAdapter {
 				message TEXT NOT NULL,
 				image BYTEA NOT NULL,
 				created_at TIMESTAMPTZ NOT NULL,
-				ip VARCHAR(64) NOT NULL
+				ip VARCHAR(64) NOT NULL,
+				is_sensitive BOOLEAN NOT NULL DEFAULT FALSE
 			);
+			ALTER TABLE sketches ADD COLUMN IF NOT EXISTS is_sensitive BOOLEAN NOT NULL DEFAULT FALSE;
 			CREATE INDEX IF NOT EXISTS idx_sketches_created_at ON sketches(created_at DESC);
 			CREATE INDEX IF NOT EXISTS idx_sketches_ip_created_at ON sketches(ip, created_at);
 		`)
@@ -43,8 +45,9 @@ export class PostgresDatabaseAdapter implements DatabaseAdapter {
 			name: string
 			message: string
 			created_at: Date | string
+			is_sensitive?: boolean
 		}>(
-			`SELECT id, name, message, created_at
+			`SELECT id, name, message, created_at, is_sensitive
 			 FROM sketches
 			 ORDER BY created_at DESC
 			 LIMIT $1 OFFSET $2`,
@@ -60,6 +63,7 @@ export class PostgresDatabaseAdapter implements DatabaseAdapter {
 				name: r.name,
 				message: r.message,
 				createdAt: new Date(r.created_at),
+				isSensitive: Boolean(r.is_sensitive),
 			})),
 			page,
 			pageSize,
@@ -94,9 +98,9 @@ export class PostgresDatabaseAdapter implements DatabaseAdapter {
 		const createdAt = new Date()
 
 		await this.pool.query(
-			`INSERT INTO sketches (id, name, message, image, created_at, ip)
-			 VALUES ($1, $2, $3, $4, $5, $6)`,
-			[id, input.name, input.message, input.image, createdAt, input.ip],
+			`INSERT INTO sketches (id, name, message, image, created_at, ip, is_sensitive)
+			 VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+			[id, input.name, input.message, input.image, createdAt, input.ip, Boolean(input.isSensitive)],
 		)
 
 		return {
@@ -105,6 +109,7 @@ export class PostgresDatabaseAdapter implements DatabaseAdapter {
 			message: input.message,
 			createdAt,
 			ip: input.ip,
+			isSensitive: Boolean(input.isSensitive),
 		}
 	}
 

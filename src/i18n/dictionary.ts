@@ -178,6 +178,9 @@ export const dictionary = {
     "Hundreds of visitors have scribbled on the wall. Your turn — draw, write, or just leave a weird little mark.": "Hundreds of visitors have scribbled on the wall. Your turn — draw, write, or just leave a weird little mark.",
     "add yours": "add yours",
     "Sad cat waiting for your doodle": "Sad cat waiting for your doodle",
+    "Sensitive content": "Sensitive content",
+    "Click to view": "Click to view",
+    "Hide": "Hide",
   },
   id: {
     "such end. very empty. much art. wow. 🐶": "Waduh tamat. Kosong banget. Seni parah. Wow. 🐶",
@@ -358,5 +361,8 @@ export const dictionary = {
     "Hundreds of visitors have scribbled on the wall. Your turn — draw, write, or just leave a weird little mark.": "Ratusan pengunjung sudah coret-coret di dinding. Giliranmu — gambar, tulis, atau tinggalkan jejak anehmu.",
     "add yours": "tinggalkan jejakmu",
     "Sad cat waiting for your doodle": "Kucing sedih menunggu doodlemu",
+    "Sensitive content": "Konten sensitif",
+    "Click to view": "Klik untuk melihat",
+    "Hide": "Sembunyikan",
   },
 } as const;

@@ -23,10 +23,18 @@ export class MysqlDatabaseAdapter implements DatabaseAdapter {
 				image MEDIUMBLOB NOT NULL,
 				created_at DATETIME(3) NOT NULL,
 				ip VARCHAR(64) NOT NULL,
+				is_sensitive TINYINT(1) NOT NULL DEFAULT 0,
 				INDEX idx_sketches_created_at (created_at),
 				INDEX idx_sketches_ip_created_at (ip, created_at)
 			);
 		`)
+		try {
+			await this.pool.execute(`
+				ALTER TABLE sketches ADD COLUMN is_sensitive TINYINT(1) NOT NULL DEFAULT 0;
+			`)
+		} catch {
+			// Column already exists or freshly created
+		}
 	}
 
 	async getSketches(
@@ -37,7 +45,7 @@ export class MysqlDatabaseAdapter implements DatabaseAdapter {
 		const limit = pageSize + 1
 
 		const [rows] = await this.pool.query<mysql.RowDataPacket[]>(
-			`SELECT id, name, message, created_at
+			`SELECT id, name, message, created_at, is_sensitive
 			 FROM sketches
 			 ORDER BY created_at DESC
 			 LIMIT ? OFFSET ?`,
@@ -53,6 +61,7 @@ export class MysqlDatabaseAdapter implements DatabaseAdapter {
 				name: String(r.name),
 				message: String(r.message),
 				createdAt: new Date(r.created_at),
+				isSensitive: Boolean(r.is_sensitive),
 			})),
 			page,
 			pageSize,
@@ -85,11 +94,12 @@ export class MysqlDatabaseAdapter implements DatabaseAdapter {
 	async createSketch(input: InsertSketchInput): Promise<InsertSketchResult> {
 		const id = crypto.randomUUID()
 		const createdAt = new Date()
+		const isSensitive = input.isSensitive ? 1 : 0
 
 		await this.pool.execute(
-			`INSERT INTO sketches (id, name, message, image, created_at, ip)
-			 VALUES (?, ?, ?, ?, ?, ?)`,
-			[id, input.name, input.message, input.image, createdAt, input.ip],
+			`INSERT INTO sketches (id, name, message, image, created_at, ip, is_sensitive)
+			 VALUES (?, ?, ?, ?, ?, ?, ?)`,
+			[id, input.name, input.message, input.image, createdAt, input.ip, isSensitive],
 		)
 
 		return {
@@ -98,6 +108,7 @@ export class MysqlDatabaseAdapter implements DatabaseAdapter {
 			message: input.message,
 			createdAt,
 			ip: input.ip,
+			isSensitive: Boolean(input.isSensitive),
 		}
 	}
 

@@ -66,4 +66,5 @@ export interface Sketch {
 	ip?: string
 	/** Present on optimistic cards before the server assigns a real id */
 	imageWebp?: string
+	isSensitive?: boolean
 }

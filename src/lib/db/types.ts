@@ -7,6 +7,7 @@ export interface InsertSketchInput {
 	message: string
 	image: Buffer
 	ip: string
+	isSensitive?: boolean
 }
 
 export interface InsertSketchResult {
@@ -15,6 +16,7 @@ export interface InsertSketchResult {
 	message: string
 	createdAt: Date
 	ip: string
+	isSensitive?: boolean
 }
 
 export interface DatabaseAdapter {

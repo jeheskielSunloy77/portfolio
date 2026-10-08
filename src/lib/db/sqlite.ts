@@ -22,9 +22,17 @@ export class SqliteDatabaseAdapter implements DatabaseAdapter {
 				message TEXT NOT NULL,
 				image BLOB NOT NULL,
 				created_at TEXT NOT NULL,
-				ip TEXT NOT NULL
+				ip TEXT NOT NULL,
+				is_sensitive INTEGER NOT NULL DEFAULT 0
 			);
 		`)
+		try {
+			await this.client.execute(`
+				ALTER TABLE sketches ADD COLUMN is_sensitive INTEGER NOT NULL DEFAULT 0;
+			`)
+		} catch {
+			// Column already exists or table freshly created
+		}
 		await this.client.execute(`
 			CREATE INDEX IF NOT EXISTS idx_sketches_created_at ON sketches(created_at DESC);
 		`)
@@ -41,7 +49,7 @@ export class SqliteDatabaseAdapter implements DatabaseAdapter {
 		const limit = pageSize + 1
 
 		const res = await this.client.execute({
-			sql: `SELECT id, name, message, created_at
+			sql: `SELECT id, name, message, created_at, is_sensitive
 				  FROM sketches
 				  ORDER BY created_at DESC
 				  LIMIT ? OFFSET ?`,
@@ -57,6 +65,7 @@ export class SqliteDatabaseAdapter implements DatabaseAdapter {
 				name: String(r.name),
 				message: String(r.message),
 				createdAt: new Date(String(r.created_at)),
+				isSensitive: Boolean(r.is_sensitive),
 			})),
 			page,
 			pageSize,
@@ -100,10 +109,12 @@ export class SqliteDatabaseAdapter implements DatabaseAdapter {
 			input.image.byteLength,
 		)
 
+		const isSensitive = input.isSensitive ? 1 : 0
+
 		await this.client.execute({
-			sql: `INSERT INTO sketches (id, name, message, image, created_at, ip)
-				  VALUES (?, ?, ?, ?, ?, ?)`,
-			args: [id, input.name, input.message, imageBlob, createdAt.toISOString(), input.ip],
+			sql: `INSERT INTO sketches (id, name, message, image, created_at, ip, is_sensitive)
+				  VALUES (?, ?, ?, ?, ?, ?, ?)`,
+			args: [id, input.name, input.message, imageBlob, createdAt.toISOString(), input.ip, isSensitive],
 		})
 
 		return {
@@ -112,6 +123,7 @@ export class SqliteDatabaseAdapter implements DatabaseAdapter {
 			message: input.message,
 			createdAt,
 			ip: input.ip,
+			isSensitive: Boolean(input.isSensitive),
 		}
 	}
 

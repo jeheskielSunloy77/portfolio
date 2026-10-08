@@ -3,6 +3,7 @@ import { GET, POST } from './sketches'
 
 const mockCountRecentSketchesByIp = vi.fn()
 const mockCreateSketch = vi.fn()
+const mockModerateSketch = vi.fn()
 
 vi.mock('@/lib/sketches', () => ({
 	getSketches: vi.fn(),
@@ -10,6 +11,10 @@ vi.mock('@/lib/sketches', () => ({
 
 vi.mock('@/lib/sketch-image.server', () => ({
 	webpBase64ToBinary: vi.fn((base64: string) => Buffer.from(base64, 'base64')),
+}))
+
+vi.mock('@/lib/sketch-moderation.server', () => ({
+	moderateSketch: (...args: any[]) => mockModerateSketch(...args),
 }))
 
 vi.mock('@/lib/db', () => ({
@@ -22,6 +27,7 @@ vi.mock('@/lib/db', () => ({
 describe('Sketches API', () => {
 	beforeEach(() => {
 		vi.resetAllMocks()
+		mockModerateSketch.mockResolvedValue({ isSensitive: false })
 	})
 
 	describe('GET /api/sketches', () => {
@@ -171,6 +177,45 @@ describe('Sketches API', () => {
 					name: 'user',
 					message: 'hi',
 					ip: '9.9.9.9',
+					isSensitive: false,
+				}),
+			)
+		})
+
+		it('flags sensitive sketch and persists isSensitive: true', async () => {
+			mockCountRecentSketchesByIp.mockResolvedValue(0)
+			mockModerateSketch.mockResolvedValue({
+				isSensitive: true,
+				reason: 'Inappropriate drawing',
+			})
+			mockCreateSketch.mockResolvedValue({
+				_id: 'flagged-id',
+				name: 'bad-actor',
+				message: 'nsfw',
+				createdAt: new Date('2026-01-01T00:00:00.000Z'),
+				ip: '9.9.9.9',
+				isSensitive: true,
+			})
+
+			const req = {
+				json: async () => ({
+					name: 'bad-actor',
+					message: 'nsfw',
+					imageWebp: 'd2ViYXNkNjQ=',
+				}),
+				headers: new Headers([['x-forwarded-for', '9.9.9.9']]),
+			} as unknown as Request
+
+			const res = await POST({ request: req })
+			expect(res.status).toBe(201)
+			const body = await res.json()
+			expect(body.isSensitive).toBe(true)
+			expect(mockCreateSketch).toHaveBeenCalledWith(
+				expect.objectContaining({
+					name: 'bad-actor',
+					message: 'nsfw',
+					ip: '9.9.9.9',
+					isSensitive: true,
 				}),
 			)
 		})

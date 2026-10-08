@@ -46,7 +46,7 @@ export class MongoDatabaseAdapter implements DatabaseAdapter {
 	): Promise<APIResponsePaginated<Sketch>> {
 		const col = this.db.collection(COLLECTION)
 		const docs = await col
-			.find({}, { projection: { name: 1, message: 1, createdAt: 1 } })
+			.find({}, { projection: { name: 1, message: 1, createdAt: 1, isSensitive: 1 } })
 			.sort({ createdAt: -1 })
 			.skip(page * pageSize)
 			.limit(pageSize + 1)
@@ -60,7 +60,8 @@ export class MongoDatabaseAdapter implements DatabaseAdapter {
 				_id: d._id.toString(),
 				name: d.name,
 				message: d.message,
-				createdAt: d.createdAt,
+				createdAt: new Date(d.createdAt),
+				isSensitive: Boolean(d.isSensitive ?? false),
 			})),
 			page,
 			pageSize,
@@ -79,6 +80,12 @@ export class MongoDatabaseAdapter implements DatabaseAdapter {
 
 		if (Buffer.isBuffer(doc.image)) return doc.image
 		if (doc.image instanceof Binary) return Buffer.from(doc.image.buffer)
+		if (typeof doc.image === 'string') {
+			if (doc.image.startsWith('data:')) {
+				return Buffer.from(doc.image.split(',')[1] || '', 'base64')
+			}
+			return Buffer.from(doc.image, 'binary')
+		}
 		if (typeof (doc.image as any)?.buffer === 'object') {
 			return Buffer.from((doc.image as any).buffer)
 		}
@@ -101,6 +108,7 @@ export class MongoDatabaseAdapter implements DatabaseAdapter {
 			image: new Binary(input.image, Binary.SUBTYPE_BYTE_ARRAY),
 			createdAt: new Date(),
 			ip: input.ip,
+			isSensitive: Boolean(input.isSensitive ?? false),
 		}
 
 		const result = await col.insertOne(doc)
@@ -110,6 +118,7 @@ export class MongoDatabaseAdapter implements DatabaseAdapter {
 			message: doc.message,
 			createdAt: doc.createdAt,
 			ip: doc.ip,
+			isSensitive: doc.isSensitive,
 		}
 	}
 

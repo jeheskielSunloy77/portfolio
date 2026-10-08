@@ -1,5 +1,6 @@
 import { SKETCHES_PAGE_SIZE } from '@/lib/sketch-constants'
 import { webpBase64ToBinary } from '@/lib/sketch-image.server'
+import { moderateSketch } from '@/lib/sketch-moderation.server'
 import { getSketches } from '@/lib/sketches'
 import { getDbAdapter } from '@/lib/db'
 import { log } from '@/lib/utils'
@@ -75,14 +76,22 @@ export async function POST({ request }: { request: Request }) {
 			return jsonResponse({ error: 'Rate limit exceeded' }, 429)
 		}
 
+		const image = webpBase64ToBinary(parsed.data.imageWebp)
+		const moderation = await moderateSketch({
+			image,
+			name: parsed.data.name,
+			message: parsed.data.message,
+		})
+
 		const result = await adapter.createSketch({
 			name: parsed.data.name,
 			message: parsed.data.message,
-			image: webpBase64ToBinary(parsed.data.imageWebp),
+			image,
 			ip,
+			isSensitive: moderation.isSensitive,
 		})
 
-		log('info', TAG, `New sketch submitted from IP ${ip} with id ${result._id}`)
+		log('info', TAG, `New sketch submitted from IP ${ip} with id ${result._id} (isSensitive: ${result.isSensitive})`)
 		return jsonResponse(result, 201)
 	} catch (e: any) {
 		return errResponse(TAG, 'Failed to save sketch')

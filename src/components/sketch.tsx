@@ -284,19 +284,31 @@ function SketchCard({ sketch, t }: { sketch: Sketch; t: Dictionary }) {
 				)}
 
 				{isSensitive && !isRevealed && (
-					<div className='absolute inset-0 z-10 flex flex-col items-center justify-center p-3 text-center bg-background/60 backdrop-blur-xs'>
-						<div className='inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-destructive/10 text-destructive text-xs font-medium mb-2.5 border border-destructive/20'>
-							<EyeOff className='w-3.5 h-3.5' />
-							<span>{t['Sensitive content']}</span>
-						</div>
+					<div
+						onClick={() => setIsRevealed(true)}
+						className='absolute inset-0 z-10 flex flex-col items-center justify-center p-3 rounded-lg text-center bg-background/40 dark:bg-background/55 backdrop-blur-md transition-all duration-300 cursor-pointer select-none'
+					>
 						<button
 							type='button'
-							onClick={() => setIsRevealed(true)}
-							className='inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-foreground text-background hover:bg-foreground/90 transition shadow-xs cursor-pointer'
+							onClick={(e) => {
+								e.stopPropagation()
+								setIsRevealed(true)
+							}}
+							className='group/reveal inline-flex flex-col items-center gap-2 px-4 py-2.5 rounded-lg  backdrop-blur-xl border border-border/80 hover:border-foreground/20 text-foreground shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer'
 							aria-label={t['Click to view']}
 						>
-							<Eye className='w-3.5 h-3.5' />
-							<span>{t['Click to view']}</span>
+							<div className='flex items-center justify-center w-7 h-7 rounded-full bg-muted text-muted-foreground group-hover/reveal:text-foreground group-hover/reveal:bg-muted transition-colors duration-200'>
+								<EyeOff className='w-3.5 h-3.5 transition-transform duration-200 group-hover/reveal:scale-110' />
+							</div>
+							<div className='flex flex-col items-center gap-0.5'>
+								<span className='text-xs font-medium text-foreground tracking-tight'>
+									{t['Sensitive content']}
+								</span>
+								<span className='inline-flex items-center gap-1 text-[11px] text-muted-foreground font-normal'>
+									<Eye className='w-3 h-3 opacity-70' />
+									<span>{t['Click to view']}</span>
+								</span>
+							</div>
 						</button>
 					</div>
 				)}

@@ -102,7 +102,7 @@ export const OPEN_SOURCE = OPEN_SOURCE_CONTRIBUTIONS
 export const SOCIALS = [
 	{
 		name: 'LinkedIn',
-		href: 'https://www.linkedin.com/in/jeheskiel-ventioky-sunloy',
+		href: 'https://www.linkedin.com/in/jeheskielsunloy',
 		icon: Linkedin,
 	},
 	{

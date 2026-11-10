@@ -178,4 +178,45 @@ describe('SketchDialog', () => {
 		// Dialog should remain open (onOpenChange not called with false)
 		expect(onOpenChange).not.toHaveBeenCalledWith(false)
 	})
+
+	test('displays moderation timeout alert and remains open when mutation rejects with 503 moderation_timeout', async () => {
+		const user = userEvent.setup()
+		const onOpenChange = vi.fn()
+		const mutateAsync = vi.fn().mockRejectedValue({
+			type: 'moderation_timeout',
+			status: 503,
+		})
+		const mockMutation: any = { status: 'idle', mutateAsync }
+
+		render(
+			<SketchDialog
+				isOpen={true}
+				onOpenChange={onOpenChange}
+				createSketchMutation={mockMutation}
+				t={t}
+			/>
+		)
+
+		const nameInput = screen.getByPlaceholderText('enter your name')
+		const messageInput = screen.getByPlaceholderText(
+			'leave a message or description...'
+		)
+		const saveBtn = screen.getByRole('button', { name: /save sketch/i })
+
+		await user.type(nameInput, 'Tester')
+		await user.type(messageInput, 'Message')
+
+		const surface = screen.getByTestId('drawing-surface')
+		fireEvent.pointerDown(surface, { clientX: 60, clientY: 60, pointerId: 1, pressure: 0.5, buttons: 1 })
+		fireEvent.pointerUp(surface, { clientX: 60, clientY: 60, pointerId: 1, buttons: 0 })
+
+		await user.click(saveBtn)
+
+		expect(mutateAsync).toHaveBeenCalledTimes(1)
+		expect(await screen.findByText('Moderation timed out')).toBeInTheDocument()
+		expect(
+			screen.getByText('Content verification timed out. Please try submitting again.')
+		).toBeInTheDocument()
+		expect(onOpenChange).not.toHaveBeenCalledWith(false)
+	})
 })

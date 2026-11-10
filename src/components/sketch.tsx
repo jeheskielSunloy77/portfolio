@@ -130,7 +130,10 @@ function SketchContent({
 				/* ignore */
 			}
 			throw {
-				type: 'error',
+				type:
+					json?.type === 'moderation_timeout' || res.status === 503
+						? 'moderation_timeout'
+						: 'error',
 				status: res.status,
 				message: json?.error ?? 'Failed to save',
 			}

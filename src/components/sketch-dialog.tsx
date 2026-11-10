@@ -494,6 +494,13 @@ export function SketchDialog({
               "You have reached the submission rate limit. Please try again later."
             ] ?? "You have reached the submission rate limit. Please try again later.",
         });
+      } else if (err?.type === "moderation_timeout" || err?.status === 503) {
+        setError({
+          title: t["Moderation timed out"] ?? "Moderation timed out",
+          description:
+            t["Content verification timed out. Please try submitting again."] ??
+            "Content verification timed out. Please try submitting again.",
+        });
       } else {
         setError({
           title: t["Failed to save sketch"],

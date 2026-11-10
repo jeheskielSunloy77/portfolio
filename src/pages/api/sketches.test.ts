@@ -15,9 +15,18 @@ vi.mock('@/lib/sketch-image.server', () => ({
 	webpBase64ToBinary: vi.fn((base64: string) => Buffer.from(base64, 'base64')),
 }))
 
-vi.mock('@/lib/sketch-moderation.server', () => ({
-	moderateSketch: (...args: any[]) => mockModerateSketch(...args),
-}))
+vi.mock('@/lib/sketch-moderation.server', () => {
+	class ModerationUnavailableError extends Error {
+		constructor(message = 'fail') {
+			super(message)
+			this.name = 'ModerationUnavailableError'
+		}
+	}
+	return {
+		moderateSketch: (...args: any[]) => mockModerateSketch(...args),
+		ModerationUnavailableError,
+	}
+})
 
 vi.mock('@/lib/db', () => ({
 	getDbAdapter: vi.fn(() => ({
@@ -244,6 +253,32 @@ describe('Sketches API', () => {
 					isSensitive: true,
 				}),
 			)
+		})
+
+		it('returns 503 and moderation_timeout type when moderation fails or times out', async () => {
+			const { ModerationUnavailableError } = await import(
+				'@/lib/sketch-moderation.server'
+			)
+			mockModerateSketch.mockRejectedValue(
+				new ModerationUnavailableError('timed out'),
+			)
+
+			const req = {
+				json: async () => ({
+					name: 'user',
+					message: 'hi',
+					imageWebp: 'd2ViYXNkNjQ=',
+				}),
+				headers: new Headers([['x-forwarded-for', '1.2.3.4']]),
+			} as unknown as Request
+
+			const res = await POST({ request: req })
+			expect(res.status).toBe(503)
+			const body = await res.json()
+			expect(body.type).toBe('moderation_timeout')
+			expect(body.error).toContain('Content verification timed out')
+			expect(res.headers.get('Retry-After')).toBe('3')
+			expect(mockCreateSketch).not.toHaveBeenCalled()
 		})
 
 		it('rejects with 403 and cooldownUntil when device is in cooldown', async () => {

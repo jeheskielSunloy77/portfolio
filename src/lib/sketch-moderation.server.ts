@@ -5,6 +5,17 @@ import { z } from 'zod'
 
 const TAG = 'SketchModeration'
 
+export const DEFAULT_MODERATION_TIMEOUT_MS = 10000
+
+export class ModerationUnavailableError extends Error {
+	constructor(
+		message = 'Content verification timed out or failed. Please try submitting again.',
+	) {
+		super(message)
+		this.name = 'ModerationUnavailableError'
+	}
+}
+
 export interface ModerationResult {
 	isSensitive: boolean
 	reason?: string
@@ -23,10 +34,95 @@ export const sketchModerationSchema = z.object({
 	reason: z.string().optional().describe('Brief explanation if flagged as sensitive.'),
 })
 
+/**
+ * Fast regex-based pre-filter to instantly flag severe hate speech,
+ * slurs, explicit sexual solicitation, and violent threats in name or message
+ * without needing an external AI call.
+ */
+export function checkTextSafety(
+	name: string,
+	message: string,
+): ModerationResult | null {
+	const raw = `${name} ${message}`
+	const text = raw
+		.toLowerCase()
+		.normalize('NFKD')
+		.replace(/[̀-ͯ]/g, '')
+
+	// Normalize common leetspeak substitutions
+	const deobfuscated = text
+		.replace(/[@]/g, 'a')
+		.replace(/[$]/g, 's')
+		.replace(/[0]/g, 'o')
+		.replace(/[1!|]/g, 'i')
+		.replace(/[3]/g, 'e')
+		.replace(/[5]/g, 's')
+		.replace(/[+]/g, 't')
+
+	const textsToTest = [text, deobfuscated]
+
+	// 1. Hate speech / threats targeting religious, ethnic, or demographic groups
+	const targetedHateRegex =
+		/\b(kill|murder|death\s+to|slaughter|burn|destroy|hang|gas|shoot|behead|decapitate|eradicate)\s+(all\s+)?(the\s+)?(fucking\s+|stinky\s+)?(jews?|jewish|muslims?|islam(ic|ist)?|christians?|hindus?|arabs?|blacks?|whites?|asians?|gays?|queers?|trans|israel|palestine)\b/i
+
+	const hostilityRegex =
+		/\b(fuck|hates?)\s+(all\s+)?(the\s+)?(fucking\s+)?(jews?|jewish|muslims?|islam(ic|ist)?|christians?|hindus?|arabs?|blacks?|whites?|gays?|queers?|trans|allah|jesus|god|israel|palestine)\b/i
+
+	const groupDehumanizationRegex =
+		/\b(islam|muslim|jew|jewish|christian|black|white|arab|gay|trans)\b.{0,40}\b(cancer|disease|scum|cockroach(es)?|rats?|parasites?|subhuman|pigs?)\b/i
+
+	// 2. Severe slurs (racial, ethnic, religious, LGBTQ+)
+	const slursRegex =
+		/\b(nigger|nigga|kike|faggot|chink|gook|spic|tranny|retard)\b/i
+
+	// 3. Explicit sexual solicitation or extreme nsfw text
+	const sexualRegex =
+		/\b(fuck\s+me|suck\s+my\s+dick|blowjob|penis|vagina|cunt|pussy|dickpic)\b/i
+
+	// 4. Violent threats
+	const violenceRegex =
+		/\b(kill|murder|shoot|bomb|slaughter)\s+(all|every|everyone|your\s+family|yourself)\b/i
+
+	for (const t of textsToTest) {
+		if (
+			targetedHateRegex.test(t) ||
+			hostilityRegex.test(t) ||
+			groupDehumanizationRegex.test(t) ||
+			slursRegex.test(t) ||
+			violenceRegex.test(t)
+		) {
+			return {
+				isSensitive: true,
+				reason: 'Flagged by content safety filters for hate speech, slurs, or violent content.',
+			}
+		}
+		if (sexualRegex.test(t)) {
+			return {
+				isSensitive: true,
+				reason: 'Flagged by content safety filters for sexually explicit or suggestive text.',
+			}
+		}
+	}
+
+	return null
+}
+
 export async function moderateSketch(
 	input: ModerateSketchInput,
-	timeoutMs = 4000,
+	timeoutMs = DEFAULT_MODERATION_TIMEOUT_MS,
 ): Promise<ModerationResult> {
+	// 1. Fast text safety check
+	const textCheckResult = checkTextSafety(input.name, input.message)
+	if (textCheckResult) {
+		log(
+			'info',
+			TAG,
+			`Sketch by "${input.name}" flagged by fast text pre-filter: ${textCheckResult.reason}`,
+		)
+		return textCheckResult
+	}
+
+	// 2. Multimodal AI moderation
 	try {
 		const aiConfig = getChatModel()
 		if (!aiConfig.model) {
@@ -87,8 +183,10 @@ DO NOT flag (isSensitive: false) harmless drawings, innocent stick figures, funn
 		log(
 			'warn',
 			TAG,
-			`Moderation check failed or timed out: ${error instanceof Error ? error.message : String(error)}. Defaulting to safe.`,
+			`Moderation check failed or timed out: ${error instanceof Error ? error.message : String(error)}. Failing closed.`,
 		)
-		return { isSensitive: false }
+		throw new ModerationUnavailableError(
+			'Content verification timed out or failed. Please try submitting again.',
+		)
 	}
 }

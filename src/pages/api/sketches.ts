@@ -1,6 +1,9 @@
 import { SKETCHES_PAGE_SIZE } from '@/lib/sketch-constants'
 import { webpBase64ToBinary } from '@/lib/sketch-image.server'
-import { moderateSketch } from '@/lib/sketch-moderation.server'
+import {
+	moderateSketch,
+	ModerationUnavailableError,
+} from '@/lib/sketch-moderation.server'
 import { getSketches } from '@/lib/sketches'
 import { getDbAdapter } from '@/lib/db'
 import { log } from '@/lib/utils'
@@ -136,11 +139,29 @@ export async function POST({ request }: { request: Request }) {
 		}
 
 		const image = webpBase64ToBinary(parsed.data.imageWebp)
-		const moderation = await moderateSketch({
-			image,
-			name: parsed.data.name,
-			message: parsed.data.message,
-		})
+		let moderation
+		try {
+			moderation = await moderateSketch({
+				image,
+				name: parsed.data.name,
+				message: parsed.data.message,
+			})
+		} catch (err) {
+			if (err instanceof ModerationUnavailableError) {
+				return jsonResponse(
+					{
+						error: 'Content verification timed out. Please try submitting again.',
+						type: 'moderation_timeout',
+					},
+					503,
+					{
+						'Set-Cookie': setCookieHeader,
+						'Retry-After': '3',
+					},
+				)
+			}
+			throw err
+		}
 
 		const result = await adapter.createSketch({
 			name: parsed.data.name,

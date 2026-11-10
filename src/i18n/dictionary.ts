@@ -186,6 +186,8 @@ export const dictionary = {
     "Submissions unlock on:": "Submissions unlock on:",
     "Rate limit exceeded": "Rate limit exceeded",
     "You have reached the submission rate limit. Please try again later.": "You have reached the submission rate limit. Please try again later.",
+    "Moderation timed out": "Moderation timed out",
+    "Content verification timed out. Please try submitting again.": "Content verification timed out. Please try submitting again.",
   },
   id: {
     "such end. very empty. much art. wow. 🐶": "Waduh tamat. Kosong banget. Seni parah. Wow. 🐶",
@@ -374,5 +376,7 @@ export const dictionary = {
     "Submissions unlock on:": "Pengiriman terbuka kembali pada:",
     "Rate limit exceeded": "Batas pengiriman terlampaui",
     "You have reached the submission rate limit. Please try again later.": "Anda telah mencapai batas pengiriman sketsa. Silakan coba lagi nanti.",
+    "Moderation timed out": "Moderasi waktu habis",
+    "Content verification timed out. Please try submitting again.": "Verifikasi konten mengalami batas waktu. Silakan coba kirim lagi.",
   },
 } as const;
